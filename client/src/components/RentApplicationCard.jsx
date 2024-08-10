@@ -32,8 +32,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const handleRentClick =(( quantity_available)=>{
-  
+const handleRentClick =(( quantity_available, rent_id)=>{
+    
 });
 
 
@@ -43,6 +43,7 @@ const RentApplicationCard = ({
   category,
   rent,
   quantity_available,
+  rent_id
 }) => {
   const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
@@ -71,9 +72,12 @@ const RentApplicationCard = ({
         setInputValue(value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (quantity_available,rent_id) => {
+      console.log(quantity_available);
+      console.log(rent_id);
         if (!inputError && inputValue !== "") {
             // Process the inputValue here, like saving it or making an API call
+       
             toast.success("Input value is valid!");
             handleClose(); // Close the modal after submission
         } else {
@@ -141,15 +145,14 @@ const RentApplicationCard = ({
           <strong>Quantity Available</strong> {quantity_available}
         </Typography>
 
-        <StyledButton variant="contained" size="small" onClick={handleRentClick(quantity_available)}>
-        <div>
+        <div >
             <Button variant="contained" color="primary" onClick={handleOpen}>
-                Open Modal
+                Rent
             </Button>
 
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose} >
                 <DialogTitle>Enter a Value</DialogTitle>
-                <DialogContent>
+                <DialogContent style={{width:"400px" , height:"150px" , margin:"auto"}}>
                     <TextField
                         autoFocus
                         margin="dense"
@@ -166,13 +169,12 @@ const RentApplicationCard = ({
                     <Button onClick={handleClose} color="secondary">
                         Cancel
                     </Button>
-                    <Button onClick={handleSubmit} color="primary">
+                    <Button onClick={handleSubmit(quantity_available,rent_id)} color="primary">
                         Submit
                     </Button>
                 </DialogActions>
             </Dialog>
         </div>
-        </StyledButton>
       </CardContent>
     </StyledCard>
   );
