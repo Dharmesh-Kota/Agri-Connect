@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 import {
   Grid,
   Container,
@@ -8,35 +10,67 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
+  TextField,
+  Box,
 } from "@mui/material";
 import ApplicationCard from "../components/ApplicationCard";
 import AOS from "aos";
-import "aos/dist/aos.css"; // Import AOS styles
+import "aos/dist/aos.css";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const WorkApplications = () => {
   const [openDialog, setOpenDialog] = useState(true);
   const [useCurrentLocation, setUseCurrentLocation] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [applications, setApplications] = useState([]);
+  const [formOpen, setFormOpen] = useState(false);
+  const [formValues, setFormValues] = useState({
+    workersRequired: "",
+    description: "",
+    closingDate: "",
+    labour: "",
+  });
+  const [formErrors, setFormErrors] = useState({
+    workersRequired: false,
+    description: false,
+    closingDate: false,
+    labour: false,
+  });
+
+  const dummy_data = [
+    {
+      id: 1,
+      title: "Software Engineer",
+      company: "Tech Corp",
+      personName: "John Doe",
+      applicationId: "APP1234",
+      workersRequired: 5,
+      closingDate: "2024-08-31",
+      description:
+        "A software engineer position at Tech Corp, focusing on building scalable applications.",
+      amountPerDay: "200",
+    },
+    {
+      id: 2,
+      title: "Data Scientist",
+      company: "Data Inc",
+      personName: "Jane Smith",
+      applicationId: "APP5678",
+      workersRequired: 3,
+      closingDate: "2024-09-15",
+      description:
+        "A data scientist role at Data Inc, involving data analysis and machine learning.",
+      amountPerDay: "250",
+    },
+  ];
 
   const fetchApplications = async (location) => {
-    if (location) {
-      // fetch with current location
-    } else {
-      // fetch with profile location
+    try {
+      // Your fetch logic here
+      setApplications(dummy_data);
+    } catch (error) {
+      toast.error("Failed to fetch applications.");
     }
-    // Replace this URL with your backend API endpoint
-    // const response = await fetch("/api/applications", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ location }),
-    // });
-    // const data = await response.json();
-    // setApplications(data);
-    // // Close the dialog after fetching applications
-    // setOpenDialog(false);
   };
 
   useEffect(() => {
@@ -52,54 +86,95 @@ const WorkApplications = () => {
           (position) => {
             const { latitude, longitude } = position.coords;
             setCurrentLocation({ latitude, longitude });
-            // Pass the current location to the backend to fetch data
             handleCloseDialog();
             fetchApplications({ latitude, longitude });
           },
           (error) => {
-            // console.error(error);
-            // Handle location error
             setOpenDialog(false);
-            // Fetch applications with fallback location
+            toast.error("Failed to get current location.");
             fetchApplications();
           }
         );
       } else {
-        console.log("Geolocation is not supported by this browser.");
         setOpenDialog(false);
+        toast.error("Geolocation is not supported by this browser.");
         fetchApplications();
       }
     } else if (useCurrentLocation === false) {
-      // Fetch applications with profile location
       fetchApplications();
       handleCloseDialog();
     }
   }, [useCurrentLocation]);
 
   const handleLocationChoice = (choice) => {
+    if (choice === "profile") {
+      // Check if user is logged in
+      const isLoggedIn = true; // Replace with actual login check
+      if (!isLoggedIn) {
+        toast.error("Please log in to use your profile location.");
+        window.location.href = "/login"; // Redirect to login page
+        return;
+      }
+    }
     setUseCurrentLocation(choice === "current");
-
-    // You can also handle the scenario where you need to handle a profile location fetch here
-    // If you want to trigger fetching immediately after choice
-    // fetchApplications();
   };
 
   const handleCloseDialog = () => {
     if (useCurrentLocation === null) {
-      // Prevent closing if no choice has been made
       return;
     }
     setOpenDialog(false);
   };
 
+  const handleIconClick = () => {
+    setFormOpen(true);
+  };
+
+  const handleFormClose = () => {
+    setFormOpen(false);
+  };
+
+  const handleFormChange = (e) => {
+    setFormValues({
+      ...formValues,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const validateForm = () => {
+    const today = new Date().toISOString().split("T")[0];
+    const errors = {
+      workersRequired: formValues.workersRequired <= 0,
+      description: !formValues.description,
+      closingDate: formValues.closingDate <= today,
+      labour: formValues.labour <= 0,
+    };
+    setFormErrors(errors);
+    return !Object.values(errors).includes(true);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        const response = await axios.post(
+          "/api/submit-application",
+          formValues
+        );
+        console.log("Form submitted:", response.data);
+        toast.success("Application submitted successfully!");
+        handleFormClose();
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        toast.error("Error submitting application. Please try again.");
+        handleFormClose();
+      }
+    }
+  };
+
   return (
     <>
-      <Dialog
-        open={openDialog}
-        // onClose={handleCloseDialog} // Disabling closing via backdrop click or escape key
-        // disableBackdropClick
-        // disableEscapeKeyDown
-      >
+      <Dialog open={openDialog} maxWidth="sm" fullWidth>
         <DialogTitle>Location Preference</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
@@ -109,17 +184,13 @@ const WorkApplications = () => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => {
-              handleLocationChoice("current");
-            }}
+            onClick={() => handleLocationChoice("current")}
             color="primary"
           >
             Use Current Location
           </Button>
           <Button
-            onClick={() => {
-              handleLocationChoice("profile");
-            }}
+            onClick={() => handleLocationChoice("profile")}
             color="secondary"
           >
             Use Profile Location
@@ -145,6 +216,96 @@ const WorkApplications = () => {
           ))}
         </Grid>
       </Container>
+
+      {/* Floating Icon */}
+      <AddCircleIcon
+        onClick={handleIconClick}
+        style={{
+          position: "fixed",
+          bottom: "16px",
+          right: "16px",
+          fontSize: "4em",
+          color: "#4caf50",
+          cursor: "pointer",
+          zIndex: 1000,
+        }}
+      />
+
+      {/* Form Modal */}
+      <Dialog open={formOpen} onClose={handleFormClose} maxWidth="sm" fullWidth>
+        <DialogTitle>Submit Application</DialogTitle>
+        <DialogContent>
+          <Box
+            component="form"
+            onSubmit={handleFormSubmit}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              padding: 3,
+            }}
+          >
+            <TextField
+              label="Workers Required"
+              name="workersRequired"
+              type="number"
+              value={formValues.workersRequired}
+              onChange={handleFormChange}
+              fullWidth
+              error={formErrors.workersRequired}
+              helperText={
+                formErrors.workersRequired &&
+                "This field is required and must be greater than 0"
+              }
+            />
+            <TextField
+              label="Description"
+              name="description"
+              type="text"
+              value={formValues.description}
+              onChange={handleFormChange}
+              fullWidth
+              error={formErrors.description}
+              helperText={formErrors.description && "This field is required"}
+            />
+            <TextField
+              label="Closing Date"
+              name="closingDate"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+              value={formValues.closingDate}
+              onChange={handleFormChange}
+              fullWidth
+              error={formErrors.closingDate}
+              helperText={
+                formErrors.closingDate &&
+                "This field is required and must be a future date"
+              }
+            />
+            <TextField
+              label="Labour (in Rupee)"
+              name="labour"
+              type="number"
+              value={formValues.labour}
+              onChange={handleFormChange}
+              fullWidth
+              error={formErrors.labour}
+              helperText={
+                formErrors.labour &&
+                "This field is required and must be greater than 0"
+              }
+            />
+            <DialogActions>
+              <Button type="submit" color="primary">
+                Submit
+              </Button>
+              <Button onClick={handleFormClose} color="secondary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
