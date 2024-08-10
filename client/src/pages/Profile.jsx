@@ -9,44 +9,38 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import PlaceIcon from "@mui/icons-material/Place";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
-
 import {
   Grid,
   Typography,
   TextField,
   Button,
+  Switch,
   FormControlLabel,
-  RadioGroup,
-  Radio,
-  FormLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
-
-import { useAuth } from "../context/auth";
-import config from "../config.js";
 
 const Profile = () => {
   const imageURL =
     "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=";
 
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [userName, setUserName] = useState("abc");
-  const [email, setEmail] = useState("abc@gmail.com");
+  const [name, setName] = useState("John Doe");
+  const [userName, setUserName] = useState("john_doe");
+  const [email, setEmail] = useState("john.doe@example.com");
   const [type, setType] = useState("User");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [location, setLocation] = useState("");
+  const [address, setAddress] = useState("123 Main St, Anytown, USA");
+  const [phoneNumber, setPhoneNumber] = useState("1234567890");
+  const [location, setLocation] = useState("37.7749,-122.4194"); // Latitude and Longitude of San Francisco
+  const [birthdate, setBirthdate] = useState("1990-01-01");
+  const [isWorking, setIsWorking] = useState(true); // New state for work status
 
-  const [isValidPhone, setIsValidPhone] = useState(false);
+  const [isValidPhone, setIsValidPhone] = useState(true);
   const navigate = useNavigate();
-  const { setIsLoggedIn, LogOut } = useAuth();
 
   const [justVerify, setJustVerify] = useState(false);
+  const [showEditFields, setShowEditFields] = useState(true); // Boolean to show/hide right component
 
   const validatePhoneNumber = (input) => {
     if (input) {
@@ -54,10 +48,9 @@ const Profile = () => {
       const isValid = /^\d{10}$/.test(value);
       setIsValidPhone(isValid);
     } else {
-      setIsValidPhone(false); // Set to false if input is undefined
+      setIsValidPhone(false);
     }
   };
-  
 
   const theme = createTheme({
     typography: {
@@ -66,7 +59,16 @@ const Profile = () => {
         fontWeight: "600",
       },
     },
+    palette: {
+      primary: {
+        main: "#4caf50", // Green color
+      },
+      secondary: {
+        main: "#81c784", // Light green color
+      },
+    },
   });
+
   const UpdateProfile = async () => {
     setJustVerify(true);
     if (name === "" || address === "" || !isValidPhone || location === "") {
@@ -74,145 +76,38 @@ const Profile = () => {
     }
     setLoading(true);
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-    };
-    try {
-      const results = await axios.post(
-        (config.BACKEND_API || "http://localhost:8000") + "/update-profile",
-        {
-          name,
-          username: userName,
-          email,
-          contact: phoneNumber,
-          address,
-          location,
-        },
-        { headers }
-      );
-    } catch (err) {
-      // if (err.results.status === 403) {
-      //   LogOut();
-      // }
-      console.log(err);
-    }
-    setLoading(false);
-  };
-
-  const getProfile = async () => {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-    };
-
-    try {
-      const result = await axios.get(
-        (config.BACKEND_API || "http://localhost:8000") + "/profile",
-        {
-          headers,
-        }
-      );
-      const { user } = result.data;
-      setName(user.name);
-      setEmail(user.email);
-      setUserName(user.username);
-      setPhoneNumber(user.contact);
-      setAddress(user.address);
-      setLocation(user.location);
-      validatePhoneNumber(user.contact);
-    } catch (err) {
-      // if (err.result.status === 403) {
-      //   LogOut();
-      // }
-      console.log(err);
-    }
+    // Mock update process
+    setTimeout(() => {
+      console.log("Profile updated with: ", {
+        name,
+        userName,
+        email,
+        phoneNumber,
+        address,
+        location,
+        birthdate,
+      });
+      setLoading(false);
+    }, 1000);
   };
 
   useEffect(() => {
-    if (
-      !(
-        window.localStorage.getItem("token") !== null
-      )
-    ) {
-      window.localStorage.removeItem("token");
-      setIsLoggedIn(false);
-      navigate("/");
-    }
-  }, []);
+    // Using dummy data instead of fetching from backend
+    setName("John Doe");
+    setUserName("john_doe");
+    setEmail("john.doe@example.com");
+    setPhoneNumber("1234567890");
+    setAddress("123 Main St, Anytown, USA");
+    setLocation("37.7749,-122.4194"); // Latitude and Longitude of San Francisco
+    setBirthdate("1990-01-01");
+    validatePhoneNumber("1234567890");
 
-  useEffect(() => {
-    getProfile();
     AOS.init({
       duration: 800,
       easing: "ease-in-out",
       once: true,
     });
   }, []);
-
-  const [apiKey, setApiKey] = useState("");
-
-  useEffect(() => {
-    const fetchApiKey = async () => {
-      try {
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-        };
-
-        const response = await fetch(
-          (config.BACKEND_API || "http://localhost:8000") + "/getTomTomApiKey",
-          { headers }
-        );
-        const data = await response.json();
-        setApiKey(data.apiKey.trim());
-      } catch (error) {
-        console.error("Error fetching API key:", error);
-      }
-    };
-    fetchApiKey();
-  }, []);
-
-  const initializeTomTomSearchBox = (apiKey) => {
-    var options = {
-      searchOptions: {
-        key: apiKey,
-        language: "en-GB",
-        limit: 5,
-        placeholder: "Search for Nearby Location",
-      },
-      autocompleteOptions: {
-        key: apiKey,
-        language: "en-GB",
-      },
-    };
-
-    // Set the container to the ID of the div
-    options.container = "#searchBoxContainer";
-
-    var ttSearchBox = new window.tt.plugins.SearchBox(
-      window.tt.services,
-      options
-    );
-
-    ttSearchBox.on("tomtom.searchbox.resultselected", function (data) {
-      const newLocation =
-        String(data.data.result.position.lat) +
-        "," +
-        String(data.data.result.position.lng);
-      document.getElementById("location").value = newLocation;
-      setLocation(newLocation);
-    });
-
-    var searchBoxHTML = ttSearchBox.getSearchBoxHTML();
-    document.getElementById("searchBoxContainer").appendChild(searchBoxHTML);
-  };
-
-  useEffect(() => {
-    if (apiKey) {
-      initializeTomTomSearchBox(apiKey);
-    }
-  }, [apiKey]);
 
   return (
     <>
@@ -222,12 +117,13 @@ const Profile = () => {
       >
         <ThemeProvider theme={theme}>
           <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+            <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
               <Card
                 sx={{
                   maxWidth: "100%",
                   justifyContent: "center",
                   textAlign: "center",
+                  padding: "1em",
                 }}
               >
                 <CardMedia
@@ -235,222 +131,262 @@ const Profile = () => {
                   alt="profile"
                   height="100"
                   image={imageURL}
-                  style={{ maxWidth: "100%", height: "auto" }}
+                  style={{
+                    maxWidth: "80%",
+                    height: "auto",
+                    borderRadius: "50%",
+                    margin: "auto",
+                  }}
                 />
                 <CardContent>
                   <Typography
-                    variant="h5"
+                    variant="h6"
                     component="div"
                     sx={{ fontWeight: "bold" }}
                   >
-                    YOU
+                    {name || "No Name"}
                   </Typography>
                   <Typography
-                    variant="subtitle1"
+                    variant="body2"
                     color="textSecondary"
                     sx={{ fontWeight: "bold" }}
                   >
-                    {userName}
+                    Username: {userName}
                   </Typography>
                   <Typography
-                    variant="subtitle1"
+                    variant="body2"
                     color="textSecondary"
                     sx={{ fontWeight: "bold" }}
                   >
-                    {email}
+                    Email: {email}
                   </Typography>
                   <Typography
-                    variant="subtitle1"
+                    variant="body2"
                     color="textSecondary"
                     sx={{ fontWeight: "bold" }}
                   >
-                    +91 {phoneNumber}
+                    Phone: +91 {phoneNumber}
+                  </Typography>
+                  {address && (
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      Address: {address}
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card
+                sx={{
+                  maxWidth: "100%",
+                  marginBottom: "1em",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  padding: "1em",
+                  marginTop: "1em",
+                  backgroundColor: "#e8f5e9", // Light green background
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{ fontWeight: "bold", color: "#388e3c" }} // Darker green color
+                  >
+                    {isWorking ? "Currently Working" : "Not Working"}
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Card>
-                <CardContent>
-                  <Grid container spacing={2} style={{ marginLeft: "0.1em" }}>
-                    <Grid item xs={10} style={{ marginTop: "1em" }}>
-                      <Typography
-                        variant="h4"
-                        component="div"
-                        sx={{ fontWeight: "bold" }}
-                      >
-                        Profile
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={10} style={{ marginTop: "1em" }}>
-                      <TextField
-                        id="standard-helperText-1"
-                        label="First Name"
-                        value={name}
-                        onChange={(e) => {
-                          setName(e.target.value);
-                        }}
-                        fullWidth
-                        autoComplete="off"
-                        error={justVerify && name === ""}
-                        helperText={
-                          justVerify &&
-                          (name === ""
-                            ? "Please enter a valid name containing only letters."
-                            : "")
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={10} style={{ marginTop: "0.4em" }}>
-                      <TextField
-                        id="standard-helperText-4"
-                        label="Username"
-                        value={userName}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                        fullWidth
-                        autoComplete="off"
-                      />
-                    </Grid>
-                    <Grid item xs={10}>
-                      <TextField
-                        id="outlined-read-only-input-5"
-                        label="Email"
-                        value={email}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                        fullWidth
-                        autoComplete="off"
-                      />
-                    </Grid>
-                    <Grid item xs={10} style={{ marginTop: "0.4em" }}>
-                      <TextField
-                        id="standard-helperText-4"
-                        label="Type"
-                        value={type}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                        fullWidth
-                        autoComplete="off"
-                      />
-                    </Grid>
-                    <Grid item xs={10} style={{ marginTop: "0.4em" }}>
-                      <TextField
-                        id="standard-helperText-1"
-                        label="Address"
-                        value={address}
-                        onChange={(e) => {
-                          setAddress(e.target.value);
-                        }}
-                        fullWidth
-                        autoComplete="off"
-                        error={justVerify && address === ""}
-                        helperText={
-                          justVerify &&
-                          (address === "" ? "address cnnnot be empty." : "")
-                        }
-                        multiline
-                        rows={3}
-                      />
-                    </Grid>
-                    <Grid item xs={10} style={{ marginTop: "0.4em" }}>
-                      <TextField
-                        id="standard-helperText-8"
-                        label="Phone No."
-                        value={phoneNumber}
-                        onChange={(e) => {
-                          validatePhoneNumber(e.target.value);
-                          setPhoneNumber(e.target.value);
-                        }}
-                        fullWidth
-                        autoComplete="off"
-                        error={!isValidPhone && justVerify}
-                        helperText={
-                          justVerify &&
-                          (!isValidPhone
-                            ? "Please enter a 10-digit number."
-                            : "")
-                        }
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      style={{ marginTop: "0.4em" }}
-                      id="searchBoxContainer"
-                    >
-                      <PlaceOutlinedIcon /> Location
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      style={{ marginTop: "0.4em" }}
-                      id="searchBoxContainer"
-                    ></Grid>
 
-                    <Grid></Grid>
-
-                    <Grid item xs={10} style={{ marginTop: "0.4em" }}>
-                      <TextField
-                        id="location"
-                        label="Location"
-                        value={location}
-                        onChange={(e) => {
-                          setLocation(e.target.value);
-                        }}
-                        error={justVerify && location === ""}
-                        helperText={
-                          justVerify &&
-                          (location === "" ? "Please select your location" : "")
-                        }
-                        fullWidth
-                      />
+            {showEditFields && (
+              <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+                <Typography
+                  variant="h4"
+                  component="div"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#388e3c",
+                    marginTop: "1em",
+                    marginBottom: "1em",
+                    textAlign: "center",
+                  }} // Darker green color
+                >
+                  Profile
+                </Typography>
+                <Card>
+                  <CardContent>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Name"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          fullWidth
+                          autoComplete="off"
+                          error={justVerify && name === ""}
+                          helperText={
+                            justVerify && name === ""
+                              ? "Please enter a valid name."
+                              : ""
+                          }
+                          color="success"
+                          size="small"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: 25,
+                              fontWeight: "bold",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Username"
+                          value={userName}
+                          onChange={(e) => setUserName(e.target.value)}
+                          fullWidth
+                          autoComplete="off"
+                          error={justVerify && userName === ""}
+                          helperText={
+                            justVerify && userName === ""
+                              ? "Please enter a valid username."
+                              : ""
+                          }
+                          color="success"
+                          size="small"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: 25,
+                              fontWeight: "bold",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          fullWidth
+                          autoComplete="off"
+                          error={justVerify && email === ""}
+                          helperText={
+                            justVerify && email === ""
+                              ? "Please enter a valid email."
+                              : ""
+                          }
+                          color="success"
+                          size="small"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: 25,
+                              fontWeight: "bold",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Phone Number"
+                          value={phoneNumber}
+                          onChange={(e) => {
+                            setPhoneNumber(e.target.value);
+                            validatePhoneNumber(e.target.value);
+                          }}
+                          fullWidth
+                          autoComplete="off"
+                          error={justVerify && !isValidPhone}
+                          helperText={
+                            justVerify && !isValidPhone
+                              ? "Please enter a valid phone number."
+                              : ""
+                          }
+                          color="success"
+                          size="small"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: 25,
+                              fontWeight: "bold",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          label="Address"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          fullWidth
+                          autoComplete="off"
+                          error={justVerify && address === ""}
+                          helperText={
+                            justVerify && address === ""
+                              ? "Please enter a valid address."
+                              : ""
+                          }
+                          color="success"
+                          size="small"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: 25,
+                              fontWeight: "bold",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          label="Birthdate"
+                          value={birthdate}
+                          onChange={(e) => setBirthdate(e.target.value)}
+                          fullWidth
+                          autoComplete="off"
+                          color="success"
+                          size="small"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: 25,
+                              fontWeight: "bold",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={showEditFields}
+                              onChange={(e) =>
+                                setShowEditFields(e.target.checked)
+                              }
+                            />
+                          }
+                          label="Edit Profile"
+                        />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <div style={{ textAlign: "center", marginTop: "1em" }}>
+                  </CardContent>
+                  <CardActions>
                     <Button
                       variant="contained"
-                      color="success"
+                      color="primary"
                       onClick={UpdateProfile}
-                      style={{ marginTop: "1em", backgroundColor: "#2A386B" }}
-                      sx={{ fontFamily: "Quicksand", fontWeight: "bold" }}
+                      disabled={loading}
                     >
-                      {!loading ? "UPDATE" : "Updating..."}
+                      {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                      ) : (
+                        "Update"
+                      )}
                     </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            spacing={3}
-            justifyContent="center"
-            style={{ marginTop: "5em" }}
-          >
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={6}
-              lg={4}
-              xl={4}
-              style={{ textAlign: "center" }}
-            >
-              <Button
-                variant="contained"
-                color="error"
-                onClick={LogOut}
-                style={{ marginTop: "1em" }}
-                sx={{ fontFamily: "Quicksand", fontWeight: "bold" }}
-              >
-                Logout &nbsp;
-                <LogoutIcon />
-              </Button>
-            </Grid>
+                  </CardActions>
+                </Card>
+              </Grid>
+            )}
           </Grid>
         </ThemeProvider>
       </div>
