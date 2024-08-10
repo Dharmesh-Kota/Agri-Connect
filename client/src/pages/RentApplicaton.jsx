@@ -9,11 +9,12 @@ import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS styles
 import DropdownWithSelectedOptions from "../components/DropdownWithSelectedOptions";
 
+
 const chipsContainerStyle = {
     display: 'flex',
     flexWrap: 'wrap', // Allows wrapping if there's not enough space
     gap: '8px', // Spacing between chips
-};
+}
 
 
 const dummy_data = [
@@ -106,6 +107,7 @@ const dummy_data = [
 
 
 const RentApplication = () => {
+
     const [openDialog, setOpenDialog] = useState(true);
     const [useCurrentLocation, setUseCurrentLocation] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
@@ -113,10 +115,6 @@ const RentApplication = () => {
     const [maxValue , setMaxValue] = useState();
 
     const [selectedOptions, setSelectedOptions] = useState([]);
-    
-
-    
-
     
     // const handleChoiceChange = () => {
     //     setApplications([]);
