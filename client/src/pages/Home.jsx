@@ -15,6 +15,8 @@ import { Box } from "@mui/material";
 import rentimg from "../images/rent.png";
 import hireimg from "../images/hire.jpg";
 
+import LandingPage from "../components/LandingPage";
+
 const ImgcontainerStyle = {
   height: "40%",
   width: "100%",
@@ -138,17 +140,7 @@ function Home() {
 
   return (
     <>
-      <div style={ImgcontainerStyle}>
-        <img
-          src="https://via.placeholder.com/500x250"
-          alt="Project Image 1"
-          style={imageStyle}
-        />
-        <div style={welcometext}>
-          <div style={{ fontSize: "6rem" }}>Welcome to</div>
-          <div style={{ fontSize: "7.5rem" }}>AgriConnect</div>
-        </div>
-      </div>
+      <LandingPage />
       <div></div>
       <div style={containerStyle}>
         <div style={imageStyle}>
