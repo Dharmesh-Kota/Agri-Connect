@@ -82,7 +82,7 @@ export const create_work_application = async (req, res) => {
     try {
         
         const user = await User.findById(req.user.id);
-        if (user.working != '') return res.status(400).json({ message: 'You are already working so you cant appoint!' });
+        if (user.working != '' && user.working != 'hirer') return res.status(400).json({ message: 'You are already working so you cant appoint!' });
         if (req.body.workers_required <= 0) return res.status(400).json({ message: 'Invalid number of workers!' });
         if (req.body.closing_date < new Date()) return res.status(400).json({ message: 'Invalid closing date!' });
         if (req.body.labour < 0) return res.status(400).json({ message: 'Invalid labour cost!' });
@@ -121,7 +121,7 @@ export const apply_for_work = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         const application_id = req.params.application_id;
-        if (user.working != '') return res.status(400).json({ message: 'You are already working so you cant apply!' });
+        if (user.working != '' && user.working != 'hirer') return res.status(400).json({ message: 'You are already working so you cant apply!' });
         let valid = await WorkApplication.findOne({application_id: application_id}, {applicants: 1});
         if (valid.applicants.includes(user.username)) return res.status(400).json({ message: 'You have already applied!' });
 
@@ -143,7 +143,7 @@ export const apply_for_work = async (req, res) => {
 export const view_applications = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (user.working != '') return res.status(400).json({ message: 'You are already working so you cant view applications!' });
+        if (user.working != '' && user.working != 'hirer') return res.status(400).json({ message: 'You are already working so you cant view applications!' });
 
         let applications = await WorkApplication.find(
             { hirer: req.user.username, status: 'open' },
@@ -156,23 +156,24 @@ export const view_applications = async (req, res) => {
                 { application_id: application.application_id },
                 { worker: 1 }
             );
-            if (!hired_workers) {
-                application.rating = 0;
-                application.hired_workers = [];
-                continue;
+            
+            let applicantsWithRatings = [];
+            for (let applicant of application.applicants) {
+
+                let rating = await HirerWorker.find({worker: applicant, status: 'completed'}, {worker_rating: 1});
+                let avg_rating = 0, count = 0;
+                for (let rate of rating) {
+                    if (rate.worker_rating == 0) continue;
+                    avg_rating += rate.worker_rating;
+                    count++;
+                }
+                avg_rating = avg_rating / count;
+                applicantsWithRatings.push({ applicant: applicant, rating: avg_rating });
+
             }
-            for (let worker of hired_workers) {
-                let worker_rating = await HirerWorker.find(
-                    { worker: worker.worker },
-                    { worker_rating: 1 }
-                );
-                
-                if (worker_rating.worker_rating == 0) continue;
-                avg_rating += worker_rating.worker_rating;
-                count++;
-            }
-            avg_rating = avg_rating / count;
-            application.rating = avg_rating;
+        
+            // Replace the applicants array with the one that includes ratings
+            application.applicants = applicantsWithRatings;
             application.hired_workers = hired_workers;
         }
         
