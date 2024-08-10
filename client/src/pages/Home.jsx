@@ -6,78 +6,118 @@ import "../CSS/AboutUs.css";
 
 import Button from '@mui/material/Button';
 import { Box, Typography, Grid } from "@mui/material";
+import rentimg from "../images/rent.png"
+import hireimg from "../images/hire.jpg"
 
 const ImgcontainerStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    border: "3px solid black",
-    borderRadius: "15px",
     height: "40%",
-    width:"80%",
-    margin:"auto"
+    width:"100%",
 }
+const welcometext = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)', // Centers the text
+    color: '#ffffff',
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', // Adds shadow for better readability
+    textAlign: 'center'
+  };
 
-const HomeImg = {
-    width: "100%",
-    height: "100%",
-}
 
+const imageStyle = {
+    width: '100%',
+    height: 'auto',
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  };
 
-const buttonStyle = {
-    padding: "12px 24px",         // Increased padding for larger buttons
-    fontSize: "25px",             // Increased font size for better visibility
-    borderRadius: "15px",         // Rounded corners
-    backgroundColor: "#1976d2",   // Custom background color
-    color: "#fff",                // White text color
-    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Soft shadow for depth
-    textTransform: "none",        // Prevent all caps text
-    transition: "all 0.3s ease",  // Smooth transition for hover effects
-    '&:hover': {
-      backgroundColor: "#115293", // Darker shade on hover
-    },
+  const containerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column', // Use 'column' if you want a vertical layout
+    gap: '20px', // Space between the two sections
+    padding: '20px'
   };
   
-
-
-
-// const ProjectDetailsContainer = {
-//     display:"flex",
-//     alignItems:"center",
-//     justifyContent:"center"
-// }
-
-// const ProjectImgContainer = {
-
-// }
-
-// const ProjectTextContainer = {
-
-// }
-
-
-const containerStyle = {
-    margin: "50px auto",
-    padding:"50px auto",
-    width: "80%",
+  const textrentStyle = {
+    position: 'absolute',
+    right: '15%',
+    bottom: '20%',
+    transform: 'translateY(-50%)',
+    color: '#ffffff',
+    fontSize: '5rem',
+    fontWeight: 'bold',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
   };
   
-  const zigzagItemStyle = {
-    padding: "20px",
-    border: "2px solid #ccc",
-    borderRadius: "10px",
-    marginBottom: "30px",
+  const ButtonrentStyle = {
+    position: 'absolute',
+    right: '27.5%',
+    bottom: '20%',
+    padding: '10px 20px',
+    fontSize: '1.5rem',
+    color: '#000000',
+    fontWeight: 'bold', // Make the font bold
+    backgroundColor: 'transparent', // Remove background color
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    boxShadow: '5px 5px 7px rgba(0, 0, 0, 0.3)'
+};
+  
+  const texthireStyle = {
+    position: 'absolute',
+    left: '15%',
+    bottom: '20%',
+    transform: 'translateY(-50%)',
+    color: '#ffffff',
+    fontSize: '5rem',
+    fontWeight: 'bold',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
   };
   
-  const textStyle = {
-    fontSize: "18px",
-    color: "#333",
+  const ButtonhireStyle = {
+    position: 'absolute',
+    left: '27.5%',
+    bottom: '20%',
+    padding: '10px 20px',
+    fontSize: '1.5rem',
+    color: '#000000',
+    fontWeight: 'bold', // Make the font bold
+    backgroundColor: 'transparent', // Remove background color
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
+};
+
+const contentStyle = {
+    textAlign: 'justify', // Aligns text justification
+    padding: '20px',
+    width: '80%', // Use lowercase 'width' instead of 'Width'
+    margin: '20px auto',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '10px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
   };
   
-  const imageStyle = {
-    width: "100%",
-    height: "auto",
-    borderRadius: "10px",
+  const headingStyle = {
+    fontSize: '2.5rem',
+    margin: '0',
+    color: '#333'
+  };
+  
+  const paragraphStyle = {
+    fontSize: '1.2rem',
+    color: '#555',
+    lineHeight: '1.6',
+    textAlign: 'justify', // Justifies text within paragraphs
+    margin: '0 0 20px' // Adds spacing between paragraphs
   };
 
 function Home() {
@@ -91,66 +131,40 @@ function Home() {
             alt="Project Image 1"
             style={imageStyle}
             />
+           <div style={welcometext}>
+        <div style={{ fontSize: '6rem' }}>Welcome to</div>
+        <div style={{ fontSize: '7.5rem' }}>AgriConnect</div>
+      </div>
         </div>
         <div>
-      <Box sx={{ '& button': { m: 2 } }}> {/* Increased margin for spacing */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Button size="large" sx={buttonStyle} onClick={()=>{navigate("/find_work")}}>Find Work</Button>
-          <Button size="large" sx={buttonStyle} onClick={()=>{navigate("/rent_machine")}}>Rent Machine</Button>
+    </div>
+    <div style={containerStyle}>
+        <div style={imageStyle}>
+        <img src={hireimg} alt="Background" style={{ width: '80%', height: '500px' }} />
+        <div style={texthireStyle}>
+            Hire & Get Hired
         </div>
-      </Box>
+        <button style={ButtonhireStyle}>Hiring</button>
+        </div>
+        <div style={imageStyle}>
+        <img src={rentimg} alt="Background" style={{ width: '80%', height: '500px' }} />
+        <div style={textrentStyle}>
+            Acquire & Lease
+        </div>
+        <button style={ButtonrentStyle}>Rent Machine</button>
+        </div>
     </div>
 
-        <Box style={containerStyle}>
-      <Grid container spacing={4} style={zigzagItemStyle}>
-        {/* First Row: Image on Left, Text on Right */}
-        <Grid item xs={12} md={6}>
-          <img
-            src="https://via.placeholder.com/300"
-            alt="Project Image 1"
-            style={imageStyle}
-            />
-        </Grid>
-        <Grid item xs={12} md={6} style={textStyle}>
-          <Typography>
-            This is the description for the first image. The text is on the right.
-          </Typography>
-        </Grid>
-      </Grid>
 
-      <Grid container spacing={4} style={zigzagItemStyle}>
-        {/* Second Row: Text on Left, Image on Right */}
-        <Grid item xs={12} md={6} style={textStyle}>
-          <Typography>
-            This is the description for the second image. The text is on the left.
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <img
-            src="https://via.placeholder.com/300"
-            alt="Project Image 2"
-            style={imageStyle}
-            />
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={4} style={zigzagItemStyle}>
-        {/* Third Row: Image on Left, Text on Right */}
-        <Grid item xs={12} md={6}>
-          <img
-            src="https://via.placeholder.com/300"
-            alt="Project Image 3"
-            style={imageStyle}
-            />
-        </Grid>
-        <Grid item xs={12} md={6} style={textStyle}>
-          <Typography>
-            This is the description for the third image. The text is on the right.
-          </Typography>
-        </Grid>
-      </Grid>
-    </Box>
-
+    <div style={contentStyle}>
+      <h1 style={headingStyle}>What We Do</h1>
+      <p style={paragraphStyle}>
+        At AgriConnect, we bridge the gap between technology and agriculture. Our platform offers innovative solutions to connect farmers with essential resources, equipment rentals, and expert advice. Whether you're looking to hire machinery, access advanced tools, or gain insights into the latest agricultural practices, AgriConnect provides a seamless and efficient way to support your farming needs.
+      </p>
+      <p style={paragraphStyle}>
+        Our goal is to empower farmers with the tools and knowledge they need to thrive in a rapidly evolving industry. Join us in transforming agriculture and achieving greater productivity and sustainability for the future.
+      </p>
+    </div>
         </>
     );
 }
