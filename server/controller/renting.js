@@ -1,5 +1,6 @@
 import User from '../models/user.js';
 import RentMachinery from '../models/rent_machinery.js';
+import axios from 'axios';
 
 export const rent_application = async (req, res) => {
     try {
@@ -20,10 +21,10 @@ export const rent_application = async (req, res) => {
         for (let application of applications) {
             if (application.quantity_available == 0) continue;
             
-            const apiKey = process.env.apiKey;
+            const apiKey = process.env.API_KEY;
 
             const startCoordinates = location;
-            let endCoordinates = await User.findOne(application.owner, {location: 1});
+            let endCoordinates = await User.findOne({username:application.owner}, {location: 1});
             endCoordinates = endCoordinates.location;
 
             if (!endCoordinates) {
@@ -43,7 +44,7 @@ export const rent_application = async (req, res) => {
                 const travelTime = route.summary.travelTimeInSeconds / 60; // in mins
 
                 if (distance < 25) {
-                    let owner_details = await User.findOne(hirer.hirer, {name: 1, email: 1});
+                    let owner_details = await User.findOne({username: application.owner}, {name: 1, email: 1});
                     application.distance = distance;
                     application.travelTime = travelTime;
                     application.hirer_name = owner_details.name;
@@ -54,6 +55,8 @@ export const rent_application = async (req, res) => {
                 console.error('No route found.');
             }
         }
+
+        return res.status(200).send({ applications: feasible_applications });
 
     } catch (error) {
         console.log(error.message);
@@ -83,8 +86,7 @@ export const create_rent_application = async (req, res) => {
             discription: req.body.discription,
             category: req.body.category,
             rent: req.body.rent,
-            quantity_available: req.body.quantity_available,
-            machinery_holder: req.body.machinery_holder
+            quantity_available: req.body.quantity_available
         });
 
         return res.status(200).send({ message: 'Rent application created successfully!' });
@@ -159,6 +161,8 @@ export const update_application = async (req, res) => {
             rent: req.body.rent,
             quantity_available: req.body.quantity_available
         });
+
+        return res.status(200).send({ message: 'Rent application updated successfully!' });
 
     } catch (error) {
         console.log(error.message);
