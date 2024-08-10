@@ -31,7 +31,8 @@ function Navbar() {
   };
 
   const navbarStyle = {
-    position: "sticky",
+    position: "fixed",
+    width: "100%",
     top: "0%",
     zIndex: 100,
     backdropFilter: "blur(10px)",
