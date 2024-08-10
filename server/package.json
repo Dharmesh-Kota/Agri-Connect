@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Web application for hackout-24",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "author": "Team Blitz",
   "license": "ISC",
