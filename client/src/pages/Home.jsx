@@ -151,7 +151,6 @@ function Home() {
       <div style={contentStyle}>
         <h1 style={headingStyle}>
           <Typography
-            variant="h5"
             fontSize="xx-large"
             fontWeight="bold"
             sx={{ color: "#134611" }}
@@ -164,11 +163,7 @@ function Home() {
             <Card style={cardStyle}>
               <CardContent>
                 <WorkIcon style={iconStyle} />
-                <Typography
-                  variant="h5"
-                  fontWeight="bold"
-                  sx={{ color: "#134611" }}
-                >
+                <Typography fontWeight="bold" sx={{ color: "#134611" }}>
                   Connect
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
@@ -182,11 +177,7 @@ function Home() {
             <Card style={cardStyle}>
               <BuildIcon style={iconStyle} />
               <CardContent>
-                <Typography
-                  variant="h5"
-                  fontWeight="bold"
-                  sx={{ color: "#134611" }}
-                >
+                <Typography fontWeight="bold" sx={{ color: "#134611" }}>
                   Rent Equipment
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
@@ -200,11 +191,7 @@ function Home() {
             <Card style={cardStyle}>
               <InsightsIcon style={iconStyle} />
               <CardContent>
-                <Typography
-                  variant="h5"
-                  fontWeight="bold"
-                  sx={{ color: "#134611" }}
-                >
+                <Typography fontWeight="bold" sx={{ color: "#134611" }}>
                   Innovate
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
