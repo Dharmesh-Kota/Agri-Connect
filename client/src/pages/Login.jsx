@@ -66,10 +66,10 @@ export default function Login() {
 
     try {
       const results = await axios.post(
-        (process.env.REACT_APP_BACKEND_API || "http://localhost:8000") +
+        (process.env.BACKEND_API || "http://localhost:8000") +
           "/create-session",
         {
-          username: emailUsername,
+          emailUsername,
           password,
         }
       );

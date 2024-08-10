@@ -25,7 +25,11 @@ const userSchema = new mongoose.Schema({
     address: String,
     birthdate: Date,
     experience: String,
-    contact: String
+    contact: String,
+    working: {
+        type: String,
+        default: ''
+    }
 },{
     timestamps: true
 });

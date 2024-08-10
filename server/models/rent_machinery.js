@@ -11,18 +11,29 @@ const rentMachinerySchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['ongoing', 'completed'],
+        enum: [
+            'Tractors',
+            'Plowing & Tilling Equipment',
+            'Planting & Seeding Equipment',
+            'Irrigation Equipment',
+            'Harvesting Equipment',
+            'Crop Protection Equipment',
+            'Hay & Forage Equipment',
+            'Material Handling & Transport Equipment'
+        ],
         required: true
     },
-    worker_rating: {
+    rent: {
         type: Number,
         required: true,
-        default: 0
     },
-    hirer_rating: {
+    quantity_available: {
         type: Number,
         required: true,
-        default: 0
+        default: 1
+    },
+    machineryHolder: {
+        type: [String]
     }
 },{
     timestamps: true
