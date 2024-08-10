@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-// import '../CSS/Navbar.css';
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -9,10 +8,12 @@ import IconButton from "@mui/material/IconButton";
 import { Button } from "@mui/material";
 import { useAuth } from "../context/auth";
 import { useNavigate } from "react-router-dom";
-import config from "../config.js";
+import Logo from "../images/logo.png";
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
+  const [showNavbar, setShowNavbar] = useState(true);
   const { isLoggedIn, setIsLoggedIn, LogOut } = useAuth();
   const navigate = useNavigate();
 
@@ -24,11 +25,26 @@ function Navbar() {
     setAnchorEl(null);
   };
 
+  const handleScroll = () => {
+    const currentScrollPos = window.pageYOffset;
+    setShowNavbar(prevScrollPos > currentScrollPos || currentScrollPos < 10);
+    setPrevScrollPos(currentScrollPos);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [prevScrollPos]);
+
   const navbarStyle = {
     position: "fixed",
     width: "100%",
-    top: "0%",
+    top: "0",
     zIndex: 100,
+    transition: "top 0.3s",
+    top: showNavbar ? "0" : "-80px", // Adjust based on navbar height
     backdropFilter: "blur(10px)",
     margin: 0,
     overflowY: "hidden",
@@ -36,7 +52,7 @@ function Navbar() {
   };
 
   return (
-    <nav className=" navbar navbar-expand-lg p-2" style={navbarStyle}>
+    <nav className="navbar navbar-expand-lg p-0" style={navbarStyle}>
       <div className="container-fluid">
         <Link
           className="navbar-brand"
@@ -47,7 +63,7 @@ function Navbar() {
             fontFamily: "Quicksand",
           }}
         >
-          <i className="fa-solid fa-seedling"></i> Compostify
+        <img src={Logo} alt="AgriConnect Logo" style={{ width: '55px', height: '45px' }} /> AgriConnect
         </Link>
         <button
           className="navbar-toggler"

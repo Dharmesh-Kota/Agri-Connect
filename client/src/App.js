@@ -10,6 +10,9 @@ import AboutUS from "./pages/AboutUs";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import RentApplicaton from "./pages/RentApplicaton";
 import WorkApplications from "./pages/WorkApplications";
+import img2 from "./images/img2.png";
+import { Box, Grid } from "@mui/material";
+import HomePage from "./pages/HomePage";
 import ViewWorkApplications from "./pages/ViewWorkApplications";
 
 function App() {
@@ -35,14 +38,14 @@ function App() {
       <ThemeProvider theme={theme}>
         {!isHiddenPath && <Navbar />}
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          {/* <Route exact path="/" element={<Home />} /> */}
+          <Route exact path="/" element={<HomePage />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/aboutus" element={<AboutUS />} />
           <Route exact path="/rent-application" element={<RentApplicaton />} />
           <Route exact path="/work-applications" element={<WorkApplications />} />
-          <Route exact path="/view-work-applications" element={<ViewWorkApplications />} />
         </Routes>
         {!isHiddenPath && <Footer />}
       </ThemeProvider>

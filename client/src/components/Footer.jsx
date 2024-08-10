@@ -6,7 +6,6 @@ import {
   MDBCol,
   MDBIcon,
 } from "mdb-react-ui-kit";
-import config from "../config.js";
 
 export default function Footer() {
   return (
@@ -15,39 +14,53 @@ export default function Footer() {
       <div className="mt-5">&nbsp;</div>
       <MDBFooter
         className="text-center text-lg-start text-muted"
-        style={{ backgroundColor: "#DFFFFF" }}
+        style={{ backgroundColor: "#f0fff1" }}
       >
-        <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+        <section className="d-flex justify-content-center justify-content-lg-between p-2 border-bottom">
           <div className="me-5 d-none d-lg-block">
             <span>Get connected with us on social networks:</span>
           </div>
 
           <div>
-            <a href="#" className="me-4 text-reset">
+            <a
+              href="https://github.com/Dharmesh-Kota/Agri-Connect"
+              className="me-4 text-reset"
+            >
               <MDBIcon fab icon="youtube" />
             </a>
-            <a href="#" className="me-4 text-reset">
+            <a
+              href="https://github.com/Dharmesh-Kota/Agri-Connect"
+              className="me-4 text-reset"
+            >
               <MDBIcon fab icon="instagram" />
             </a>
-            <a href="#" className="me-4 text-reset">
+            <a
+              href="https://github.com/Dharmesh-Kota/Agri-Connect"
+              className="me-4 text-reset"
+            >
               <MDBIcon fab icon="linkedin" />
             </a>
-            <a href="#" className="me-4 text-reset">
+            <a
+              href="https://github.com/Dharmesh-Kota/Agri-Connect"
+              className="me-4 text-reset"
+            >
               <MDBIcon fab icon="github" />
             </a>
           </div>
         </section>
 
         <section className="">
-          <MDBContainer className="text-center text-md-start mt-5">
-            <MDBRow className="mt-3">
-              <MDBCol md="3" lg="4" xl="3" className="mx-auto mb-4">
-                <h6 className="text-uppercase fw-bold mb-4">
+          <MDBContainer className="text-center text-md-start mt-4">
+            <MDBRow>
+              <MDBCol md="3" lg="4" xl="3" className="mx-auto">
+                <h6 className="text-uppercase fw-bold">
                   <MDBIcon icon="gem" className="me-3" />
                   TEAM-BLITZ
                 </h6>
                 <p>
-                Designed with passion and dedication by Team Blitz for the <strong>HACK-WITH-INDIA</strong> hackathon. Our team's hard work and eagerness shine through in every detail of this platform. Thank you for being a part of our journey.
+                  Crafted with passion by Team Blitz for{" "}
+                  <strong>HackOut-2024</strong>, showcasing our dedication in
+                  every detail.
                 </p>
               </MDBCol>
               <MDBCol md="4" lg="3" xl="3" className="mx-auto mb-md-0 mb-4">
@@ -60,20 +73,16 @@ export default function Footer() {
                   <MDBIcon icon="envelope" className="me-3" />
                   abc@daiict.ac.in
                 </p>
-                <p>
-                  <MDBIcon icon="phone" className="me-3" />
-                  (+91) 9999999999
-                </p>
               </MDBCol>
             </MDBRow>
           </MDBContainer>
         </section>
 
-        <div
-          className="text-center p-4"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
-        >
-          <a className="text-reset fw-bold" href="https://github.com/Dharmesh-Kota/HackWithIndia">
+        <div className="text-center p-2" style={{ backgroundColor: "#b7e4c7" }}>
+          <a
+            className="text-reset fw-bold"
+            href="https://github.com/Dharmesh-Kota/Agri-Connect"
+          >
             TEAM-BLITZ
           </a>
         </div>
