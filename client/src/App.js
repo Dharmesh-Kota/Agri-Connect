@@ -14,6 +14,7 @@ import img2 from "./images/img2.png";
 import { Box, Grid } from "@mui/material";
 import HomePage from "./pages/HomePage";
 import ViewWorkApplications from "./pages/ViewWorkApplications";
+import ViewRentApplications from "./pages/ViewRentApplications";
 
 function App() {
   const theme = createTheme({
@@ -47,6 +48,7 @@ function App() {
           <Route exact path="/rent-applications" element={<RentApplicaton />} />
           <Route exact path="/work-applications" element={<WorkApplications />} />
           <Route exact path="/view-work-applications" element={<ViewWorkApplications />} />
+          <Route exact path="/view-rent-applications" element={<ViewRentApplications />} />
         </Routes>
         {!isHiddenPath && <Footer />}
       </ThemeProvider>
