@@ -48,6 +48,16 @@ export const work_application = async (req, res) => {
 
                 if (distance < 50) {
                     let hirer_details = await User.findOne({username: hirer.hirer}, {name: 1, email: 1});
+                    let rating = await WorkApplication.findOne({hirer: hirer.hirer}, {application_id: 1});
+                    let avg_rating = 0, count = 0;
+                    for (let rate of rating) {
+                        let worker_rating = await HirerWorker.findOne({application_id: rate.application_id}, {hirer_rating: 1});
+                        if (worker_rating.hirer_rating == 0) continue;
+                        avg_rating += worker_rating.hirer_rating;
+                        count++;
+                    }
+                    avg_rating = avg_rating / count;
+                    hirer.rating = avg_rating;
                     hirer.distance = distance;
                     hirer.travelTime = travelTime;
                     hirer.hirer_name = hirer_details.name;
@@ -135,12 +145,37 @@ export const view_applications = async (req, res) => {
         const user = await User.findById(req.user.id);
         if (user.working != '') return res.status(400).json({ message: 'You are already working so you cant view applications!' });
 
-        let applications = await WorkApplication.find({hirer: req.user.username, status: 'open'}, {application_id: 1, description: 1, workers_required: 1, closing_date: 1, labour: 1, applicants: 1});
+        let applications = await WorkApplication.find(
+            { hirer: req.user.username, status: 'open' },
+            { application_id: 1, description: 1, workers_required: 1, closing_date: 1, labour: 1, applicants: 1 }
+        ).lean();
+        
         for (let application of applications) {
-            let hired_workers = await HirerWorker.find({application_id: application.application_id}, {worker: 1});
+            let avg_rating = 0, count = 0;
+            let hired_workers = await HirerWorker.findOne(
+                { application_id: application.application_id },
+                { worker: 1 }
+            );
+            if (!hired_workers) {
+                application.rating = 0;
+                application.hired_workers = [];
+                continue;
+            }
+            for (let worker of hired_workers) {
+                let worker_rating = await HirerWorker.find(
+                    { worker: worker.worker },
+                    { worker_rating: 1 }
+                );
+                
+                if (worker_rating.worker_rating == 0) continue;
+                avg_rating += worker_rating.worker_rating;
+                count++;
+            }
+            avg_rating = avg_rating / count;
+            application.rating = avg_rating;
             application.hired_workers = hired_workers;
         }
-
+        
         return res.status(201).json({ applications: applications });
 
     } catch (error) {

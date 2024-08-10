@@ -12,52 +12,64 @@ const ViewWorkApplications = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const dummy_data = [
-    {
-      id: 1,
-      title: "Software Engineer",
-      company: "Tech Corp",
-      workersRequired: 5,
-      closingDate: "2024-08-31",
-      description:
-        "A software engineer position at Tech Corp, focusing on building scalable applications.",
-      amountPerDay: "200",
-      status: "Open",
-      applicants: [
-        "alice",
-        "bob",
-        "charlie",
-        "alice",
-        "bob",
-        "charlie",
-        "alice",
-        "bob",
-        "charlie",
-        "alice",
-        "bob",
-        "charlie",
-      ], // Dummy applicant usernames
-      hired: ["david"], // Dummy hired applicant usernames
-    },
-    {
-      id: 2,
-      title: "Data Scientist",
-      company: "Data Inc",
-      workersRequired: 3,
-      closingDate: "2024-09-15",
-      description:
-        "A data scientist role at Data Inc, involving data analysis and machine learning.",
-      amountPerDay: "250",
-      status: "Open",
-      applicants: ["eve", "frank"], // Dummy applicant usernames
-      hired: [], // No hired applicants yet
-    },
-  ];
+  // const dummy_data = [
+  //   {
+  //     id: 1,
+  //     title: "Software Engineer",
+  //     company: "Tech Corp",
+  //     workersRequired: 5,
+  //     closingDate: "2024-08-31",
+  //     description:
+  //       "A software engineer position at Tech Corp, focusing on building scalable applications.",
+  //     amountPerDay: "200",
+  //     status: "Open",
+  //     applicants: [
+  //       "alice",
+  //       "bob",
+  //       "charlie",
+  //       "alice",
+  //       "bob",
+  //       "charlie",
+  //       "alice",
+  //       "bob",
+  //       "charlie",
+  //       "alice",
+  //       "bob",
+  //       "charlie",
+  //     ], // Dummy applicant usernames
+  //     hired: ["david"], // Dummy hired applicant usernames
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Data Scientist",
+  //     company: "Data Inc",
+  //     workersRequired: 3,
+  //     closingDate: "2024-09-15",
+  //     description:
+  //       "A data scientist role at Data Inc, involving data analysis and machine learning.",
+  //     amountPerDay: "250",
+  //     status: "Open",
+  //     applicants: ["eve", "frank"], // Dummy applicant usernames
+  //     hired: [], // No hired applicants yet
+  //   },
+  // ];
 
   const fetchApplications = async () => {
     try {
-      // Your fetch logic here
-      setApplications(dummy_data);
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      };
+
+      const results = await axios.get(
+        (process.env.BACKEND_API || "http://localhost:8000") +
+          `/view-work-applications`,
+        { headers }
+      );
+
+      console.log(results.data.applications);
+
+      setApplications(results.data.applications);
     } catch (error) {
       toast.error("Failed to fetch applications.");
     }
@@ -72,14 +84,52 @@ const ViewWorkApplications = () => {
     setIsModalOpen(false);
   };
 
-  const handleEditApplication = (id) => {
-    toast.success(`Edit Application ${id}`);
-    // Add your edit logic here
+  const handleEditApplication = async (application_id) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      };
+
+      // const results = await axios.post(
+      //   (config.BACKEND_API || "http://localhost:8000") +
+      //     `/update-work-application`,
+      //   { headers }
+      // );
+
+      // console.log(results);
+
+      // console.log("Form submitted:", response.data);
+      toast.success("Application submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error submitting application. Please try again.");
+    }
   };
 
-  const handleDeleteApplication = (id) => {
-    toast.success(`Delete Application ${id}`);
-    // Add your delete logic here
+  const handleDeleteApplication = async (application_id) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      };
+
+      const results = await axios.get(
+        (process.env.BACKEND_API || "http://localhost:8000") +
+          `/delete-work-application/${application_id}`,
+        { headers }
+      );
+
+      setApplications((apps) =>
+        apps.filter((app) => app.application_id !== application_id)
+      );
+
+      // console.log("Form submitted:", response.data);
+      toast.success("Application deleted successfully!");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error deleting application. Please try again.");
+    }
   };
 
   const handleApplicantStatusChange = async (
@@ -144,22 +194,21 @@ const ViewWorkApplications = () => {
     <>
       <Container sx={{ pt: "5em" }}>
         <Grid container spacing={4}>
-          {applications.map((app) => (
-            <Grid item xs={12} key={app.id} data-aos="fade-up">
-              <ViewApplicationCard
-                title={app.title}
-                company={app.company}
-                workersRequired={app.workersRequired}
-                closingDate={app.closingDate}
-                description={app.description}
-                amountPerDay={app.amountPerDay}
-                status={app.status}
-                onViewApplicants={() => handleViewApplicants(app)}
-                onEdit={() => handleEditApplication(app.id)}
-                onDelete={() => handleDeleteApplication(app.id)}
-              />
-            </Grid>
-          ))}
+          {applications &&
+            applications.map((app) => (
+              <Grid item xs={12} key={app._id} data-aos="fade-up">
+                <ViewApplicationCard
+                  workersRequired={app.workers_required}
+                  closingDate={app.closing_date}
+                  description={app.description}
+                  amountPerDay={app.labour}
+                  status={"Open"}
+                  onViewApplicants={() => handleViewApplicants(app)}
+                  onEdit={() => handleEditApplication(app.application_id)}
+                  onDelete={() => handleDeleteApplication(app.application_id)}
+                />
+              </Grid>
+            ))}
         </Grid>
       </Container>
 
