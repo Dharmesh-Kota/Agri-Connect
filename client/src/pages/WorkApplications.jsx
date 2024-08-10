@@ -18,6 +18,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
+import { useAuth } from "../context/auth";
+import config from "../config.js";
+
 const WorkApplications = () => {
   const [openDialog, setOpenDialog] = useState(true);
   const [useCurrentLocation, setUseCurrentLocation] = useState(null);
@@ -25,49 +28,64 @@ const WorkApplications = () => {
   const [applications, setApplications] = useState([]);
   const [formOpen, setFormOpen] = useState(false);
   const [formValues, setFormValues] = useState({
-    workersRequired: "",
+    workers_required: "",
     description: "",
-    closingDate: "",
+    closing_date: "",
     labour: "",
   });
   const [formErrors, setFormErrors] = useState({
-    workersRequired: false,
+    workers_required: false,
     description: false,
-    closingDate: false,
+    closing_date: false,
     labour: false,
   });
 
-  const dummy_data = [
-    {
-      id: 1,
-      title: "Software Engineer",
-      company: "Tech Corp",
-      personName: "John Doe",
-      applicationId: "APP1234",
-      workersRequired: 5,
-      closingDate: "2024-08-31",
-      description:
-        "A software engineer position at Tech Corp, focusing on building scalable applications.",
-      amountPerDay: "200",
-    },
-    {
-      id: 2,
-      title: "Data Scientist",
-      company: "Data Inc",
-      personName: "Jane Smith",
-      applicationId: "APP5678",
-      workersRequired: 3,
-      closingDate: "2024-09-15",
-      description:
-        "A data scientist role at Data Inc, involving data analysis and machine learning.",
-      amountPerDay: "250",
-    },
-  ];
+  // const dummy_data = [
+  //   {
+  //     id: 1,
+  //     title: "Software Engineer",
+  //     company: "Tech Corp",
+  //     personName: "John Doe",
+  //     applicationId: "APP1234",
+  //     workers_required: 5,
+  //     closing_date: "2024-08-31",
+  //     description:
+  //       "A software engineer position at Tech Corp, focusing on building scalable applications.",
+  //     amountPerDay: "200",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Data Scientist",
+  //     company: "Data Inc",
+  //     personName: "Jane Smith",
+  //     applicationId: "APP5678",
+  //     workers_required: 3,
+  //     closing_date: "2024-09-15",
+  //     description:
+  //       "A data scientist role at Data Inc, involving data analysis and machine learning.",
+  //     amountPerDay: "250",
+  //   },
+  // ];
 
   const fetchApplications = async (location) => {
     try {
-      // Your fetch logic here
-      setApplications(dummy_data);
+      // fetch applications
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      };
+
+      const results = await axios.get(
+        (process.env.BACKEND_API || "http://localhost:8000") +
+          (location
+            ? `/work-application?lat=${location.latitude}&lng=${location.longitude}`
+            : `/work-application`),
+        { headers }
+      );
+
+      console.log(results.data.hirers);
+
+      setApplications(results.data.hirers);
     } catch (error) {
       toast.error("Failed to fetch applications.");
     }
@@ -144,9 +162,9 @@ const WorkApplications = () => {
   const validateForm = () => {
     const today = new Date().toISOString().split("T")[0];
     const errors = {
-      workersRequired: formValues.workersRequired <= 0,
+      workers_required: formValues.workers_required <= 0,
       description: !formValues.description,
-      closingDate: formValues.closingDate <= today,
+      closing_date: formValues.closing_date <= today,
       labour: formValues.labour <= 0,
     };
     setFormErrors(errors);
@@ -157,11 +175,28 @@ const WorkApplications = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await axios.post(
-          "/api/submit-application",
-          formValues
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+        };
+
+        console.log(formValues);
+
+        const results = await axios.post(
+          (process.env.BACKEND_API || "http://localhost:8000") +
+            `/create-work-application`,
+          formValues,
+          { headers }
         );
-        console.log("Form submitted:", response.data);
+
+        console.log(results);
+        setFormValues({
+          workers_required: "",
+          description: "",
+          closing_date: "",
+          labour: "",
+        });
+        // console.log("Form submitted:", response.data);
         toast.success("Application submitted successfully!");
         handleFormClose();
       } catch (error) {
@@ -201,16 +236,14 @@ const WorkApplications = () => {
       <Container sx={{ pt: "5em" }}>
         <Grid container spacing={4}>
           {applications.map((app) => (
-            <Grid item xs={12} key={app.id} data-aos="fade-up">
+            <Grid item xs={12} key={app._id} data-aos="fade-up">
               <ApplicationCard
-                title={app.title}
-                company={app.company}
-                personName={app.personName}
-                applicationId={app.applicationId}
-                workersRequired={app.workersRequired}
-                closingDate={app.closingDate}
+                personName={app.hirer}
+                applicationId={app.application_id}
+                workers_required={app.workers_required}
+                closing_date={app.closing_date}
                 description={app.description}
-                amountPerDay={app.amountPerDay}
+                amountPerDay={app.labour}
               />
             </Grid>
           ))}
@@ -247,14 +280,14 @@ const WorkApplications = () => {
           >
             <TextField
               label="Workers Required"
-              name="workersRequired"
+              name="workers_required"
               type="number"
-              value={formValues.workersRequired}
+              value={formValues.workers_required}
               onChange={handleFormChange}
               fullWidth
-              error={formErrors.workersRequired}
+              error={formErrors.workers_required}
               helperText={
-                formErrors.workersRequired &&
+                formErrors.workers_required &&
                 "This field is required and must be greater than 0"
               }
             />
@@ -270,15 +303,15 @@ const WorkApplications = () => {
             />
             <TextField
               label="Closing Date"
-              name="closingDate"
+              name="closing_date"
               type="date"
               InputLabelProps={{ shrink: true }}
-              value={formValues.closingDate}
+              value={formValues.closing_date}
               onChange={handleFormChange}
               fullWidth
-              error={formErrors.closingDate}
+              error={formErrors.closing_date}
               helperText={
-                formErrors.closingDate &&
+                formErrors.closing_date &&
                 "This field is required and must be a future date"
               }
             />

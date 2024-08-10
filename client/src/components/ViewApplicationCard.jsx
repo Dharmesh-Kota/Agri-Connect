@@ -29,8 +29,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const ViewApplicationCard = ({
-  title,
-  company,
   workersRequired,
   closingDate,
   description,
@@ -45,7 +43,7 @@ const ViewApplicationCard = ({
     <StyledCard>
       <CardContent>
         <Box mb={2}>
-          <Typography
+          {/* <Typography
             variant="h5"
             component="div"
             gutterBottom
@@ -54,7 +52,7 @@ const ViewApplicationCard = ({
             fontSize="1.5rem" // Larger font size
           >
             {title}
-          </Typography>
+          </Typography> */}
           <Typography
             variant="subtitle1"
             color="text.secondary"
@@ -62,10 +60,10 @@ const ViewApplicationCard = ({
             fontWeight={600} // Medium font weight
             fontSize="1.2rem" // Slightly larger font size
           >
-            {company}
+            {description}
           </Typography>
         </Box>
-        <Typography
+        {/* <Typography
           variant="body2"
           color="text.secondary"
           paragraph
@@ -74,7 +72,7 @@ const ViewApplicationCard = ({
           fontSize="1rem" // Regular font size
         >
           {description}
-        </Typography>
+        </Typography> */}
         <Typography
           variant="body2"
           color="text.secondary"
