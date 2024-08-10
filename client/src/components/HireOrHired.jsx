@@ -19,11 +19,12 @@ function LandingPage() {
       {/* Text Container */}
       <Box
         sx={{
-          flex: 1,
+          flex: 70,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-end",
           padding: "0.5%", // Adjust padding as needed
+          zIndex: 1,
         }}
       >
         <Typography
@@ -38,11 +39,11 @@ function LandingPage() {
         >
           Hire or get Hired
           <Button
-            sx={{ m: 4, p: 1, px: 4, fontWeight: "bold" }}
+            sx={{ p: 2, px: 4, fontWeight: "bold", fontSize: "20px" }}
             variant="outlined"
             color="success"
             onClick={() => {
-              navigate("/work-application");
+              navigate("/work-applications");
             }}
           >
             Hiring <OpenInNewRoundedIcon color="success" sx={{ mx: 1 }} />
@@ -53,9 +54,9 @@ function LandingPage() {
       {/* Image Container */}
       <Box
         sx={{
-          flex: 1,
+          flex: 30,
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           alignItems: "center",
           position: "relative",
         }}
