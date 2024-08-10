@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userScehma = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -17,18 +17,19 @@ const userScehma = new mongoose.Schema({
         type: String,
         required: true
     },
-    role: {
+    location: {
         type: String,
-        enum: ['compostAgency', 'ngo', 'donor'],
         required: true
     },
-    // location: String,
-    // contact: String,
-    // address: String
+    contact: String,
+    address: String,
+    birthdate: Date,
+    experience: String,
+    contact: String
 },{
     timestamps: true
 });
 
-const User = mongoose.model('User', userScehma);
+const User = mongoose.model('User', userSchema);
 
 export default User;
