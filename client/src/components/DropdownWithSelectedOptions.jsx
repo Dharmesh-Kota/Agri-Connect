@@ -6,7 +6,7 @@ import { Grid, Container, Button, Dialog, DialogActions, DialogContent, DialogTi
 
 const dropdownStyle = {
   margin: "auto",
-  width: "50%",
+  width: "100%",
   padding: "10px",
   border: "1px solid #ccc",
   borderRadius: "4px",
@@ -39,11 +39,14 @@ const DropdownWithSelectedOptions = ({ selectedOptions, setSelectedOptions }) =>
                   <MenuItem value="" disabled>
                       <em>Select Option</em>
                   </MenuItem>
-                  <MenuItem value="Harvesters">Harvesters</MenuItem>
-                  <MenuItem value="Irrigation Systems">Irrigation Systems</MenuItem>
-                  <MenuItem value="">Option 3</MenuItem>
-                  <MenuItem value="">Option 4</MenuItem>
-                  <MenuItem value="">Option 5</MenuItem>
+                  <MenuItem value="Harvesting Equipment">Harvesters</MenuItem>
+                  <MenuItem value="Tractors">Irrigation Systems</MenuItem>
+                  <MenuItem value="Plowing & Tilling Equipment">Plowing & Tilling Equipment</MenuItem>
+                  <MenuItem value="Planting & Seeding Equipment">Planting & Seeding Equipment</MenuItem>
+                  <MenuItem value="Irrigation Equipment">Irrigation Equipment</MenuItem>
+                  <MenuItem value="Crop Protection Equipment">Crop Protection Equipment</MenuItem>
+                  <MenuItem value="Hay & Forage Equipment">Hay & Forage Equipment</MenuItem>
+                  <MenuItem value="Material Handling & Transport Equipment">Material Handling & Transport Equipment</MenuItem>
               </Select>
           </FormControl>
 

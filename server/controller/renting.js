@@ -68,7 +68,8 @@ export const rent_application = async (req, res) => {
 export const create_rent_application = async (req, res) => {
     try {
         
-        if (req.body.rent < 0 || req.body.quantity_available < 0) return res.status(400).send({ error: 'Invalid input!' });
+        let reqbody = req.body.formValues;
+        if (reqbody.rent < 0 || reqbody.quantity_available < 0) return res.status(400).send({ error: 'Invalid input!' });
 
         // Generating 15digits id with current date and time so that each appointment id is unique
         // assuming that no two appointments are booked at the same time
@@ -79,6 +80,7 @@ export const create_rent_application = async (req, res) => {
         const formattedDateTime = `${formattedDate}T${formattedTime}`;
 
         const rent_id = formattedDateTime;
+
 
         await RentMachinery.create({
             rent_id: rent_id,
@@ -145,6 +147,7 @@ export const rent_machinery = async (req, res) => {
 
 
 export const update_application = async (req, res) => {
+   
     try {
         
         const rent_id = req.params.rent_id;
