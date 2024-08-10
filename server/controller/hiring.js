@@ -18,7 +18,7 @@ export const work_application = async (req, res) => {
             location = location.location;
         }
 
-        let hirers = await WorkApplication.find({status: 'open'}, {application_id: 1, description: 1, hirer: 1, workers_required: 1, closing_date: 1, labour: 1});
+        let hirers = await WorkApplication.find({status: 'open'}, {application_id: 1, description: 1, hirer: 1, workers_required: 1, closing_date: 1, labour: 1}).lean();
         let nearby_hirers = [];
         for (let hirer of hirers) {
             if (hirer.workers_required == 0) continue;
@@ -48,11 +48,11 @@ export const work_application = async (req, res) => {
 
                 if (distance < 50) {
                     let hirer_details = await User.findOne({username: hirer.hirer}, {name: 1, email: 1});
-                    let rating = await WorkApplication.findOne({hirer: hirer.hirer}, {application_id: 1});
+                    let rating = await WorkApplication.find({hirer: hirer.hirer}, {application_id: 1});
                     let avg_rating = 0, count = 0;
                     for (let rate of rating) {
                         let worker_rating = await HirerWorker.findOne({application_id: rate.application_id}, {hirer_rating: 1});
-                        if (worker_rating.hirer_rating == 0) continue;
+                        if (!worker_rating || worker_rating.hirer_rating == 0) continue;
                         avg_rating += worker_rating.hirer_rating;
                         count++;
                     }
@@ -106,7 +106,7 @@ export const create_work_application = async (req, res) => {
             status: 'open'
         });
 
-        await User.findOneAndUpdate({username: req.user.username}, { working: appication_id });
+        await User.findOneAndUpdate({username: req.user.username}, { working: 'hirer' });
 
         return res.status(201).json({ message: 'Work application created successfully!'});
 
@@ -143,7 +143,7 @@ export const apply_for_work = async (req, res) => {
 export const view_applications = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (user.working != '') return res.status(400).json({ message: 'You are already working so you cant view applications!' });
+        if (user.working != '' && user.working !== 'hirer') return res.status(400).json({ message: 'You are already working so you cant view applications!' });
 
         let applications = await WorkApplication.find(
             { hirer: req.user.username, status: 'open' },
@@ -152,27 +152,27 @@ export const view_applications = async (req, res) => {
         
         for (let application of applications) {
             let avg_rating = 0, count = 0;
-            let hired_workers = await HirerWorker.findOne(
-                { application_id: application.application_id },
+            let hired_workers = await HirerWorker.find(
+                { application_id: application.application_id , status: "ongoing"},
                 { worker: 1 }
             );
-            if (!hired_workers) {
-                application.rating = 0;
-                application.hired_workers = [];
-                continue;
-            }
-            for (let worker of hired_workers) {
-                let worker_rating = await HirerWorker.find(
-                    { worker: worker.worker },
-                    { worker_rating: 1 }
-                );
+            // if (!hired_workers) {
+            //     application.rating = 0;
+            //     application.hired_workers = [];
+            //     continue;
+            // }
+            // for (let worker of hired_workers) {
+            //     let worker_rating = await HirerWorker.find(
+            //         { worker: worker.worker },
+            //         { worker_rating: 1 }
+            //     );
                 
-                if (worker_rating.worker_rating == 0) continue;
-                avg_rating += worker_rating.worker_rating;
-                count++;
-            }
-            avg_rating = avg_rating / count;
-            application.rating = avg_rating;
+            //     if (worker_rating.worker_rating == 0) continue;
+            //     avg_rating += worker_rating.worker_rating;
+            //     count++;
+            // }
+            // avg_rating = avg_rating / count;
+            // application.rating = avg_rating;
             application.hired_workers = hired_workers;
         }
         
