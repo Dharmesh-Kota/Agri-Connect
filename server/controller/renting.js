@@ -14,7 +14,7 @@ export const rent_application = async (req, res) => {
             location = location.location;
         }
 
-        let applications = await RentMachinery.find({}, {rent_id: 1, owner: 1, discription: 1, category: 1, rent: 1, quantity_available: 1});
+        let applications = await RentMachinery.find({}, {rent_id: 1, owner: 1, description: 1, category: 1, rent: 1, quantity_available: 1});
         let feasible_applications = [];
 
         for (let application of applications) {
@@ -42,7 +42,7 @@ export const rent_application = async (req, res) => {
                 const distance = route.summary.lengthInMeters / 1000; // in km
                 const travelTime = route.summary.travelTimeInSeconds / 60; // in mins
 
-                if (distance < 25) {
+                if (distance < 50) {
                     let owner_details = await User.findOne(hirer.hirer, {name: 1, email: 1});
                     application.distance = distance;
                     application.travelTime = travelTime;
@@ -65,7 +65,8 @@ export const rent_application = async (req, res) => {
 export const create_rent_application = async (req, res) => {
     try {
         
-        if (req.body.rent < 0 || req.body.quantity_available < 0) return res.status(400).send({ error: 'Invalid input!' });
+        let reqbody = req.body.formValues;
+        if (reqbody.rent < 0 || reqbody.quantity_available < 0) return res.status(400).send({ error: 'Invalid input!' });
 
         // Generating 15digits id with current date and time so that each appointment id is unique
         // assuming that no two appointments are booked at the same time
@@ -77,14 +78,15 @@ export const create_rent_application = async (req, res) => {
 
         const rent_id = formattedDateTime;
 
+
         await RentMachinery.create({
             rent_id: rent_id,
             owner: req.user.username,
-            discription: req.body.discription,
-            category: req.body.category,
-            rent: req.body.rent,
-            quantity_available: req.body.quantity_available,
-            machinery_holder: req.body.machinery_holder
+            description: reqbody.description,
+            category: reqbody.category,
+            rent: reqbody.rent,
+            quantity_available: reqbody.quantity_available,
+            machinery_holder: reqbody.machinery_holder
         });
 
         return res.status(200).send({ message: 'Rent application created successfully!' });
@@ -99,7 +101,7 @@ export const create_rent_application = async (req, res) => {
 export const view_applications = async (req, res) => {
     try {
         
-        let applications = await RentMachinery.find({owner: req.user.username}, {rent_id: 1, discription: 1, category: 1, rent: 1, quantity_available: 1, machinery_holder: 1});
+        let applications = await RentMachinery.find({owner: req.user.username}, {rent_id: 1, description: 1, category: 1, rent: 1, quantity_available: 1, machinery_holder: 1});
         for (let application of applications) {
             let holder_details = [];
             for (let holder of application.machinery_holder) {
@@ -143,6 +145,7 @@ export const rent_machinery = async (req, res) => {
 
 
 export const update_application = async (req, res) => {
+   
     try {
         
         const rent_id = req.params.rent_id;
@@ -154,7 +157,7 @@ export const update_application = async (req, res) => {
         await RentMachinery.findOneAndUpdate({
             rent_id: rent_id
         }, {
-            discription: req.body.discription,
+            description: req.body.description,
             category: req.body.category,
             rent: req.body.rent,
             quantity_available: req.body.quantity_available

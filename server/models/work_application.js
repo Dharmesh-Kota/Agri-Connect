@@ -24,7 +24,7 @@ const workApplicationSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    discription: {
+    description: {
         type: String,
         required: true
     },

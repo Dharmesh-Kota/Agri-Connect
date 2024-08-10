@@ -1,7 +1,10 @@
-import React from "react";
-import { Card, CardContent, Typography, Box, Button } from "@mui/material";
+import React , {useState} from "react";
+import { Card, CardContent, Typography, Box , Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { light } from "@mui/material/styles/createPalette";
+import toast from "react-hot-toast";
+
+
 
 // Custom styled component for a more attractive card
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -29,13 +32,56 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const handleRentClick =(( quantity_available)=>{
+  
+});
+
+
 const RentApplicationCard = ({
   owner,
-  discription,
+  description,
   category,
   rent,
   quantity_available,
 }) => {
+  const [open, setOpen] = useState(false);
+    const [inputValue, setInputValue] = useState("");
+    const [inputError, setInputError] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setInputValue("");  // Reset input value
+        setInputError(false); // Reset error state
+    };
+
+    const handleInputChange = (event) => {
+        const value = event.target.value;
+
+        // Validate input value
+        if (value === "" || isNaN(value) || value <= 0 || value > quantity_available) {
+            setInputError(true);
+        } else {
+            setInputError(false);
+        }
+
+        setInputValue(value);
+    };
+
+    const handleSubmit = () => {
+        if (!inputError && inputValue !== "") {
+            // Process the inputValue here, like saving it or making an API call
+            toast.success("Input value is valid!");
+            handleClose(); // Close the modal after submission
+        } else {
+            toast.error("Please enter a valid value.");
+        }
+    };
+
+
   return (
     <StyledCard>
       <CardContent>
@@ -59,7 +105,7 @@ const RentApplicationCard = ({
             fontSize="1.2rem" // Slightly larger font size
           >
             <strong>Descrition : </strong>
-            {discription}
+            {description}
           </Typography>
         </Box>
         <Typography
@@ -95,8 +141,37 @@ const RentApplicationCard = ({
           <strong>Quantity Available</strong> {quantity_available}
         </Typography>
 
-        <StyledButton variant="contained" size="small">
-          Rent
+        <StyledButton variant="contained" size="small" onClick={handleRentClick(quantity_available)}>
+        <div>
+            <Button variant="contained" color="primary" onClick={handleOpen}>
+                Open Modal
+            </Button>
+
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Enter a Value</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Enter a number"
+                        type="number"
+                        fullWidth
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        error={inputError}
+                        helperText={inputError ? `Please enter a value greater than 0 and less than ${quantity_available}` : ""}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="secondary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleSubmit} color="primary">
+                        Submit
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
         </StyledButton>
       </CardContent>
     </StyledCard>
