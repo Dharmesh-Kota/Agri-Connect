@@ -87,6 +87,7 @@ function Navbar() {
               disableRipple
               variant="text"
               sx={{
+                fontWeight: "bold",
                 transition: "all 0.3s ease",
                 border: "2px solid transparent",
                 "&:hover": {
@@ -99,7 +100,11 @@ function Navbar() {
               <Link
                 className="nav-link active"
                 to="/"
-                style={{ fontFamily: "Quicksand", transition: "all 0.3s ease" }}
+                style={{
+                  fontFamily: "Quicksand",
+                  transition: "all 0.3s ease",
+                  color: "#134611",
+                }}
               >
                 Home
               </Link>
@@ -108,6 +113,7 @@ function Navbar() {
               disableRipple
               variant="text"
               sx={{
+                fontWeight: "bold",
                 transition: "all 0.3s ease",
                 border: "2px solid transparent",
                 "&:hover": {
@@ -120,7 +126,11 @@ function Navbar() {
               <Link
                 className="nav-link active"
                 to="/work-applications"
-                style={{ fontFamily: "Quicksand", transition: "all 0.3s ease" }}
+                style={{
+                  fontFamily: "Quicksand",
+                  transition: "all 0.3s ease",
+                  color: "#134611",
+                }}
               >
                 Hiring
               </Link>
@@ -129,6 +139,7 @@ function Navbar() {
               disableRipple
               variant="text"
               sx={{
+                fontWeight: "bold",
                 transition: "all 0.3s ease",
                 border: "2px solid transparent",
                 "&:hover": {
@@ -141,7 +152,11 @@ function Navbar() {
               <Link
                 className="nav-link active"
                 to="/rent-applications"
-                style={{ fontFamily: "Quicksand", transition: "all 0.3s ease" }}
+                style={{
+                  fontFamily: "Quicksand",
+                  transition: "all 0.3s ease",
+                  color: "#134611",
+                }}
               >
                 Rent Applications
               </Link>
@@ -150,6 +165,7 @@ function Navbar() {
               disableRipple
               variant="text"
               sx={{
+                fontWeight: "bold",
                 transition: "all 0.3s ease",
                 border: "2px solid transparent",
                 "&:hover": {
@@ -162,7 +178,7 @@ function Navbar() {
               <Link
                 className="nav-link active"
                 to="/aboutus"
-                style={{ fontFamily: "Quicksand" }}
+                style={{ fontFamily: "Quicksand", color: "#134611" }}
               >
                 AboutUS
               </Link>
@@ -180,7 +196,7 @@ function Navbar() {
                   >
                     <AccountCircleOutlinedIcon
                       fontSize="large"
-                      style={{ fontFamily: "Quicksand" }}
+                      style={{ fontFamily: "Quicksand", color: "#134611" }}
                     />
                   </IconButton>
                   <Menu
@@ -198,12 +214,16 @@ function Navbar() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem
+                      onClick={handleClose}
+                      sx={{ fontWeight: "bold", color: "#134611" }}
+                    >
                       <Link className="nav-link" to="/profile">
                         Profile
                       </Link>
                     </MenuItem>
                     <MenuItem
+                      sx={{ fontWeight: "bold", color: "#134611" }}
                       onClick={() => {
                         handleClose();
                         LogOut();

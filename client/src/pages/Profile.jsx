@@ -32,6 +32,7 @@ const Profile = () => {
   const { validateUser } = useAuth();
 
   const [loading, setLoading] = useState(false);
+  const [valid, setValid] = useState(false);
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -135,6 +136,7 @@ const Profile = () => {
 
       if (results?.status === 200) {
         const { user } = results?.data;
+        setValid(user?.valid === undefined ? "" : user.valid);
         setName(user?.name === undefined ? "" : user.name);
         setUserName(user?.username === undefined ? "" : user.username);
         setEmail(user?.email === undefined ? "" : user.email);
@@ -305,34 +307,38 @@ const Profile = () => {
                 )}
               </CardContent>
             </Card>
-            <Card
-              sx={{
-                my: 4,
-                backgroundColor: isWorking === "false" ? "#f08080" : "#e8f5e9",
-              }}
-            >
-              <CardContent
+            {valid && (
+              <Card
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  my: 4,
+                  backgroundColor:
+                    isWorking === "false" ? "#f08080" : "#e8f5e9",
                 }}
               >
-                <Typography
-                  fontSize="large"
-                  fontWeight="bold"
-                  sx={{ color: isWorking === "false" ? "#c1121f" : "#388e3c" }}
+                <CardContent
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
-                  {typeof isWorking === "string"
-                    ? isWorking === "false"
-                      ? "Not Working"
-                      : isWorking
-                    : ""}
-                </Typography>
-              </CardContent>
-            </Card>
+                  <Typography
+                    fontSize="large"
+                    fontWeight="bold"
+                    sx={{
+                      color: isWorking === "false" ? "#c1121f" : "#388e3c",
+                    }}
+                  >
+                    {typeof isWorking === "string"
+                      ? isWorking === "false"
+                        ? "Not Working"
+                        : isWorking
+                      : ""}
+                  </Typography>
+                </CardContent>
+              </Card>
+            )}
           </Grid>
-
           {showEditFields && (
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <Card>
