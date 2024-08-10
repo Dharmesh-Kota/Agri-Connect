@@ -37,12 +37,13 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [location, setLocation] = useState(""); // Latitude and Longitude of San Francisco
+  const [location, setLocation] = useState(""); // Latitude and Longitude
   const [birthdate, setBirthdate] = useState(null);
+  const [experience, setExperience] = useState("");
   const [isWorking, setIsWorking] = useState(true);
-  const [isValidPhone, setIsValidPhone] = useState(true);
   const [justVerify, setJustVerify] = useState(false);
   const [showEditFields, setShowEditFields] = useState(true);
+  const [apiKey, setApiKey] = useState("");
 
   const theme = createTheme({
     typography: {
@@ -64,24 +65,55 @@ const Profile = () => {
     }
   };
 
-  const UpdateProfile = async () => {
+  const updateProfile = async () => {
     setJustVerify(true);
-    if (name && address && location) {
-      setLoading(true);
-      // Mock update process
-      setTimeout(() => {
-        console.log("Profile updated with:", {
+
+    if (
+      name === "" ||
+      address === "" ||
+      location === "" ||
+      phoneNumber.length !== 10 ||
+      birthdate === "" ||
+      address === ""
+    ) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      };
+
+      const results = await axios.post(
+        (process.env.BACKEND_API || "http://localhost:8000") +
+          `/update-profile/${window.localStorage.getItem("username")}`,
+        {
           name,
-          userName,
+          username: userName,
           email,
-          phoneNumber,
+          contact: phoneNumber,
           address,
           location,
           birthdate,
-        });
-        setLoading(false);
-      }, 1000);
+          experience,
+        },
+        { headers }
+      );
+
+      if (results?.status === 200) {
+        toast.success("Profile updated successfully!");
+      } else {
+        toast.error("Failed to update profile.");
+      }
+    } catch (err) {
+      console.log("Error ->", err);
+      toast.error("Server Problem, Failed to Update user data.");
     }
+
+    setLoading(false);
   };
 
   const getUser = async () => {
@@ -90,27 +122,28 @@ const Profile = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${window.localStorage.getItem("token")}`,
       };
+
       const results = await axios.get(
-        `${
-          process.env.BACKEND_API || "http://localhost:8000"
-        }/profile/${window.localStorage.getItem("username")}`,
+        (process.env.BACKEND_API || "http://localhost:8000") +
+          `/profile/${window.localStorage.getItem("username")}`,
         { headers }
       );
 
-      if (results.status === 200) {
-        const { user } = results.data;
-        setName(user.name);
-        setUserName(user.username);
-        setEmail(user.email);
-        setPhoneNumber(user.contact);
-        setAddress(user.address);
-        setLocation(user.location);
-        setIsWorking(user.working);
+      if (results?.status === 200) {
+        const { user } = results?.data;
+        setName(user?.name === undefined ? "" : user.name);
+        setUserName(user?.username === undefined ? "" : user.username);
+        setEmail(user?.email === undefined ? "" : user.email);
+        setPhoneNumber(user?.contact === undefined ? "" : user.contact);
+        setAddress(user?.address === undefined ? "" : user.address);
+        setLocation(user?.location === undefined ? "" : user.location);
+        setIsWorking(user?.working === undefined ? "" : user.working);
       } else {
         toast.error("Invalid Credentials");
       }
     } catch (err) {
-      console.log("error ->", err);
+      console.log("Error ->", err);
+      toast.error("Failed to fetch user data.");
     }
   };
 
@@ -123,8 +156,6 @@ const Profile = () => {
     AOS.init({ duration: 800, easing: "ease-in-out", once: true });
   }, []);
 
-  const [apiKey, setApiKey] = useState("");
-
   useEffect(() => {
     const fetchApiKey = async () => {
       try {
@@ -134,11 +165,14 @@ const Profile = () => {
         };
 
         const response = await fetch(
-          (config.BACKEND_API || "http://localhost:8000") + "/getTomTomApiKey",
-          { headers }
+          (process.env.BACKEND_API || "http://localhost:8000") +
+            "/getTomTomApiKey",
+          {
+            headers,
+          }
         );
-        const data = await response.json();
-        setApiKey(data.apiKey?.trim());
+        const data = await response?.json();
+        setApiKey(data?.apiKey?.trim());
       } catch (error) {
         console.error("Error fetching API key:", error);
       }
@@ -147,7 +181,7 @@ const Profile = () => {
   }, []);
 
   const initializeTomTomSearchBox = (apiKey) => {
-    var options = {
+    const options = {
       searchOptions: {
         key: apiKey,
         language: "en-GB",
@@ -158,26 +192,21 @@ const Profile = () => {
         key: apiKey,
         language: "en-GB",
       },
+      container: "#searchBoxContainer",
     };
 
-    // Set the container to the ID of the div
-    options.container = "#searchBoxContainer";
-
-    var ttSearchBox = new window.tt.plugins.SearchBox(
+    const ttSearchBox = new window.tt.plugins.SearchBox(
       window.tt.services,
       options
     );
 
-    ttSearchBox.on("tomtom.searchbox.resultselected", function (data) {
-      const newLocation =
-        String(data.data.result.position.lat) +
-        "," +
-        String(data.data.result.position.lng);
+    ttSearchBox.on("tomtom.searchbox.resultselected", (data) => {
+      const newLocation = `${data.data.result.position.lat},${data.data.result.position.lng}`;
       document.getElementById("location").value = newLocation;
       setLocation(newLocation);
     });
 
-    var searchBoxHTML = ttSearchBox.getSearchBoxHTML();
+    const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
     document.getElementById("searchBoxContainer")?.appendChild(searchBoxHTML);
   };
 
@@ -228,21 +257,21 @@ const Profile = () => {
                   color="textSecondary"
                   sx={{ fontWeight: "bold" }}
                 >
-                  Username: {userName}
+                  Username{userName !== "" ? ":" : ""} {userName}
                 </Typography>
                 <Typography
                   variant="body2"
                   color="textSecondary"
                   sx={{ fontWeight: "bold" }}
                 >
-                  Email: {email}
+                  Email{email !== "" ? ":" : ""} {email}
                 </Typography>
                 <Typography
                   variant="body2"
                   color="textSecondary"
                   sx={{ fontWeight: "bold" }}
                 >
-                  Phone: +91 {phoneNumber}
+                  Phone{phoneNumber !== "" ? ": +91" : ""} {phoneNumber}
                 </Typography>
                 {address && (
                   <Typography
@@ -250,25 +279,28 @@ const Profile = () => {
                     color="textSecondary"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Address: {address}
+                    Address{address !== "" ? ":" : ""} {address}
                   </Typography>
                 )}
               </CardContent>
             </Card>
             <Card
               sx={{
-                maxWidth: "100%",
-                marginBottom: "1em",
-                padding: "1em",
-                marginTop: "1em",
+                my: 4,
                 backgroundColor: "#e8f5e9",
               }}
             >
-              <CardContent>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ fontWeight: "bold", color: "#388e3c" }}
+                  fontSize="large"
+                  fontWeight="bold"
+                  sx={{ color: "#388e3c" }}
                 >
                   {isWorking ? "Currently Working" : "Not Working"}
                 </Typography>
@@ -334,6 +366,9 @@ const Profile = () => {
                         size="small"
                         autoComplete="off"
                         error={justVerify && !userName}
+                        InputProps={{
+                          readOnly: true,
+                        }}
                         helperText={
                           justVerify && !userName
                             ? "Please enter a valid username."
@@ -360,9 +395,12 @@ const Profile = () => {
                         required
                         size="small"
                         autoComplete="off"
-                        error={justVerify && !email}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        error={justVerify && email === ""}
                         helperText={
-                          justVerify && !email
+                          justVerify && email === ""
                             ? "Please enter a valid email."
                             : ""
                         }
@@ -387,12 +425,6 @@ const Profile = () => {
                         required
                         size="small"
                         autoComplete="off"
-                        error={justVerify && !isValidPhone}
-                        helperText={
-                          justVerify && !isValidPhone
-                            ? "Please enter a valid phone number."
-                            : ""
-                        }
                         sx={{
                           "& .MuiOutlinedInput-root": {
                             borderRadius: "12px",
@@ -473,6 +505,32 @@ const Profile = () => {
                       />
                     </Grid>
                     <Grid item xs={12} padding={1}>
+                      <TextField
+                        color="success"
+                        value={experience}
+                        onChange={(e) => setExperience(e.target.value)}
+                        id="experience"
+                        label="Experiences"
+                        placeholder="Experiences"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        autoComplete="off"
+                        error={justVerify && !experience}
+                        helperText={
+                          justVerify && !experience
+                            ? "Please enter a valid experience."
+                            : ""
+                        }
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
+                            borderRadius: "12px",
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} padding={1}>
                       <FormControlLabel
                         control={
                           <Switch
@@ -489,7 +547,7 @@ const Profile = () => {
                       <Button
                         fullWidth
                         variant="contained"
-                        onClick={UpdateProfile}
+                        onClick={updateProfile}
                         sx={{
                           width: "fit-content",
                           fontWeight: "bold",
