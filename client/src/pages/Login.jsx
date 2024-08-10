@@ -19,6 +19,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import VpnKeyRoundedIcon from "@mui/icons-material/VpnKeyRounded";
 import axios from "axios";
 import image1 from "../images/login_img.jpg";
+import img1 from "../images/img1.png";
 
 export default function Login() {
   axios.defaults.withCredentials = true;
@@ -105,9 +106,9 @@ export default function Login() {
         minHeight: "100vh",
         paddingX: { xs: 2, sm: 4 },
         paddingY: { xs: 4, sm: 6 },
-        background:
-          "radial-gradient(788px at 0.7% 3.4%, rgb(164, 231, 192) 0%, rgb(255, 255, 255) 90%)",
-        // background: `url(${image1}) no-repeat bottom center fixed`,
+        // background:
+        // "radial-gradient(788px at 0.7% 3.4%, rgb(164, 231, 192) 0%, rgb(255, 255, 255) 90%)",
+        background: `url(${img1}) no-repeat bottom center fixed`,
         backgroundSize: "cover",
       }}
     >
@@ -124,7 +125,7 @@ export default function Login() {
           flexDirection: "column",
           alignItems: "center",
           boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-          backdropFilter: "blur(10px)",
+          backdropFilter: "blur(12px)",
           backgroundColor: "transparent",
         }}
       >
@@ -270,7 +271,7 @@ export default function Login() {
                 }}
                 sx={{
                   fontWeight: "bold",
-                  color: "#10451d",
+                  color: "white",
                   textDecoration: "underline",
                 }}
               >
