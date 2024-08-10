@@ -151,7 +151,7 @@ export default function Login() {
                 fullWidth
                 required
                 size="small"
-                autoComplete="off"
+                autoComplete="on"
                 error={
                   justVerify &&
                   (emailUsername === "" || emailUsername.length >= 255)
@@ -189,7 +189,7 @@ export default function Login() {
                 fullWidth
                 required
                 size="small"
-                autoComplete="off"
+                autoComplete="on"
                 error={
                   justVerify &&
                   (!validPassword || password === "" || password.length >= 255)
