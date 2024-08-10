@@ -44,7 +44,7 @@ function LandingPage() {
             variant="outlined"
             color="success"
             onClick={() => {
-              navigate("/rent-application");
+              navigate("/rent-applications");
             }}
           >
             Rent Machine
