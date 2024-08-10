@@ -117,6 +117,7 @@ export default function Login() {
         toast.error("An error occurred during registration.");
       }
     } catch (err) {
+      toast.error("Error Occured !!");
       console.log("error -> ", err);
     }
     setLoading(false);
