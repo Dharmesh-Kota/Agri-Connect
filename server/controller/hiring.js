@@ -1,6 +1,7 @@
 import User from '../models/user.js'
 import WorkApplication from '../models/work_application.js'
 import HirerWorker from '../models/hirer_worker.js'
+import axios from 'axios';
 // import { application } from 'express';
 
 export const work_application = async (req, res) => {
@@ -16,16 +17,16 @@ export const work_application = async (req, res) => {
             location = location.location;
         }
         
-        let hirers = WorkApplication.find({status: 'open'}, {application_id: 1, description: 1, hirer: 1, workers_required: 1, closing_date: 1, labour: 1});
+        let hirers = await WorkApplication.find({status: 'open'}, {application_id: 1, description: 1, hirer: 1, workers_required: 1, closing_date: 1, labour: 1});
         let nearby_hirers = [];
-        for (const hirer of hirers) {
+        for (let hirer of hirers) {
             if (hirer.workers_required == 0) continue;
             if (hirer.closing_date < new Date()) continue;
             
-            const apiKey = process.env.apiKey;
+            const apiKey = process.env.API_KEY;
 
             const startCoordinates = location;
-            let endCoordinates = await User.findOne(hirer.hirer, {location: 1});
+            let endCoordinates = await User.findOne({username: hirer.hirer}, {location: 1});
             endCoordinates = endCoordinates.location;
 
             if (!endCoordinates) {
@@ -45,7 +46,7 @@ export const work_application = async (req, res) => {
                 const travelTime = route.summary.travelTimeInSeconds / 60; // in mins
 
                 if (distance < 25) {
-                    let hirer_details = await User.findOne(hirer.hirer, {name: 1, email: 1});
+                    let hirer_details = await User.findOne({username: hirer.hirer}, {name: 1, email: 1});
                     hirer.distance = distance;
                     hirer.travelTime = travelTime;
                     hirer.hirer_name = hirer_details.name;
@@ -111,6 +112,8 @@ export const apply_for_work = async (req, res) => {
         const application_id = req.params.application_id;
         await WorkApplication.findOneAndUpdate({ application_id: application_id, status: 'open' }, { $push: { applicants: req.user.username } });
 
+        return res.status(201).json({ message: 'Application submitted successfully!' });
+
     } catch (error) {
         console.log('Error: ', error);
         return res.status(500).json({ error: error });        
@@ -173,6 +176,8 @@ export const hire_worker = async (req, res) => {
 
         await User.findOneAndUpdate({username: worker}, { working: application_id });
 
+        return res.status(201).json({ message: 'Worker hired successfully!' });
+
     } catch (error) {
         console.log('Error: ', error);
         return res.status(500).json({ error: error });
@@ -188,7 +193,7 @@ export const free_worker = async (req, res) => {
 
         const hirer = await WorkApplication.findOne({application_id: application_id, hirer: req.user.username, status: 'open'});
         if (!hirer) return res.status(400).json({ message: 'You are not the hirer of this application!' });
-        const valid = await HirerWorker.findOne({application_id: application_id, worker: worker});
+        const valid = await HirerWorker.findOne({application_id: application_id, worker: worker, status: 'ongoing'});
         if (!valid) return res.status(400).json({ message: 'Worker is not hired!' });
 
         let rating = 0;
@@ -199,6 +204,8 @@ export const free_worker = async (req, res) => {
         await HirerWorker.findOneAndUpdate({application_id: application_id, worker: worker}, { status: 'completed', hirer_rating: rating });
         await User.findOneAndUpdate({username: worker}, { working: '' });
         await WorkApplication.findOneAndUpdate({application_id: application_id}, { $inc: { workers_required: 1 } });
+
+        return res.status(201).json({ message: 'Worker freed successfully!' });
 
     } catch (error) {
         console.log('Error: ', error);
@@ -265,6 +272,8 @@ export const update_application = async (req, res) => {
         if (req.body.closing_date < new Date()) return res.status(400).json({ message: 'Invalid closing date!' });
 
         await WorkApplication.findOneAndUpdate({application_id: application_id}, req.body);
+
+        return res.status(201).json({ message: 'Application updated successfully!' });
 
     } catch (error) {
         console.log('Error: ', error);
