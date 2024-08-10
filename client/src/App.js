@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Footer from "./components/Footer";
 import AboutUS from "./pages/AboutUs";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import WorkApplications from "./pages/WorkApplications";
 
 function App() {
   const theme = createTheme({
@@ -37,6 +38,7 @@ function App() {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/aboutus" element={<AboutUS />} />
+          <Route exact path="/work-applications" element={<WorkApplications />} />
         </Routes>
         {!isHiddenPath && <Footer />}
       </ThemeProvider>
