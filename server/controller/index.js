@@ -3,6 +3,7 @@ import { generateToken } from '../config/jwtUtils.js'
 
 export const signup = async (req, res) => {
     try {
+        console.log(req.body);
         let user = await User.findOne({ $or: [{ email: req.body.email }, { username: req.body.username }] });
         if (user) {
             return res.status(409).json({ error: 'User already exists!'});

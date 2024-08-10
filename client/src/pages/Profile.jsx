@@ -44,7 +44,7 @@ const Profile = () => {
 
   const [isValidPhone, setIsValidPhone] = useState(false);
   const navigate = useNavigate();
-  const { setIsLoggedIn, setRole, LogOut } = useAuth();
+  const { setIsLoggedIn, LogOut } = useAuth();
 
   const [justVerify, setJustVerify] = useState(false);
 
@@ -85,7 +85,6 @@ const Profile = () => {
           name,
           username: userName,
           email,
-          role: type,
           contact: phoneNumber,
           address,
           location,
@@ -118,7 +117,6 @@ const Profile = () => {
       setName(user.name);
       setEmail(user.email);
       setUserName(user.username);
-      setType(user.role);
       setPhoneNumber(user.contact);
       setAddress(user.address);
       setLocation(user.location);
@@ -134,14 +132,11 @@ const Profile = () => {
   useEffect(() => {
     if (
       !(
-        window.localStorage.getItem("token") !== null &&
-        window.localStorage.getItem("role") !== null
+        window.localStorage.getItem("token") !== null
       )
     ) {
       window.localStorage.removeItem("token");
-      window.localStorage.removeItem("role");
       setIsLoggedIn(false);
-      setRole("");
       navigate("/");
     }
   }, []);

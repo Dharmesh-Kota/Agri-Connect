@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -39,8 +40,9 @@ export default function Register() {
   //   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
+  
   //   const navigate = useNavigate();
-
+  
   const handlePasswordofLogin = (e) => {
     const input = e.target.value;
     setpasswordcheck(true);
@@ -52,14 +54,14 @@ export default function Register() {
       setValidPassword(true);
     }
   };
-
+  
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRePassword] = useState("");
-  const [role, setRole] = useState("");
-
+  const [location, setLocation] = useState("");
+  
   const navigate = useNavigate();
   const { LogOut } = useAuth();
 
@@ -73,7 +75,7 @@ export default function Register() {
       name === "" ||
       !validPassword ||
       password !== repassword ||
-      role === ""
+      location === ""
     ) {
       return;
     }
@@ -86,7 +88,7 @@ export default function Register() {
           email: email,
           name: name,
           password: password,
-          role: role,
+          location: location,
         })
         .then((response) => {
           if (response.status === 201) {
@@ -112,6 +114,70 @@ export default function Register() {
     }
     setloading(false);
   };
+
+  const [apiKey, setApiKey] = useState("");
+
+  useEffect(() => {
+    const fetchApiKey = async () => {
+      try {
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+        };
+
+        const response = await fetch(
+          (config.BACKEND_API || "http://localhost:8000") + "/getTomTomApiKey",
+          { headers }
+        );
+        const data = await response.json();
+        setApiKey(data.apiKey.trim());
+      } catch (error) {
+        console.error("Error fetching API key:", error);
+      }
+    };
+    fetchApiKey();
+  }, []);
+
+  const initializeTomTomSearchBox = (apiKey) => {
+    var options = {
+      searchOptions: {
+        key: apiKey,
+        language: "en-GB",
+        limit: 5,
+        placeholder: "Search for Nearby Location",
+      },
+      autocompleteOptions: {
+        key: apiKey,
+        language: "en-GB",
+      },
+    };
+
+    // Set the container to the ID of the div
+    options.container = "#searchBoxContainer";
+
+    var ttSearchBox = new window.tt.plugins.SearchBox(
+      window.tt.services,
+      options
+    );
+
+    ttSearchBox.on("tomtom.searchbox.resultselected", function (data) {
+      const newLocation =
+        String(data.data.result.position.lat) +
+        "," +
+        String(data.data.result.position.lng);
+      document.getElementById("location").value = newLocation;
+      setLocation(newLocation);
+    });
+
+    var searchBoxHTML = ttSearchBox.getSearchBoxHTML();
+    document.getElementById("searchBoxContainer").appendChild(searchBoxHTML);
+  };
+
+  useEffect(() => {
+    if (apiKey) {
+      initializeTomTomSearchBox(apiKey);
+    }
+  }, [apiKey]);
 
   return (
     <div className="my-glass-effect">
@@ -293,31 +359,40 @@ export default function Register() {
                 }
                 autoComplete="off"
               />
+              
               <Grid
-                item
-                xs={10}
-                style={{ marginTop: "0.4em", fontFamily: "Quicksand" }}
-                sx={{
-                  fontWeight: "bold",
-                }}
-                id="searchBoxContainer"
-              >
-                Role *
-              </Grid>
-              <Select
-                value={role}
+              item
+              xs={10}
+              style={{ marginTop: "0.4em" }}
+              id="searchBoxContainer"
+            >
+              <PlaceOutlinedIcon /> Location
+            </Grid>
+            <Grid
+              item
+              xs={10}
+              style={{ marginTop: "0.4em" }}
+              id="searchBoxContainer"
+            ></Grid>
+
+            <Grid></Grid>
+
+            <Grid item xs={10} style={{ marginTop: "0.4em" }}>
+              <TextField
+                id="location"
+                label="Location"
+                value={location}
                 onChange={(e) => {
-                  setRole(e.target.value);
+                  setLocation(e.target.value);
                 }}
-                displayEmpty
-                inputProps={{ "aria-label": "Without label" }}
+                error={justVerify && location === ""}
+                helperText={
+                  justVerify &&
+                  (location === "" ? "Please select your location" : "")
+                }
                 fullWidth
-                error={justVerify && role === ""}
-              >
-                <MenuItem value="compostAgency">Compost Agency</MenuItem>
-                <MenuItem value="ngo">NGO</MenuItem>
-                <MenuItem value="donor">Donor</MenuItem>
-              </Select>
+              />
+            </Grid>
 
               <Button
                 type="submit"
