@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Box, MenuItem, FormControl, Select, Chip } from "@mui/material";
+import axios from "axios";
+import { Box, MenuItem, FormControl, Select, Chip, InputLabel } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { Grid, Container, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography , TextField} from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Grid, Container, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, TextField } from "@mui/material";
 import toast from "react-hot-toast";
 import ApplicationCard from "../components/RentApplicationCard";
 import AOS from "aos";
@@ -17,94 +19,29 @@ const chipsContainerStyle = {
 }
 
 
-const dummy_data = [
-    {
-        owner: "John Doe Farms",
-        description: "Heavy-duty tractor suitable for plowing and tilling large fields.",
-        category: ["Tractors", "Irrigation Systems"],
-        rent: 150, // in dollars per day
-        quantity_available: 2
-    },
-    {
-        owner: "Green Harvest Co.",
-        description: "Advanced combine harvester equipped with GPS and auto-steering for precision harvesting.",
-        category: ["Harvesters"],
-        rent: 500, // in dollars per day
-        quantity_available: 1
-    },
-    {
-        owner: "Sunny Acres Agri",
-        description: "Efficient sprinkler system ideal for irrigating medium-sized farms.",
-        category: ["Irrigation Systems"],
-        rent: 80, // in dollars per day
-        quantity_available: 5
-    }
-];
-
-
-//this is dropdown menu as component.
-
-
-
-// const DropdownWithSelectedOptions = () => {
-
-// // Handle the selection of a new option
-// const [selectedOptions, setSelectedOptions] = useState([]);
-// const handleChange = (event) => {
-//     const { value } = event.target;
-//     setSelectedOptions((prevSelected) => {
-//         // Ensure only unique values are added
-//         if (!prevSelected.includes(value)) {
-//             return [...prevSelected, value];
-//         }
-//         return prevSelected;
-//     });
-// };
-
-// // Handle the removal of a selected option
-// const handleRemove = (optionToRemove) => {
-//     setSelectedOptions((prevSelected) => prevSelected.filter(option => option !== optionToRemove));
-// };
-
-// return (
-//     <Box style={dropdownStyle}>
-//         <FormControl fullWidth>
-//             <Select
-//                 value=""
-//                 onChange={handleChange}
-//                 displayEmpty
-//                 >
-//                 <MenuItem value="" disabled>
-//                     <em>Select Option</em>
-//                 </MenuItem>
-//                 <MenuItem value="Option 1">Option 1</MenuItem>
-//                 <MenuItem value="Option 2">Option 2</MenuItem>
-//                 <MenuItem value="Option 3">Option 3</MenuItem>
-//                 <MenuItem value="Option 4">Option 4</MenuItem>
-//                 <MenuItem value="Option 5">Option 5</MenuItem>
-//             </Select>
-//         </FormControl>
-
-//         {/* Display the selected options as chips with a delete button */}
-//         <Box mt={2} display="flex" flexWrap="wrap">
-//             {selectedOptions.map((option) => (
-//                 <Chip
-//                 key={option}
-//                     label={option}
-//                     onDelete={() => handleRemove(option)}
-//                     deleteIcon={
-//                         <IconButton size="small">
-//                             <CloseIcon />
-//                         </IconButton>
-//                     }
-//                     style={{ margin: "5px" }}
-//                     />
-//                 ))}
-//         </Box>
-//     </Box>
-// );
-// };
-
+// const dummy_data = [
+//     {
+//         owner: "John Doe Farms",
+//         description: "Heavy-duty tractor suitable for plowing and tilling large fields.",
+//         category: ["Tractors", "Irrigation Systems"],
+//         rent: 150, // in dollars per day
+//         quantity_available: 2
+//     },
+//     {
+//         owner: "Green Harvest Co.",
+//         description: "Advanced combine harvester equipped with GPS and auto-steering for precision harvesting.",
+//         category: ["Harvesters"],
+//         rent: 500, // in dollars per day
+//         quantity_available: 1
+//     },
+//     {
+//         owner: "Sunny Acres Agri",
+//         description: "Efficient sprinkler system ideal for irrigating medium-sized farms.",
+//         category: ["Irrigation Systems"],
+//         rent: 80, // in dollars per day
+//         quantity_available: 5
+//     }
+// ];
 
 const RentApplication = () => {
 
@@ -112,59 +49,73 @@ const RentApplication = () => {
     const [useCurrentLocation, setUseCurrentLocation] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
     const [applications, setApplications] = useState([]);
-    const [maxValue , setMaxValue] = useState();
+    const [maxValue, setMaxValue] = useState();
 
     const [selectedOptions, setSelectedOptions] = useState([]);
-    
-    // const handleChoiceChange = () => {
-    //     setApplications([]);
-    //     try {
-    //         // Your fetch logic here
-    //         // Filter the dummy_data
-    //         const filteredApplications = dummy_data.filter(application => {
-    //             // Check if any of the application's categories are in the selectedOptions
-    //             const categoryMatch = application.category.some(cat => selectedOptions.includes(cat));
+    const [selectCategoryOptions , setSelectCategoryOptions] = useState([])
+    const [formOpen, setFormOpen] = useState(false);
+    const [formValues, setFormValues] = useState({
+        category: [],
+        description: "",
+        rent: 0,
+        quantity_available: 0,
+    });
+    const [formErrors, setFormErrors] = useState({
+        category: false,
+        description: false,
+        rent: false,
+        quantity_available: false,
+    });
 
-    //             // Check if the rent is below the threshold
-    //             const priceMatch = application.rent <= maxValue;
-
-    //             // Return true if both conditions are met
-    //             return categoryMatch && priceMatch;
-    //         });
-
-    //         // Update the applications state with the filtered data
-    //         setApplications(filteredApplications);
-
-    //     } catch (error) {
-    //         toast.error("Failed to fetch applications.");
-    //     }
-    // }
-
-    useEffect(()=>{
+    useEffect(() => {
         try {
-            // Your fetch logic here
-            // Filter the dummy_data
-            const filteredApplications = dummy_data.filter(application => {
-                // Check if any of the application's categories are in the selectedOptions
-                const categoryMatch = application.category.some(cat => selectedOptions.includes(cat));
+            let dummy_data = [];
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${window.localStorage.getItem("token")}`
+            };
+            const fetchfunction = async () => {
+                try {
+                    const response = await axios.get(
+                        `${process.env.BACKEND_API || "http://localhost:8000"}/rent-application`,
+                        { headers }
+                    );
+                    let dummy_data = response.data.applications
+                    // console.log(dummy_data);
+                    // Filter the dummy_data
+                    
+                        const filteredApplications = dummy_data.filter(application => {
+                        // Check if any of the application's categories are in the selectedOptions
+                        const categoryMatch = application.category.some(cat => selectedOptions.includes(cat));
+        
+                        // Check if the rent is below the threshold
+                        const priceMatch = application.rent <= maxValue || maxValue === undefined;
+        
+                        // Return true if both conditions are met
+                        return categoryMatch && priceMatch;
+                    });
+                
+                // Update the applications state with the filtered data
+                    setApplications(filteredApplications);
+                    // console.log(filteredApplications);
+                    // console.log(selectedOptions);
+                    return response.data; // Return the fetched data
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    return []; // Return an empty array on error
+                }
+            };
 
-                // Check if the rent is below the threshold
-                const priceMatch = application.rent <= maxValue || maxValue === undefined;
-
-                // Return true if both conditions are met
-                return categoryMatch && priceMatch;
-            });
-
-            // Update the applications state with the filtered data
-            setApplications(filteredApplications);
-            console.log(applications);
-
+            
+            fetchfunction(); 
+            
+            
         } catch (error) {
             toast.error("Failed to fetch applications.");
         }
+        
 
-
-    }, [selectedOptions,maxValue]); 
+    }, [selectedOptions, maxValue]);
 
     const fetchApplications = async (location) => {
         //   try {
@@ -228,14 +179,72 @@ const RentApplication = () => {
 
     const handleInputChange = (event) => {
         const value = event.target.value;
-    
+
         // Ensure the input value is numeric and within the acceptable range
         if (!isNaN(value) && value >= 0 && value <= 100000) {
-          setMaxValue(value);
-      };
-      
+            setMaxValue(value);
+        };
+
     }
-   
+
+
+    const handleIconClick = () => {
+        setFormOpen(true);
+    };
+
+    const handleFormClose = () => {
+        setFormOpen(false);
+    };
+
+    const handleFormChange = (e) => {
+        setFormValues({
+            ...formValues,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const validateForm = () => {
+        const errors = {
+            category: formValues.category.length <= 0,
+            description: !formValues.description,
+            rent: formValues.rent <= 0,
+            quantity_available: formValues.quantity_available <= 0,
+        };
+        setFormErrors(errors);
+        return !Object.values(errors).includes(true);
+    };
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`
+        };
+        formValues.category = selectCategoryOptions; 
+        if (validateForm()) {
+            try {
+                const response = await axios.post(
+                    `${
+                        process.env.BACKEND_API || "http://localhost:8000"
+                      }/create-rent-application`,
+                    {formValues}, {headers}
+                );
+                console.log("Form submitted:", response.data);
+                toast.success("Application submitted successfully!");
+                handleFormClose();
+            } catch (error) {
+                console.error("Error submitting form:", error);
+                toast.error("Error submitting application. Please try again.");
+                handleFormClose();
+            }
+        }
+    };
+    const handleChipDelete = (chipToDelete) => {
+        formValues.category((prevValues) => ({
+            ...prevValues,
+            category: prevValues.category.filter((item) => item !== chipToDelete),
+        }));
+    };
 
     return (
         <>
@@ -266,10 +275,8 @@ const RentApplication = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* this is dropdown menu which is not working */}
-
-            <div style={{ margin:"30px", marginTop: "100px", width: "100%" , display:"flex", flexDirection:'row'}}>
-                <DropdownWithSelectedOptions 
+            <div style={{ margin: "50px", marginTop: "100px", width: "80%", display: "flex", flexDirection: 'row', alignItems:'center' , }}>
+                <DropdownWithSelectedOptions
                     selectedOptions={selectedOptions}
                     setSelectedOptions={setSelectedOptions}
                 />
@@ -282,7 +289,7 @@ const RentApplication = () => {
                     fullWidth
                     margin="normal"
 
-                    style={{width:"200px" , height:"50px", margin:"auto"}}
+                    style={{ width: "200px", height: "50px", margin: "50px" }}
                 />
                 {/* <Button onClick={handleChoiceChange}>Search</Button> */}
             </div>
@@ -298,12 +305,96 @@ const RentApplication = () => {
                                 category={app.category}
                                 rent={app.rent}
                                 quantity_available={app.quantity_available}
-                                rent_id={app.rent_id}
                             />
                         </Grid>
                     ))}
                 </Grid>
             </Container>}
+
+
+
+            {/* Floating Icon */}
+            <AddCircleIcon
+                onClick={handleIconClick}
+                style={{
+                    position: "fixed",
+                    bottom: "16px",
+                    right: "16px",
+                    fontSize: "4em",
+                    color: "#4caf50",
+                    cursor: "pointer",
+                    zIndex: 1000,
+                }}
+            />
+
+            {/* Form Modal */}
+            <Dialog open={formOpen} onClose={handleFormClose} maxWidth="sm" fullWidth>
+                <DialogTitle>Submit Application</DialogTitle>
+                <DialogContent>
+                    <Box
+                        component="form"
+                        onSubmit={handleFormSubmit}
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 2,
+                            padding: 3,
+                        }}
+                    >
+                        <DropdownWithSelectedOptions  
+                            selectedOptions={selectCategoryOptions}
+                            setSelectedOptions={setSelectCategoryOptions}
+
+                        />   
+                        <TextField
+                            label="Description"
+                            name="description"
+                            type="text"
+                            value={formValues.description}
+                            onChange={handleFormChange}
+                            fullWidth
+                            error={formErrors.description}
+                            helperText={formErrors.description && "This field is required"}
+                        />
+                        <TextField
+                            label="quantity_available"
+                            name="quantity_available"
+                            multiple
+                            type="number"
+                            value={formValues.quantity_available}
+                            onChange={handleFormChange}
+                            fullWidth
+                            error={formErrors.quantity_available}
+                            helperText={
+                                formErrors.quantity_available &&
+                                "This field is required and must be greater than 0"
+                            }
+                        />
+                        <TextField
+                            label="rent (in Rupee)"
+                            name="rent"
+                            type="number"
+                            value={formValues.rent}
+                            onChange={handleFormChange}
+                            fullWidth
+                            error={formErrors.rent}
+                            helperText={
+                                formErrors.rent &&
+                                "This field is required and must be greater than 0"
+                            }
+                        />
+                        <DialogActions>
+                            <Button type="submit" color="primary">
+                                Submit
+                            </Button>
+                            <Button onClick={handleFormClose} color="secondary">
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
 
         </>
     );
