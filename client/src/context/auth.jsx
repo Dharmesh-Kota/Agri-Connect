@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const LogOut = () => {
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("username");
-    setIsLoggedIn(false);
+    setIsLoggedIn((prev) => false);
     navigate("/login");
     toast.success("Logout successful!");
   };
@@ -29,7 +29,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setIsLoggedIn(window.localStorage.getItem("token") !== null);
+    if (window.localStorage.getItem("token") === null) {
+      setIsLoggedIn((prev) => false);
+      navigate("/login");
+    } else {
+      setIsLoggedIn((prev) => true);
+    }
   }, []);
 
   return (

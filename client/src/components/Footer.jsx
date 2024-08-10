@@ -18,7 +18,9 @@ export default function Footer() {
       >
         <section className="d-flex justify-content-center justify-content-lg-between p-2 border-bottom">
           <div className="me-5 d-none d-lg-block">
-            <span>Get connected with us on social networks:</span>
+            <span style={{ fontFamily: "Quicksand" }}>
+              Get connected with us on social networks:
+            </span>
           </div>
 
           <div>
@@ -53,24 +55,32 @@ export default function Footer() {
           <MDBContainer className="text-center text-md-start mt-4">
             <MDBRow>
               <MDBCol md="3" lg="4" xl="3" className="mx-auto">
-                <h6 className="text-uppercase fw-bold">
+                <h6
+                  className="text-uppercase fw-bold"
+                  style={{ fontFamily: "Quicksand" }}
+                >
                   <MDBIcon icon="gem" className="me-3" />
                   TEAM-BLITZ
                 </h6>
-                <p>
+                <p style={{ fontFamily: "Quicksand" }}>
                   Crafted with passion by Team Blitz for{" "}
                   <strong>HackOut-2024</strong>, showcasing our dedication in
                   every detail.
                 </p>
               </MDBCol>
               <MDBCol md="4" lg="3" xl="3" className="mx-auto mb-md-0 mb-4">
-                <h6 className="text-uppercase fw-bold mb-4">Contact</h6>
-                <p>
+                <h6
+                  className="text-uppercase fw-bold mb-4"
+                  style={{ fontFamily: "Quicksand" }}
+                >
+                  Contact
+                </h6>
+                <p style={{ fontFamily: "Quicksand" }}>
                   <MDBIcon icon="home" className="me-2" />
                   DAIICT, INDIA
                 </p>
-                <p>
-                  <MDBIcon icon="envelope" className="me-3" />
+                <p style={{ fontFamily: "Quicksand" }}>
+                  <MDBIcon icon="envelope" className="me-2" />
                   abc@daiict.ac.in
                 </p>
               </MDBCol>
@@ -82,6 +92,7 @@ export default function Footer() {
           <a
             className="text-reset fw-bold"
             href="https://github.com/Dharmesh-Kota/Agri-Connect"
+            style={{ fontFamily: "Quicksand" }}
           >
             TEAM-BLITZ
           </a>

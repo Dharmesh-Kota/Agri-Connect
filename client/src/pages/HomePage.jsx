@@ -2,7 +2,7 @@ import React from "react";
 import LandingPage from "../components/LandingPage";
 import Home from "./Home";
 
-const FixedComponent = () => {
+const HomePage = () => {
   return (
     <>
       <div
@@ -21,4 +21,4 @@ const FixedComponent = () => {
   );
 };
 
-export default FixedComponent;
+export default HomePage;
