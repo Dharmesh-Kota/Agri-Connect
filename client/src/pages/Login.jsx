@@ -84,6 +84,7 @@ export default function Login() {
         toast.error("Invalid Credentials");
       }
     } catch (err) {
+      toast.error("Error Occured !!");
       console.log("error -> ", err);
     }
     setLoading(false);
