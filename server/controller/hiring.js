@@ -2,6 +2,8 @@ import User from '../models/user.js'
 import WorkApplication from '../models/work_application.js'
 import HirerWorker from '../models/hirer_worker.js'
 import axios from 'axios';
+import { hirer_rating } from "../mailer/hirer_rating.js";
+import { worker_rating } from "../mailer/worker_rating.js";
 // import { application } from 'express';
 
 export const work_application = async (req, res) => {
@@ -23,6 +25,7 @@ export const work_application = async (req, res) => {
         for (let hirer of hirers) {
             if (hirer.workers_required == 0) continue;
             if (hirer.closing_date < new Date()) continue;
+            if (hirer.hirer == req.user.username) continue;
             
             const apiKey = process.env.API_KEY;
 
@@ -153,9 +156,13 @@ export const view_applications = async (req, res) => {
         for (let application of applications) {
             let avg_rating = 0, count = 0;
             let hired_workers = await HirerWorker.find(
-                { application_id: application.application_id , status: "ongoing"},
-                { worker: 1 }
+                { application_id: application.application_id, status: "ongoing" },
+                { worker: 1, _id: 0 }
             );
+            hired_workers = hired_workers.map(workerDoc => {
+                return { username: workerDoc.worker }; // Rename worker to username
+            });
+            
             let applicantsWithRatings = [];
             for (let applicant of application.applicants) {
 
@@ -167,7 +174,7 @@ export const view_applications = async (req, res) => {
                     count++;
                 }
                 avg_rating = avg_rating / count;
-                applicantsWithRatings.push({ applicant: applicant, rating: avg_rating });
+                applicantsWithRatings.push({ username: applicant, rating: avg_rating });
 
             }
         
@@ -195,8 +202,6 @@ export const hire_worker = async (req, res) => {
         if (!hirer) return res.status(400).json({ message: 'You are not the hirer of this application!' });
         let valid = await WorkApplication.findOne({application_id: application_id}, {applicants: 1});
         if (!valid.applicants.includes(worker)) return res.status(400).json({ message: 'Worker is not an applicant!' });
-        valid = await User.findOne({username: worker}, {working: 1});
-        if (valid.working != '') return res.status(400).json({ message: 'Worker is already working!' });
 
         let working = await User.findOne({username: worker}, {working: 1});
         if (working.working != '') {
@@ -209,11 +214,17 @@ export const hire_worker = async (req, res) => {
         let application = await WorkApplication.findOne({application_id: application_id}, {workers_required: 1});
         if (application.workers_required == 0) return res.status(400).json({ message: 'No workers required!' });
         
-        await HirerWorker.create({
-            application_id: application_id,
-            worker: worker,
-            status: 'ongoing'
-        });
+        let hired = await HirerWorker.findOne({application_id: application_id, worker: worker});
+        if (hired) {
+            if (hired.status == 'ongoing') return res.status(400).json({ message: 'Worker is already working!' });
+            await HirerWorker.findOneAndUpdate({application_id: application_id, worker: worker}, { status: 'ongoing' });
+        } else {
+            await HirerWorker.create({
+                application_id: application_id,
+                worker: worker,
+                status: 'ongoing'
+            });
+        }
 
         await WorkApplication.findOneAndUpdate({application_id: application_id}, { 
             $pull: { applicants: worker },
@@ -237,9 +248,9 @@ export const free_worker = async (req, res) => {
         const application_id = req.params.application_id;
         const worker = req.params.worker;
 
-        const hirer = await WorkApplication.findOne({application_id: application_id, hirer: req.user.username, status: 'open'});
-        if (!hirer) return res.status(400).json({ message: 'You are not the hirer of this application!' });
-        const valid = await HirerWorker.findOne({application_id: application_id, worker: worker, status: 'ongoing'});
+        let valid = await WorkApplication.findOne({application_id: application_id, hirer: req.user.username, status: 'open'});
+        if (!valid) return res.status(400).json({ message: 'You are not the hirer of this application!' });
+        valid = await HirerWorker.findOne({application_id: application_id, worker: worker, status: 'ongoing'});
         if (!valid) return res.status(400).json({ message: 'Worker is not hired!' });
 
         let rating = 0;
@@ -250,6 +261,10 @@ export const free_worker = async (req, res) => {
         await HirerWorker.findOneAndUpdate({application_id: application_id, worker: worker}, { status: 'completed', hirer_rating: rating });
         await User.findOneAndUpdate({username: worker}, { working: '' });
         await WorkApplication.findOneAndUpdate({application_id: application_id}, { $inc: { workers_required: 1 } });
+
+        let hirer = await User.findOne({username: req.user.username}, {username: 1, contact: 1, name: 1, email: 1});
+        let worker_details = await User.findOne({username: worker}, {username: 1, contact: 1, name: 1, email: 1});
+        hirer_rating(worker_details, hirer);
 
         return res.status(201).json({ message: 'Worker freed successfully!' });
 
@@ -275,6 +290,11 @@ export const cancel_application = async (req, res) => {
         await User.findOneAndUpdate({username: req.user.username}, { working: '' });
         await WorkApplication.findOneAndUpdate({application_id: application_id}, { $inc: { workers_required: 1 } });
 
+        let worker = await User.findOne({username: req.user.username}, {username: 1, contact: 1, name: 1, email: 1});
+        let hirer = await Work.findOne({application_id: application_id}, {hirer: 1});
+        hirer = await User.findOne({username: hirer.hirer}, {username: 1, contact: 1, name: 1, email: 1});
+        worker_rating(worker, hirer);
+
         return res.status(201).json({ message: 'Application cancelled successfully!' });
 
     } catch (error) {
@@ -288,9 +308,9 @@ export const delete_application = async (req, res) => {
     try {
         
         const application_id = req.params.application_id;
-        const hirer = await WorkApplication.findOne({application_id: application_id, hirer: req.user.username});
-        if (!hirer) return res.status(400).json({ message: 'You are not the hirer of this application!' });
-        if (hirer.status == 'closed') return res.status(400).json({ message: 'Application is already closed!' });
+        const valid = await WorkApplication.findOne({application_id: application_id, hirer: req.user.username});
+        if (!valid) return res.status(400).json({ message: 'You are not the hirer of this application!' });
+        if (valid.status == 'closed') return res.status(400).json({ message: 'Application is already closed!' });
         
         const workers = await HirerWorker.find({application_id: application_id}, {status: 1});
         for (let worker of workers) {
