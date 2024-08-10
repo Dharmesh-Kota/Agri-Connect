@@ -86,7 +86,7 @@ function LandingPage() {
                 fontFamily: "'DM Serif Display', serif",
               }}
             >
-              Welcome To Agri Connect
+              Welcome To AgriConnect
             </Typography>
           </Grid>
         </Grid>
