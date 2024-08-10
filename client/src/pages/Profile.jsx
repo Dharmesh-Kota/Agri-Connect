@@ -113,7 +113,12 @@ const Profile = () => {
     <>
       <div
         data-aos="fade-up"
-        style={{ margin: "2em", fontFamily: "Quicksand", fontWeight: "600" }}
+        style={{
+          margin: "2em",
+          fontFamily: "Quicksand",
+          fontWeight: "600",
+          marginTop: "5em",
+        }}
       >
         <ThemeProvider theme={theme}>
           <Grid container spacing={3} justifyContent="center">

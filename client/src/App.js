@@ -46,6 +46,7 @@ function App() {
           <Route exact path="/aboutus" element={<AboutUS />} />
           <Route exact path="/rent-application" element={<RentApplicaton />} />
           <Route exact path="/work-applications" element={<WorkApplications />} />
+          <Route exact path="/view-work-applications" element={<ViewWorkApplications />} />
         </Routes>
         {!isHiddenPath && <Footer />}
       </ThemeProvider>
