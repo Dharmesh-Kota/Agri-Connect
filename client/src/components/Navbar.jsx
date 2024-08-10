@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import { Button } from "@mui/material";
 import { useAuth } from "../context/auth";
 import { useNavigate } from "react-router-dom";
+import Logo from "../images/logo.png";
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -62,7 +63,7 @@ function Navbar() {
             fontFamily: "Quicksand",
           }}
         >
-          <i className="fa-solid fa-seedling"></i> Compostify
+        <img src={Logo} alt="AgriConnect Logo" style={{ width: '55px', height: '45px' }} /> AgriConnect
         </Link>
         <button
           className="navbar-toggler"

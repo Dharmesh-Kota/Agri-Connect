@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const rentMachinerySchema = new mongoose.Schema({
+    rent_id: {
+        type: String,
+        required: true,
+        unique: true
+    },
     owner: {
         type: String,
         required: true
@@ -10,7 +15,7 @@ const rentMachinerySchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: String,
+        type: [String],
         enum: [
             'Tractors',
             'Plowing & Tilling Equipment',
@@ -32,7 +37,7 @@ const rentMachinerySchema = new mongoose.Schema({
         required: true,
         default: 1
     },
-    machineryHolder: {
+    machinery_holder: {
         type: [String]
     }
 },{
