@@ -15,7 +15,7 @@ export const rent_application = async (req, res) => {
             location = location.location;
         }
 
-        let applications = await RentMachinery.find({}, {rent_id: 1, owner: 1, description: 1, category: 1, rent: 1, quantity_available: 1});
+        let applications = await RentMachinery.find({}, {rent_id: 1, owner: 1, description: 1, category: 1, rent: 1, quantity_available: 1}).lean();
         let feasible_applications = [];
 
         for (let application of applications) {
@@ -47,8 +47,8 @@ export const rent_application = async (req, res) => {
                     let owner_details = await User.findOne({username: application.owner}, {name: 1, email: 1});
                     application.distance = distance;
                     application.travelTime = travelTime;
-                    application.hirer_name = owner_details.name;
-                    application.hirer_email = owner_details.email;
+                    application.owner_name = owner_details.name;
+                    application.owner_email = owner_details.email;
                     feasible_applications.push(application);
                 }
             } else {
