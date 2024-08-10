@@ -39,7 +39,7 @@ function App() {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/aboutus" element={<AboutUS />} />
-          <Route exact path="/rent-application" element={<RentApplicaton />} />
+          <Route exact path="/rent-applications" element={<RentApplicaton />} />
           <Route exact path="/work-applications" element={<WorkApplications />} />
         </Routes>
         {!isHiddenPath && <Footer />}

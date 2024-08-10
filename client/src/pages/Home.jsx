@@ -153,7 +153,7 @@ function Home() {
           <button
             style={ButtonhireStyle}
             onClick={() => {
-              navigate("/work-application");
+              navigate("/work-applications");
             }}
           >
             Hiring
@@ -169,7 +169,7 @@ function Home() {
           <button
             style={ButtonrentStyle}
             onClick={() => {
-              navigate("/rent-application");
+              navigate("/rent-applications");
             }}
           >
             Rent Machine

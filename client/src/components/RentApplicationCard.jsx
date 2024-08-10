@@ -48,7 +48,7 @@ const RentApplicationCard = ({
             fontWeight={700} // Bold font weight
             fontSize="1.5rem" // Larger font size
           >
-            <strong>Owner Name</strong>{owner}
+            <strong>Owner Name : </strong>{owner}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -57,7 +57,7 @@ const RentApplicationCard = ({
             fontWeight={600} // Medium font weight
             fontSize="1.2rem" // Slightly larger font size
           >
-            <strong>Descrition</strong>{discription}
+            <strong>Descrition : </strong>{discription}
           </Typography>
         </Box>
         <Typography
@@ -68,7 +68,11 @@ const RentApplicationCard = ({
           fontWeight={400} // Regular font weight
           fontSize="1rem" // Regular font size
         >
-          <strong>Categories</strong>{category.map((cat)=>{<li>{cat}</li>})}
+           <ul>
+        {category.map((cat, index) => (
+          <li key={index}>{cat}</li> // Ensure each item has a unique `key`
+        ))}
+      </ul>
         </Typography>
         <Typography
           variant="body2"
@@ -77,7 +81,7 @@ const RentApplicationCard = ({
           fontWeight={500} // Medium font weight
           fontSize="1rem"
         >
-          <strong>Rent</strong> {rent}
+          <strong>Rent : </strong> {rent}
         </Typography>
         <Typography
           variant="body2"
