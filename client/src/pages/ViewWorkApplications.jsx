@@ -134,7 +134,7 @@ const ViewWorkApplications = () => {
 
   const handleApplicantStatusChange = async (
     application_id,
-    username,
+    username_obj,
     action
   ) => {
     try {
@@ -143,11 +143,13 @@ const ViewWorkApplications = () => {
         Authorization: `Bearer ${window.localStorage.getItem("token")}`,
       };
 
+      // console.log(username);
+
       const response = await axios.get(
         (process.env.BACKEND_API || "http://localhost:8000") +
           (action === "hire"
-            ? `/hire-worker/${application_id}/${username}`
-            : `/free-worker/${application_id}/${username}`),
+            ? `/hire-worker/${application_id}/${username_obj.username}`
+            : `/free-worker/${application_id}/${username_obj.username}`),
         { headers }
       );
 
@@ -162,25 +164,33 @@ const ViewWorkApplications = () => {
                   ...app,
                   applicants:
                     action === "hire"
-                      ? app.applicants.filter((user) => user !== username)
+                      ? app.applicants.filter(
+                          (user) => user.username !== username_obj.username
+                        )
                       : app.applicants,
                   hired_workers:
                     action === "hire"
-                      ? [...app.hired_workers, username]
-                      : app.hired_workers.filter((user) => user !== username),
+                      ? [...app.hired_workers, username_obj]
+                      : app.hired_workers.filter(
+                          (user) => user.username !== username_obj.username
+                        ),
                 }
               : app
           )
         );
         toast.success(
-          `${username} has been ${action === "hire" ? "hired" : "freed"}.`
+          `${username_obj.username} has been ${
+            action === "hire" ? "hired" : "freed"
+          }.`
         );
       } else {
         throw new Error("Failed to update applicant status.");
       }
     } catch (error) {
       toast.error(
-        `Failed to ${action === "hire" ? "hire" : "free"} ${username}.`
+        `Failed to ${action === "hire" ? "hire" : "free"} ${
+          username_obj.username
+        }.`
       );
       throw error;
     }

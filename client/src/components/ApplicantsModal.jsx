@@ -40,28 +40,30 @@ const ApplicationModal = ({
 
   useEffect(() => {
     setLocalApplication(application);
-    // console.log(application);
+    console.log("app");
+
+    console.log(application);
   }, [application]);
 
   const handleTabChange = (event, newIndex) => {
     setTabIndex(newIndex);
   };
 
-  const handleHire = async (username) => {
+  const handleHire = async (username_obj) => {
     try {
       // Assume the API endpoint for hiring applicants is something like:
-      // POST /api/applications/{applicationId}/applicants/{username}/hire
+      // POST /api/applications/{applicationId}/applicants/{username}/h_objire
       await onApplicantStatusChange(
         localApplication.application_id,
-        username,
+        username_obj,
         "hire"
       );
       setLocalApplication((prevApplication) => ({
         ...prevApplication,
         applicants: prevApplication.applicants.filter(
-          (user) => user !== username
+          (user) => user.username !== username_obj.username
         ),
-        hired_workers: [...prevApplication.hired_workers, username],
+        hired_workers: [...prevApplication.hired_workers, username_obj],
       }));
     } catch (error) {
       // Handle the error if the API call fails
@@ -69,21 +71,21 @@ const ApplicationModal = ({
     }
   };
 
-  const handleFree = async (username) => {
+  const handleFree = async (username_obj) => {
     try {
       // Assume the API endpoint for freeing applicants is something like:
       // POST /api/applications/{applicationId}/applicants/{username}/free
       await onApplicantStatusChange(
         localApplication.application_id,
-        username,
+        username_obj,
         "free"
       );
       setLocalApplication((prevApplication) => ({
         ...prevApplication,
         hired_workers: prevApplication.hired_workers.filter(
-          (user) => user !== username
+          (user) => user.username !== username_obj.username
         ),
-        applicants: [...prevApplication.applicants, username],
+        applicants: [...prevApplication.applicants, username_obj],
       }));
     } catch (error) {
       // Handle the error if the API call fails
@@ -128,19 +130,18 @@ const ApplicationModal = ({
               Applicants
             </Typography>
             <List>
-              {localApplication.applicants &&
-                localApplication.applicants.map((index, username) => (
-                  <ListItem key={index}>
-                    <ListItemText primary={username} />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleHire(username)}
-                    >
-                      Hire
-                    </Button>
-                  </ListItem>
-                ))}
+              {localApplication.applicants.map((item, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={item.username} />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleHire(item)}
+                  >
+                    Hire
+                  </Button>
+                </ListItem>
+              ))}
             </List>
           </>
         )}
@@ -152,13 +153,13 @@ const ApplicationModal = ({
             </Typography>
             <List>
               {localApplication.hired_workers &&
-                localApplication.hired_workers.map((index, obj) => (
+                localApplication.hired_workers.map((obj, index) => (
                   <ListItem key={index}>
-                    <ListItemText primary={obj.worker} />
+                    <ListItemText primary={obj.username} />
                     <Button
                       variant="contained"
                       color="secondary"
-                      onClick={() => handleFree(obj.worker)}
+                      onClick={() => handleFree(obj)}
                     >
                       Free
                     </Button>
