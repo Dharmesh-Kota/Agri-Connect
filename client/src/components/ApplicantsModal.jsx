@@ -89,17 +89,19 @@ const ApplicationModal = ({
         >
           <CloseIcon />
         </IconButton>
-        <Typography variant="h6" gutterBottom>
+        {/* <Typography variant="h6" gutterBottom>
           Applicants for {localApplication.title}
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom>
+        </Typography> */}
+        {/* <Typography variant="subtitle1" gutterBottom>
           Status: {localApplication.status}
+        </Typography> */}
+        <Typography variant="subtitle1" gutterBottom>
+          Total Applicants:{" "}
+          {localApplication.applicants ? localApplication.applicants.length : 0}
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
-          Total Applicants: {localApplication.applicants.length}
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          Total Hired: {localApplication.hired.length}
+          Total Hired:{" "}
+          {localApplication.hired ? localApplication.hired.length : 0}
         </Typography>
 
         <Tabs value={tabIndex} onChange={handleTabChange} centered>
@@ -113,18 +115,19 @@ const ApplicationModal = ({
               Applicants
             </Typography>
             <List>
-              {localApplication.applicants.map((username) => (
-                <ListItem key={username}>
-                  <ListItemText primary={username} />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleHire(username)}
-                  >
-                    Hire
-                  </Button>
-                </ListItem>
-              ))}
+              {localApplication.applicants &&
+                localApplication.applicants.map((username) => (
+                  <ListItem key={username}>
+                    <ListItemText primary={username} />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleHire(username)}
+                    >
+                      Hire
+                    </Button>
+                  </ListItem>
+                ))}
             </List>
           </>
         )}
@@ -135,18 +138,19 @@ const ApplicationModal = ({
               Hired Applicants
             </Typography>
             <List>
-              {localApplication.hired.map((username) => (
-                <ListItem key={username}>
-                  <ListItemText primary={username} />
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleFree(username)}
-                  >
-                    Free
-                  </Button>
-                </ListItem>
-              ))}
+              {localApplication.hired &&
+                localApplication.hired.map((username) => (
+                  <ListItem key={username}>
+                    <ListItemText primary={username} />
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleFree(username)}
+                    >
+                      Free
+                    </Button>
+                  </ListItem>
+                ))}
             </List>
           </>
         )}

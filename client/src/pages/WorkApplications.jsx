@@ -68,7 +68,6 @@ const WorkApplications = () => {
   // ];
 
   const fetchApplications = async (location) => {
-    // console.log(location);
     try {
       // fetch applications
       const headers = {
@@ -78,7 +77,9 @@ const WorkApplications = () => {
 
       const results = await axios.get(
         (process.env.BACKEND_API || "http://localhost:8000") +
-          `/work-application?lat=${location.latitude}&lng=${location.longitude}`,
+          (location
+            ? `/work-application?lat=${location.latitude}&lng=${location.longitude}`
+            : `/work-application`),
         { headers }
       );
 
@@ -182,14 +183,19 @@ const WorkApplications = () => {
         console.log(formValues);
 
         const results = await axios.post(
-          (config.BACKEND_API || "http://localhost:8000") +
+          (process.env.BACKEND_API || "http://localhost:8000") +
             `/create-work-application`,
           formValues,
           { headers }
         );
 
         console.log(results);
-
+        setFormValues({
+          workers_required: "",
+          description: "",
+          closing_date: "",
+          labour: "",
+        });
         // console.log("Form submitted:", response.data);
         toast.success("Application submitted successfully!");
         handleFormClose();
