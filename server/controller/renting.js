@@ -15,7 +15,7 @@ export const rent_application = async (req, res) => {
             location = location.location;
         }
 
-        let applications = await RentMachinery.find({}, {rent_id: 1, owner: 1, discription: 1, category: 1, rent: 1, quantity_available: 1});
+        let applications = await RentMachinery.find({}, {rent_id: 1, owner: 1, description: 1, category: 1, rent: 1, quantity_available: 1});
         let feasible_applications = [];
 
         for (let application of applications) {
@@ -83,7 +83,7 @@ export const create_rent_application = async (req, res) => {
         await RentMachinery.create({
             rent_id: rent_id,
             owner: req.user.username,
-            discription: req.body.discription,
+            description: req.body.description,
             category: req.body.category,
             rent: req.body.rent,
             quantity_available: req.body.quantity_available
@@ -101,7 +101,7 @@ export const create_rent_application = async (req, res) => {
 export const view_applications = async (req, res) => {
     try {
         
-        let applications = await RentMachinery.find({owner: req.user.username}, {rent_id: 1, discription: 1, category: 1, rent: 1, quantity_available: 1, machinery_holder: 1});
+        let applications = await RentMachinery.find({owner: req.user.username}, {rent_id: 1, description: 1, category: 1, rent: 1, quantity_available: 1, machinery_holder: 1});
         for (let application of applications) {
             let holder_details = [];
             for (let holder of application.machinery_holder) {
@@ -156,7 +156,7 @@ export const update_application = async (req, res) => {
         await RentMachinery.findOneAndUpdate({
             rent_id: rent_id
         }, {
-            discription: req.body.discription,
+            description: req.body.description,
             category: req.body.category,
             rent: req.body.rent,
             quantity_available: req.body.quantity_available

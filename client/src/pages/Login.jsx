@@ -84,6 +84,7 @@ export default function Login() {
         toast.error("Invalid Credentials");
       }
     } catch (err) {
+      toast.error("Error Occured !!");
       console.log("error -> ", err);
     }
     setLoading(false);
@@ -151,7 +152,7 @@ export default function Login() {
                 fullWidth
                 required
                 size="small"
-                autoComplete="off"
+                autoComplete="on"
                 error={
                   justVerify &&
                   (emailUsername === "" || emailUsername.length >= 255)
@@ -189,7 +190,7 @@ export default function Login() {
                 fullWidth
                 required
                 size="small"
-                autoComplete="off"
+                autoComplete="on"
                 error={
                   justVerify &&
                   (!validPassword || password === "" || password.length >= 255)
