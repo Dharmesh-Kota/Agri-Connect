@@ -4,12 +4,16 @@ import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../CSS/AboutUs.css";
 
+import WorkIcon from "@mui/icons-material/Work";
+import BuildIcon from "@mui/icons-material/Build";
+import InsightsIcon from "@mui/icons-material/Insights";
+import { Card, CardContent, Typography, Grid } from "@mui/material";
+
+import GroupIcon from "@mui/icons-material/Group";
 import Button from "@mui/material/Button";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import rentimg from "../images/rent.png";
 import hireimg from "../images/hire.jpg";
-
-import LandingPage from "../components/LandingPage";
 
 const ImgcontainerStyle = {
   height: "40%",
@@ -47,8 +51,8 @@ const containerStyle = {
 
 const textrentStyle = {
   position: "absolute",
-  right: "15%",
-  bottom: "20%",
+  right: "20%",
+  bottom: "30%",
   transform: "translateY(-50%)",
   color: "#ffffff",
   fontSize: "5rem",
@@ -59,7 +63,7 @@ const textrentStyle = {
 const ButtonrentStyle = {
   position: "absolute",
   right: "27.5%",
-  bottom: "20%",
+  bottom: "30%",
   padding: "10px 20px",
   fontSize: "1.5rem",
   color: "#000000",
@@ -73,8 +77,8 @@ const ButtonrentStyle = {
 
 const texthireStyle = {
   position: "absolute",
-  left: "15%",
-  bottom: "20%",
+  left: "20%",
+  bottom: "30%",
   transform: "translateY(-50%)",
   color: "#ffffff",
   fontSize: "5rem",
@@ -85,7 +89,7 @@ const texthireStyle = {
 const ButtonhireStyle = {
   position: "absolute",
   left: "27.5%",
-  bottom: "20%",
+  bottom: "30%",
   padding: "10px 20px",
   fontSize: "1.5rem",
   color: "#000000",
@@ -96,29 +100,37 @@ const ButtonhireStyle = {
   cursor: "pointer",
   boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
 };
-
 const contentStyle = {
-  textAlign: "justify", // Aligns text justification
-  padding: "20px",
-  width: "80%", // Use lowercase 'width' instead of 'Width'
+  padding: "30px",
+  width: "80%",
   margin: "20px auto",
-  backgroundColor: "#f9f9f9",
+  // background: 'linear-gradient(135deg, #ffffff, #f0f0f0)',
+  // borderRadius: '15px',
+  // boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)',
+};
+
+const cardStyle = {
+  maxWidth: 345,
+  margin: "15px",
   borderRadius: "10px",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
+  textAlign: "center",
+  padding: "10px",
+  height: "200px",
 };
 
+const iconStyle = {
+  fontSize: "3rem",
+  color: "#00796b", // Teal color for the icons
+};
 const headingStyle = {
-  fontSize: "2.5rem",
-  margin: "0",
+  display: "flex",
+  justifyContent: "center",
+  fontSize: "2.8rem",
+  margin: "0 0 20px",
   color: "#333",
-};
-
-const paragraphStyle = {
-  fontSize: "1.2rem",
-  color: "#555",
-  lineHeight: "1.6",
-  textAlign: "justify", // Justifies text within paragraphs
-  margin: "0 0 20px", // Adds spacing between paragraphs
+  fontWeight: "600",
+  textShadow: "1px 1px 2px rgba(0, 0, 0, 0.2)",
 };
 
 function Home() {
@@ -126,44 +138,99 @@ function Home() {
 
   return (
     <>
-      <LandingPage />
+      <div style={ImgcontainerStyle}>
+        <img
+          src="https://via.placeholder.com/500x250"
+          alt="Project Image 1"
+          style={imageStyle}
+        />
+        <div style={welcometext}>
+          <div style={{ fontSize: "6rem" }}>Welcome to</div>
+          <div style={{ fontSize: "7.5rem" }}>AgriConnect</div>
+        </div>
+      </div>
+      <div></div>
       <div style={containerStyle}>
         <div style={imageStyle}>
           <img
             src={hireimg}
             alt="Background"
-            style={{ width: "80%", height: "500px" }}
+            style={{ width: "65%", height: "500px", borderRadius: "10px" }}
           />
-          <div style={texthireStyle}>Hire & Get Hired</div>
-          <button style={ButtonhireStyle}>Hiring</button>
+          <div style={texthireStyle}>Hire or Get Hired</div>
+          <button
+            style={ButtonhireStyle}
+            onClick={() => {
+              navigate("/work_application");
+            }}
+          >
+            Hiring
+          </button>
         </div>
         <div style={imageStyle}>
           <img
             src={rentimg}
             alt="Background"
-            style={{ width: "80%", height: "500px" }}
+            style={{ width: "65%", height: "500px", borderRadius: "10px" }}
           />
-          <div style={textrentStyle}>Acquire & Lease</div>
-          <button style={ButtonrentStyle}>Rent Machine</button>
+          <div style={textrentStyle}>Acquire or Lease</div>
+          <button
+            style={ButtonrentStyle}
+            onClick={() => {
+              navigate("/rent_application");
+            }}
+          >
+            Rent Machine
+          </button>
         </div>
       </div>
 
       <div style={contentStyle}>
-        <h1 style={headingStyle}>What We Do</h1>
-        <p style={paragraphStyle}>
-          At AgriConnect, we bridge the gap between technology and agriculture.
-          Our platform offers innovative solutions to connect farmers with
-          essential resources, equipment rentals, and expert advice. Whether
-          you're looking to hire machinery, access advanced tools, or gain
-          insights into the latest agricultural practices, AgriConnect provides
-          a seamless and efficient way to support your farming needs.
-        </p>
-        <p style={paragraphStyle}>
-          Our goal is to empower farmers with the tools and knowledge they need
-          to thrive in a rapidly evolving industry. Join us in transforming
-          agriculture and achieving greater productivity and sustainability for
-          the future.
-        </p>
+        <h1 style={headingStyle}>What we do?</h1>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} sm={4}>
+            <Card style={cardStyle}>
+              <CardContent>
+                <WorkIcon style={iconStyle} />
+                <Typography variant="h5" component="div" gutterBottom>
+                  Connect
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Easily connect farmers with skilled workers or find job
+                  opportunities in agriculture.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Card style={cardStyle}>
+              <BuildIcon style={iconStyle} />
+              <CardContent>
+                <Typography variant="h5" component="div" gutterBottom>
+                  Rent Equipment
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  List and rent agricultural machinery effortlessly. Access
+                  high-quality tools as needed.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Card style={cardStyle}>
+              <InsightsIcon style={iconStyle} />
+              <CardContent>
+                <Typography variant="h5" component="div" gutterBottom>
+                  Innovate
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Get insights into the latest farming practices and
+                  technologies to stay ahead in agriculture.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </div>
     </>
   );
