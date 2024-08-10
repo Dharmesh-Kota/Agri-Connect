@@ -2,29 +2,29 @@ import React from "react";
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-// Custom styled component for a more attractive card
+// Custom styled component for a more attractive card with greenish theme
 const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: "16px",
   boxShadow: theme.shadows[5],
   overflow: "visible",
   backgroundColor: "#ffffff", // Light background color
-  border: `1px solid #d0e1d4`, // Light greenish border
+  border: `1px solid #a8d5ba`, // Light greenish border
   transition:
     "transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
   "&:hover": {
     transform: "scale(1.02)", // Slightly scale up for a subtle effect
-    backgroundColor: "#f9fdf6", // Very light green background on hover
+    backgroundColor: "#eaf4e5", // Very light green background on hover
     boxShadow: theme.shadows[10],
   },
 }));
 
-// Custom button styling
+// Custom button styling with greenish theme
 const StyledButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: "#4caf50", // Green background color
   color: "#fff",
   "&:hover": {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: "#388e3c", // Darker green on hover
   },
 }));
 
