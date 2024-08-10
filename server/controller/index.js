@@ -43,7 +43,7 @@ export const create_session = async (req, res) => {
 export const profile = async (req, res) => {
     try {
         const username = req.params.username;
-        let user = await User.findById(req.user.id);
+        let user = await User.findById(req.user.id).lean();
         user.valid = true;
         if (user.username !== username) {
             if (user.working === '') user.working = false;
@@ -62,7 +62,7 @@ export const profile = async (req, res) => {
             if (user.working === '') user.working = false;
             else {
                 let applicantion_id = user.working;
-                let work = await WorkApplication.findOne({application_id: applicantion_id}, {hirer: 1});
+                let work = await WorkApplication.findOne({application_id: applicantion_id}, {hirer: 1}).lean();
                 work = await User.findOne({username: work.hirer}, {name: 1, email: 1, address: 1, contact: 1});
                 work.application_id = applicantion_id;
                 user.working = work;
