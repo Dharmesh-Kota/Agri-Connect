@@ -2,6 +2,9 @@ import React from "react";
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+import axios from "axios";
+import toast from "react-hot-toast";
+
 // Custom styled component for a more attractive card with greenish theme
 const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: "16px",
@@ -28,13 +31,33 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+// when apply button click
+const onClickApplyHandle = async (applicationId) => {
+  try {
+    // fetch applications
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+    };
+
+    const results = await axios.get(
+      (process.env.BACKEND_API || "http://localhost:8000") +
+        `/apply-for-work/${applicationId}`,
+      { headers }
+    );
+
+    console.log(results);
+    toast.success("Applied Successfully");
+  } catch (error) {
+    toast.error("Internal Server Error");
+  }
+};
+
 const ApplicationCard = ({
-  title,
-  company,
   personName,
   applicationId,
-  workersRequired,
-  closingDate,
+  workers_required,
+  closing_date,
   description,
   amountPerDay,
 }) => {
@@ -50,7 +73,7 @@ const ApplicationCard = ({
             fontWeight={700} // Bold font weight
             fontSize="1.5rem" // Larger font size
           >
-            {title}
+            <strong>Person Name: </strong> {personName}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -59,10 +82,10 @@ const ApplicationCard = ({
             fontWeight={600} // Medium font weight
             fontSize="1.2rem" // Slightly larger font size
           >
-            {company}
+            {description}
           </Typography>
         </Box>
-        <Typography
+        {/* <Typography
           variant="body2"
           color="text.secondary"
           paragraph
@@ -71,8 +94,8 @@ const ApplicationCard = ({
           fontSize="1rem" // Regular font size
         >
           {description}
-        </Typography>
-        <Typography
+        </Typography> */}
+        {/* <Typography
           variant="body2"
           color="text.secondary"
           fontFamily="'Quicksand', sans-serif"
@@ -80,7 +103,7 @@ const ApplicationCard = ({
           fontSize="1rem"
         >
           <strong>Person Name:</strong> {personName}
-        </Typography>
+        </Typography> */}
         <Typography
           variant="body2"
           color="text.secondary"
@@ -97,7 +120,7 @@ const ApplicationCard = ({
           fontWeight={500}
           fontSize="1rem"
         >
-          <strong>Workers Required:</strong> {workersRequired}
+          <strong>Workers Required:</strong> {workers_required}
         </Typography>
         <Typography
           variant="body2"
@@ -106,7 +129,8 @@ const ApplicationCard = ({
           fontWeight={500}
           fontSize="1rem"
         >
-          <strong>Closing Date:</strong> {closingDate}
+          <strong>Closing Date:</strong>{" "}
+          {new Date(closing_date).toISOString().split("T")[0]}
         </Typography>
         <Typography
           variant="body2"
@@ -117,7 +141,11 @@ const ApplicationCard = ({
         >
           <strong>Amount Per Day:</strong> {amountPerDay}
         </Typography>
-        <StyledButton variant="contained" size="small">
+        <StyledButton
+          variant="contained"
+          size="small"
+          onClick={() => onClickApplyHandle(applicationId)}
+        >
           Apply
         </StyledButton>
       </CardContent>

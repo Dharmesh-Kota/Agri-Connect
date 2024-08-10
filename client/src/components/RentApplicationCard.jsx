@@ -31,7 +31,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const RentApplicationCard = ({
   owner,
-  discription,
+  description,
   category,
   rent,
   quantity_available,
@@ -59,7 +59,7 @@ const RentApplicationCard = ({
             fontSize="1.2rem" // Slightly larger font size
           >
             <strong>Descrition : </strong>
-            {discription}
+            {description}
           </Typography>
         </Box>
         <Typography
