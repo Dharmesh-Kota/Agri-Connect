@@ -15,7 +15,9 @@ import { Box } from "@mui/material";
 import rentimg from "../images/rent.png";
 import hireimg from "../images/hire.jpg";
 
-import LandingPage from "../components/LandingPage";
+import LandingText from "../components/LandingText";
+
+import "../CSS/Home.css";
 
 const ImgcontainerStyle = {
   height: "40%",
@@ -140,7 +142,7 @@ function Home() {
 
   return (
     <>
-      <LandingPage />
+      <LandingText />
       <div></div>
       <div style={containerStyle}>
         <div style={imageStyle}>
