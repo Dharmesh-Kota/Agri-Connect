@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   position: relative;
-  animation: zigzag 20s infinite;
+  animation: zigzag 19s infinite;
 }
 
 @keyframes zigzag {

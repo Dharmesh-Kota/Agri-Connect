@@ -198,7 +198,7 @@ const WorkApplications = () => {
         </DialogActions>
       </Dialog>
 
-      <Container>
+      <Container sx={{ pt: "5em" }}>
         <Grid container spacing={4}>
           {applications.map((app) => (
             <Grid item xs={12} key={app.id} data-aos="fade-up">

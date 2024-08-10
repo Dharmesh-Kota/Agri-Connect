@@ -1,6 +1,6 @@
 import React from "react";
 import "../CSS/LandingPage.css";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import img2 from "../images/img2.png";
 import img3 from "../images/img3.png";
 import leaf from "../images/leaf.png";
@@ -37,6 +37,7 @@ function LandingPage() {
               style={{
                 width: "16em",
                 height: "100%",
+                zIndex: -1000,
               }}
             />
           </div>
@@ -48,6 +49,7 @@ function LandingPage() {
               style={{
                 width: "20em",
                 height: "100%",
+                zIndex: -1000,
               }}
             />
           </div>
@@ -60,7 +62,6 @@ function LandingPage() {
           sx={{
             width: "100%",
             height: "100vh",
-            // backgroundColor: "lightblue",
           }}
         >
           <Grid
@@ -77,17 +78,7 @@ function LandingPage() {
               justifyContent: "center",
             }}
           >
-            <Typography
-              fontWeight="bold"
-              sx={{
-                m: 10,
-                color: "#134611",
-                fontSize: "6em",
-                fontFamily: "'DM Serif Display', serif",
-              }}
-            >
-              Welcome To AgriConnect
-            </Typography>
+            {/* Typography */}
           </Grid>
         </Grid>
       </Box>

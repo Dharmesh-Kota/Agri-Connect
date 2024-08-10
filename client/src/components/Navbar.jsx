@@ -52,7 +52,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg p-0" style={navbarStyle}>
+    <nav className="navbar navbar-expand-lg p-1" style={navbarStyle}>
       <div className="container-fluid">
         <Link
           className="navbar-brand"
@@ -63,7 +63,12 @@ function Navbar() {
             fontFamily: "Quicksand",
           }}
         >
-        <img src={Logo} alt="AgriConnect Logo" style={{ width: '55px', height: '45px' }} /> AgriConnect
+          <img
+            src={Logo}
+            alt="AgriConnect Logo"
+            style={{ width: "55px", height: "45px" }}
+          />{" "}
+          AgriConnect
         </Link>
         <button
           className="navbar-toggler"
@@ -81,114 +86,76 @@ function Navbar() {
             <Button
               disableRipple
               variant="text"
-              style={{ transition: "all 0.5s ease" }}
               sx={{
+                transition: "all 0.3s ease",
+                border: "2px solid transparent",
                 "&:hover": {
-                  borderBottom: "1px solid #03045e",
-                  borderRadius: "5px",
+                  borderBottom: "2px solid #134611",
+                  borderTopRightRadius: "5px",
+                  borderTopLeftRadius: "5px",
                 },
               }}
             >
               <Link
                 className="nav-link active"
                 to="/"
-                style={{ fontFamily: "Quicksand", transition: "all 0.5s ease" }}
+                style={{ fontFamily: "Quicksand", transition: "all 0.3s ease" }}
               >
                 Home
               </Link>
             </Button>
-            {window.localStorage.getItem("role") === '"compostAgency"' && (
-              <>
-                <Button
-                  disableRipple
-                  variant="text"
-                  style={{ transition: "all 0.5s ease" }}
-                  sx={{
-                    "&:hover": {
-                      borderBottom: "1px solid #03045e",
-                      borderRadius: "5px",
-                    },
-                  }}
-                >
-                  <Link
-                    className="nav-link active"
-                    to="/agency_rewards"
-                    style={{ fontFamily: "Quicksand" }}
-                  >
-                    Rewards
-                  </Link>
-                </Button>
-                <Button
-                  disableRipple
-                  variant="text"
-                  style={{ transition: "all 0.5s ease" }}
-                  sx={{
-                    "&:hover": {
-                      borderBottom: "1px solid #03045e",
-                      borderRadius: "5px",
-                    },
-                  }}
-                >
-                  <Link
-                    className="nav-link active"
-                    to="/history"
-                    style={{ fontFamily: "Quicksand" }}
-                  >
-                    History
-                  </Link>
-                </Button>
-              </>
-            )}
-            {window.localStorage.getItem("role") === '"donor"' && (
-              <>
-                <Button
-                  disableRipple
-                  variant="text"
-                  style={{ transition: "all 0.5s ease" }}
-                  sx={{
-                    "&:hover": {
-                      borderBottom: "1px solid #03045e",
-                      borderRadius: "5px",
-                    },
-                  }}
-                >
-                  <Link
-                    className="nav-link active"
-                    to="/user_rewards"
-                    style={{ fontFamily: "Quicksand" }}
-                  >
-                    Rewards
-                  </Link>
-                </Button>
-                <Button
-                  disableRipple
-                  variant="text"
-                  style={{ transition: "all 0.5s ease" }}
-                  sx={{
-                    "&:hover": {
-                      borderBottom: "1px solid #03045e",
-                      borderRadius: "5px",
-                    },
-                  }}
-                >
-                  <Link
-                    className="nav-link active"
-                    to="/history"
-                    style={{ fontFamily: "Quicksand" }}
-                  >
-                    History
-                  </Link>
-                </Button>
-              </>
-            )}
             <Button
               disableRipple
               variant="text"
-              style={{ transition: "all 0.5s ease" }}
               sx={{
+                transition: "all 0.3s ease",
+                border: "2px solid transparent",
                 "&:hover": {
-                  borderBottom: "1px solid #03045e",
-                  borderRadius: "5px",
+                  borderBottom: "2px solid #134611",
+                  borderTopRightRadius: "5px",
+                  borderTopLeftRadius: "5px",
+                },
+              }}
+            >
+              <Link
+                className="nav-link active"
+                to="/work-applications"
+                style={{ fontFamily: "Quicksand", transition: "all 0.3s ease" }}
+              >
+                Hiring
+              </Link>
+            </Button>
+            <Button
+              disableRipple
+              variant="text"
+              sx={{
+                transition: "all 0.3s ease",
+                border: "2px solid transparent",
+                "&:hover": {
+                  borderBottom: "2px solid #134611",
+                  borderTopRightRadius: "5px",
+                  borderTopLeftRadius: "5px",
+                },
+              }}
+            >
+              <Link
+                className="nav-link active"
+                to="/rent-applications"
+                style={{ fontFamily: "Quicksand", transition: "all 0.3s ease" }}
+              >
+                Rent Applications
+              </Link>
+            </Button>
+            <Button
+              disableRipple
+              variant="text"
+              sx={{
+                transition: "all 0.3s ease",
+                border: "2px solid transparent",
+                "&:hover": {
+                  borderBottom: "2px solid #134611",
+                  borderTopRightRadius: "5px",
+                  borderTopLeftRadius: "5px",
                 },
               }}
             >
@@ -200,7 +167,6 @@ function Navbar() {
                 AboutUS
               </Link>
             </Button>
-
             {isLoggedIn ? (
               <>
                 <div>
@@ -252,10 +218,10 @@ function Navbar() {
               <Button
                 disableRipple
                 variant="outlined"
-                style={{ transition: "all 0.5s ease" }}
+                style={{ transition: "all 0.3s ease" }}
                 sx={{
                   "&:hover": {
-                    borderBottom: "1px solid #03045e",
+                    borderBottom: "1px solid #134611",
                     borderRadius: "5px",
                   },
                 }}

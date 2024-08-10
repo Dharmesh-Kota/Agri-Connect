@@ -1,41 +1,46 @@
 import React from "react";
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { light } from "@mui/material/styles/createPalette";
 
-// Custom styled component for a more attractive card
+// Custom styled component for a more attractive card with greenish theme
 const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: "16px",
   boxShadow: theme.shadows[5],
   overflow: "visible",
   backgroundColor: "#ffffff", // Light background color
-  border: `1px solid #d0e1d4`, // Light greenish border
+  border: `1px solid #a8d5ba`, // Light greenish border
   transition:
     "transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
   "&:hover": {
     transform: "scale(1.02)", // Slightly scale up for a subtle effect
-    backgroundColor: "#f9fdf6", // Very light green background on hover
+    backgroundColor: "#eaf4e5", // Very light green background on hover
     boxShadow: theme.shadows[10],
   },
 }));
 
-// Custom button styling
+// Custom button styling with greenish theme
 const StyledButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: "#4caf50", // Green background color
   color: "#fff",
   "&:hover": {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: "#388e3c", // Darker green on hover
   },
 }));
 
-const RentApplicationCard = ({
-  owner,
-  discription,
-  category,
-  rent,
-  quantity_available,
+const ViewApplicationCard = ({
+  title,
+  company,
+  workersRequired,
+  closingDate,
+  description,
+  amountPerDay,
+  status, // New prop for the status of the application
+  onViewApplicants, // Function to view applicants
+  onEdit, // Function to edit the application
+  onDelete, // Function to delete the application
 }) => {
+  // Ensure all necessary props are passed and used correctly
   return (
     <StyledCard>
       <CardContent>
@@ -48,8 +53,7 @@ const RentApplicationCard = ({
             fontWeight={700} // Bold font weight
             fontSize="1.5rem" // Larger font size
           >
-            <strong>Owner Name : </strong>
-            {owner}
+            {title}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -58,8 +62,7 @@ const RentApplicationCard = ({
             fontWeight={600} // Medium font weight
             fontSize="1.2rem" // Slightly larger font size
           >
-            <strong>Descrition : </strong>
-            {discription}
+            {company}
           </Typography>
         </Box>
         <Typography
@@ -70,11 +73,7 @@ const RentApplicationCard = ({
           fontWeight={400} // Regular font weight
           fontSize="1rem" // Regular font size
         >
-          <ul>
-            {category.map((cat, index) => (
-              <li key={index}>{cat}</li> // Ensure each item has a unique `key`
-            ))}
-          </ul>
+          {description}
         </Typography>
         <Typography
           variant="body2"
@@ -83,7 +82,7 @@ const RentApplicationCard = ({
           fontWeight={500} // Medium font weight
           fontSize="1rem"
         >
-          <strong>Rent : </strong> {rent}
+          <strong>Workers Required:</strong> {workersRequired}
         </Typography>
         <Typography
           variant="body2"
@@ -92,15 +91,49 @@ const RentApplicationCard = ({
           fontWeight={500}
           fontSize="1rem"
         >
-          <strong>Quantity Available</strong> {quantity_available}
+          <strong>Closing Date:</strong> {closingDate}
         </Typography>
-
-        <StyledButton variant="contained" size="small">
-          Rent
-        </StyledButton>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          fontFamily="'Quicksand', sans-serif"
+          fontWeight={500}
+          fontSize="1rem"
+        >
+          <strong>Amount Per Day:</strong> {amountPerDay}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          fontFamily="'Quicksand', sans-serif"
+          fontWeight={500}
+          fontSize="1rem"
+        >
+          <strong>Status:</strong> {status}
+        </Typography>
+        <Box mt={2} display="flex" justifyContent="space-evenly">
+          <StyledButton
+            variant="contained"
+            size="small"
+            onClick={onViewApplicants}
+          >
+            View Applicants
+          </StyledButton>
+          <StyledButton variant="contained" size="small" onClick={onEdit}>
+            Edit
+          </StyledButton>
+          <StyledButton
+            variant="contained"
+            size="small"
+            color="error"
+            onClick={onDelete}
+          >
+            Delete
+          </StyledButton>
+        </Box>
       </CardContent>
     </StyledCard>
   );
 };
 
-export default RentApplicationCard;
+export default ViewApplicationCard;
