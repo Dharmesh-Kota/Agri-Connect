@@ -32,6 +32,7 @@ const Profile = () => {
   const { validateUser } = useAuth();
 
   const [loading, setLoading] = useState(false);
+  const [valid, setValid] = useState(false);
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -44,6 +45,8 @@ const Profile = () => {
   const [justVerify, setJustVerify] = useState(false);
   const [showEditFields, setShowEditFields] = useState(true);
   const [apiKey, setApiKey] = useState("");
+
+  const [birthDatePicker, setBirthDatePicker] = useState(null);
 
   const theme = createTheme({
     typography: {
@@ -129,8 +132,11 @@ const Profile = () => {
         { headers }
       );
 
+      console.log(results.data);
+
       if (results?.status === 200) {
         const { user } = results?.data;
+        setValid(user?.valid === undefined ? "" : user.valid);
         setName(user?.name === undefined ? "" : user.name);
         setUserName(user?.username === undefined ? "" : user.username);
         setEmail(user?.email === undefined ? "" : user.email);
@@ -138,6 +144,11 @@ const Profile = () => {
         setAddress(user?.address === undefined ? "" : user.address);
         setLocation(user?.location === undefined ? "" : user.location);
         setIsWorking(user?.working === undefined ? "" : user.working);
+        setExperience(user?.experience === undefined ? "" : user.experience);
+        setBirthdate(user?.birthdate === undefined ? "" : user.birthdate);
+        setBirthDatePicker(
+          dayjs(user?.birthdate === undefined ? "" : user.birthdate)
+        );
       } else {
         toast.error("Invalid Credentials");
       }
@@ -216,6 +227,18 @@ const Profile = () => {
     }
   }, [apiKey]);
 
+  function formatToISOWithLocalTime(dateString) {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <div
@@ -284,30 +307,38 @@ const Profile = () => {
                 )}
               </CardContent>
             </Card>
-            <Card
-              sx={{
-                my: 4,
-                backgroundColor: "#e8f5e9",
-              }}
-            >
-              <CardContent
+            {valid && (
+              <Card
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  my: 4,
+                  backgroundColor:
+                    isWorking === "false" ? "#f08080" : "#e8f5e9",
                 }}
               >
-                <Typography
-                  fontSize="large"
-                  fontWeight="bold"
-                  sx={{ color: "#388e3c" }}
+                <CardContent
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
-                  {isWorking ? "Currently Working" : "Not Working"}
-                </Typography>
-              </CardContent>
-            </Card>
+                  <Typography
+                    fontSize="large"
+                    fontWeight="bold"
+                    sx={{
+                      color: isWorking === "false" ? "#c1121f" : "#388e3c",
+                    }}
+                  >
+                    {typeof isWorking === "string"
+                      ? isWorking === "false"
+                        ? "Not Working"
+                        : isWorking
+                      : ""}
+                  </Typography>
+                </CardContent>
+              </Card>
+            )}
           </Grid>
-
           {showEditFields && (
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <Card>
@@ -439,8 +470,13 @@ const Profile = () => {
                           <DatePicker
                             label="Birth Date"
                             maxDate={dayjs()}
-                            value={birthdate}
-                            onChange={(date) => setBirthdate(date)}
+                            value={birthDatePicker}
+                            onChange={(d) => {
+                              setBirthdate((prev) =>
+                                formatToISOWithLocalTime(d.$d)
+                              );
+                              setBirthDatePicker(d);
+                            }}
                             sx={{
                               "& .MuiOutlinedInput-root": {
                                 borderRadius: "12px",
@@ -483,7 +519,7 @@ const Profile = () => {
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         id="address"
-                        label="Address"
+                        label="Exact Address"
                         placeholder="Address"
                         variant="outlined"
                         fullWidth

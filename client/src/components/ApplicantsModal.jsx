@@ -40,6 +40,7 @@ const ApplicationModal = ({
 
   useEffect(() => {
     setLocalApplication(application);
+    // console.log(application);
   }, [application]);
 
   const handleTabChange = (event, newIndex) => {
@@ -50,13 +51,17 @@ const ApplicationModal = ({
     try {
       // Assume the API endpoint for hiring applicants is something like:
       // POST /api/applications/{applicationId}/applicants/{username}/hire
-      await onApplicantStatusChange(localApplication.id, username, "hire");
+      await onApplicantStatusChange(
+        localApplication.application_id,
+        username,
+        "hire"
+      );
       setLocalApplication((prevApplication) => ({
         ...prevApplication,
         applicants: prevApplication.applicants.filter(
           (user) => user !== username
         ),
-        hired: [...prevApplication.hired, username],
+        hired_workers: [...prevApplication.hired_workers, username],
       }));
     } catch (error) {
       // Handle the error if the API call fails
@@ -68,10 +73,16 @@ const ApplicationModal = ({
     try {
       // Assume the API endpoint for freeing applicants is something like:
       // POST /api/applications/{applicationId}/applicants/{username}/free
-      await onApplicantStatusChange(localApplication.id, username, "free");
+      await onApplicantStatusChange(
+        localApplication.application_id,
+        username,
+        "free"
+      );
       setLocalApplication((prevApplication) => ({
         ...prevApplication,
-        hired: prevApplication.hired.filter((user) => user !== username),
+        hired_workers: prevApplication.hired_workers.filter(
+          (user) => user !== username
+        ),
         applicants: [...prevApplication.applicants, username],
       }));
     } catch (error) {
@@ -101,7 +112,9 @@ const ApplicationModal = ({
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
           Total Hired:{" "}
-          {localApplication.hired ? localApplication.hired.length : 0}
+          {localApplication.hired_workers
+            ? localApplication.hired_workers.length
+            : 0}
         </Typography>
 
         <Tabs value={tabIndex} onChange={handleTabChange} centered>
@@ -116,8 +129,8 @@ const ApplicationModal = ({
             </Typography>
             <List>
               {localApplication.applicants &&
-                localApplication.applicants.map((username) => (
-                  <ListItem key={username}>
+                localApplication.applicants.map((index, username) => (
+                  <ListItem key={index}>
                     <ListItemText primary={username} />
                     <Button
                       variant="contained"
@@ -138,14 +151,14 @@ const ApplicationModal = ({
               Hired Applicants
             </Typography>
             <List>
-              {localApplication.hired &&
-                localApplication.hired.map((username) => (
-                  <ListItem key={username}>
-                    <ListItemText primary={username} />
+              {localApplication.hired_workers &&
+                localApplication.hired_workers.map((index, obj) => (
+                  <ListItem key={index}>
+                    <ListItemText primary={obj.worker} />
                     <Button
                       variant="contained"
                       color="secondary"
-                      onClick={() => handleFree(username)}
+                      onClick={() => handleFree(obj.worker)}
                     >
                       Free
                     </Button>

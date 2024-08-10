@@ -36,22 +36,40 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        {!isHiddenPath && <Navbar />}
-        <Routes>
-          {/* <Route exact path="/" element={<Home />} /> */}
-          <Route exact path="/" element={<HomePage />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/register" element={<Register />} />
-          <Route exact path="/profile" element={<Profile />} />
-          <Route exact path="/aboutus" element={<AboutUS />} />
-          <Route exact path="/rent-applications" element={<RentApplicaton />} />
-          <Route exact path="/work-applications" element={<WorkApplications />} />
-          <Route exact path="/view-work-applications" element={<ViewWorkApplications />} />
-          <Route exact path="/view-rent-applications" element={<ViewRentApplications />} />
-        </Routes>
-        {!isHiddenPath && <Footer />}
-      </ThemeProvider>
+      <div id="style-1">
+        <ThemeProvider theme={theme}>
+          {!isHiddenPath && <Navbar />}
+          <Routes>
+            {/* <Route exact path="/" element={<Home />} /> */}
+            <Route exact path="/" element={<HomePage />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/register" element={<Register />} />
+            <Route exact path="/profile" element={<Profile />} />
+            <Route exact path="/aboutus" element={<AboutUS />} />
+            <Route
+              exact
+              path="/rent-applications"
+              element={<RentApplicaton />}
+            />
+            <Route
+              exact
+              path="/work-applications"
+              element={<WorkApplications />}
+            />
+            <Route
+              exact
+              path="/view-work-applications"
+              element={<ViewWorkApplications />}
+            />
+            <Route
+              exact
+              path="/view-rent-applications"
+              element={<ViewRentApplications />}
+            />
+          </Routes>
+          {!isHiddenPath && <Footer />}
+        </ThemeProvider>
+      </div>
     </>
   );
 }

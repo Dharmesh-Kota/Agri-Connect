@@ -133,39 +133,45 @@ const ViewWorkApplications = () => {
   };
 
   const handleApplicantStatusChange = async (
-    applicationId,
+    application_id,
     username,
     action
   ) => {
     try {
-      // API call to update the applicant status
-      console.log("make");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      };
 
-      const response = await axios.post(
-        `/api/applications/${applicationId}/applicants/${username}/${action}`
+      const response = await axios.get(
+        (process.env.BACKEND_API || "http://localhost:8000") +
+          (action === "hire"
+            ? `/hire-worker/${application_id}/${username}`
+            : `/free-worker/${application_id}/${username}`),
+        { headers }
       );
 
-      console.log(response.status);
+      console.log(response);
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         // Update application state only if API call is successful
-        // setApplications((prevApplications) =>
-        //   prevApplications.map((app) =>
-        //     app.id === applicationId
-        //       ? {
-        //           ...app,
-        //           applicants:
-        //             action === "hire"
-        //               ? app.applicants.filter((user) => user !== username)
-        //               : app.applicants,
-        //           hired:
-        //             action === "hire"
-        //               ? [...app.hired, username]
-        //               : app.hired.filter((user) => user !== username),
-        //         }
-        //       : app
-        //   )
-        // );
+        setApplications((prevApplications) =>
+          prevApplications.map((app) =>
+            app.application_id === application_id
+              ? {
+                  ...app,
+                  applicants:
+                    action === "hire"
+                      ? app.applicants.filter((user) => user !== username)
+                      : app.applicants,
+                  hired_workers:
+                    action === "hire"
+                      ? [...app.hired_workers, username]
+                      : app.hired_workers.filter((user) => user !== username),
+                }
+              : app
+          )
+        );
         toast.success(
           `${username} has been ${action === "hire" ? "hired" : "freed"}.`
         );
