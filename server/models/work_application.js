@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const workApplicationSchema = new mongoose.Schema({
     application_id: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     hirer: {
         type: String,

@@ -1,4 +1,6 @@
 import User from '../models/user.js'
+import HirerWorker from '../models/hirer_worker.js';
+import WorkApplication from '../models/work_application.js';
 import { generateToken } from '../config/jwtUtils.js'
 
 export const signup = async (req, res) => {
@@ -44,6 +46,8 @@ export const profile = async (req, res) => {
         let user = await User.findById(req.user.id);
         user.valid = true;
         if (user.username !== username) {
+            if (user.working === '') user.working = false;
+            else user.working = '1';
             user = {
                 username: user.username,
                 name: user.name,
@@ -54,7 +58,16 @@ export const profile = async (req, res) => {
                 birthdate: user.birthdate,
                 valid: false
             };
-        } 
+        } else {
+            if (user.working === '') user.working = false;
+            else {
+                let applicantion_id = user.working;
+                let work = await WorkApplication.findOne({application_id: applicantion_id}, {hirer: 1});
+                work = await User.findOne({username: work.hirer}, {name: 1, email: 1, address: 1, contact: 1});
+                work.application_id = applicantion_id;
+                user.working = work;
+            }
+        }
         return res.status(200).json({ message: 'User found!', user: user });
     } catch (error) {
         console.log('Error: ', error);
