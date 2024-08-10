@@ -48,6 +48,7 @@ export const work_application = async (req, res) => {
 
                 if (distance < 50) {
                     let hirer_details = await User.findOne({username: hirer.hirer}, {name: 1, email: 1});
+                    let rating = await HirerWorker.find({});
                     hirer.distance = distance;
                     hirer.travelTime = travelTime;
                     hirer.hirer_name = hirer_details.name;
@@ -135,12 +136,19 @@ export const view_applications = async (req, res) => {
         const user = await User.findById(req.user.id);
         if (user.working != '') return res.status(400).json({ message: 'You are already working so you cant view applications!' });
 
-        let applications = await WorkApplication.find({hirer: req.user.username, status: 'open'}, {application_id: 1, description: 1, workers_required: 1, closing_date: 1, labour: 1, applicants: 1});
+        let applications = await WorkApplication.find(
+            { hirer: req.user.username, status: 'open' },
+            { application_id: 1, description: 1, workers_required: 1, closing_date: 1, labour: 1, applicants: 1 }
+        ).lean(); // This will return plain JavaScript objects instead of Mongoose documents
+        
         for (let application of applications) {
-            let hired_workers = await HirerWorker.find({application_id: application.application_id}, {worker: 1});
+            let hired_workers = await HirerWorker.find(
+                { application_id: application.application_id },
+                { worker: 1 }
+            );
             application.hired_workers = hired_workers;
         }
-
+        
         return res.status(201).json({ applications: applications });
 
     } catch (error) {

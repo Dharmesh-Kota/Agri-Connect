@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     contact: String,
     address: String,
     birthdate: Date,
-    experience: String,
+    experience: Number,
     contact: String,
     working: {
         type: String,
