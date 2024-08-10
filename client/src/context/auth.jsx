@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("username");
     setIsLoggedIn(false);
-    navigate("/");
+    navigate("/login");
     toast.success("Logout successful!");
   };
 

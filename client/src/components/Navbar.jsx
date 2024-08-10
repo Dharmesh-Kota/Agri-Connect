@@ -13,7 +13,7 @@ import config from "../config.js";
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, LogOut } = useAuth();
   const navigate = useNavigate();
 
   const handleMenu = (event) => {
@@ -24,14 +24,9 @@ function Navbar() {
     setAnchorEl(null);
   };
 
-  const LogOut = () => {
-    setIsLoggedIn(false);
-    window.localStorage.removeItem("token");
-    navigate("/");
-  };
-
   const navbarStyle = {
-    position: "sticky",
+    position: "fixed",
+    width: "100%",
     top: "0%",
     zIndex: 100,
     backdropFilter: "blur(10px)",

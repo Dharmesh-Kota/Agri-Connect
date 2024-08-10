@@ -9,6 +9,8 @@ import Footer from "./components/Footer";
 import AboutUS from "./pages/AboutUs";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import RentApplicaton from "./pages/RentApplicaton";
+import WorkApplications from "./pages/WorkApplications";
+
 function App() {
   const theme = createTheme({
     typography: {
@@ -37,7 +39,8 @@ function App() {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/aboutus" element={<AboutUS />} />
-          <Route exact path="/rent_application" element={<RentApplicaton />} />
+          <Route exact path="/rent-application" element={<RentApplicaton />} />
+          <Route exact path="/work-applications" element={<WorkApplications />} />
         </Routes>
         {!isHiddenPath && <Footer />}
       </ThemeProvider>
