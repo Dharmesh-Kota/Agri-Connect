@@ -29,7 +29,7 @@ export const create_session = async (req, res) => {
         }
 
         const token = generateToken(user);
-        return res.status(200).json({ token: token, role: user.role });
+        return res.status(200).json({ token: token, username: user.username });
 
     } catch (error) {
         console.log('Error: ', error);
@@ -37,28 +37,47 @@ export const create_session = async (req, res) => {
     }
 };
 
-// // Profile details of the user
-// export const profile = async (req, res) => {
-//     try {
-//         let user = await User.findById(req.user.id, {name: 1, username: 1, email: 1, role: 1, contact: 1, address: 1, location: 1});
-//         return res.status(200).json({ message: 'User found!', user: user });
-//     } catch (error) {
-//         console.log('Error: ', error);
-//         return res.status(500).json({ error: error });
-//     }
-// }
+// Profile details of the user
+export const profile = async (req, res) => {
+    try {
+        const username = req.params.username;
+        let user = await User.findById(req.user.id);
+        user.valid = true;
+        if (user.username !== username) {
+            user = {
+                username: user.username,
+                name: user.name,
+                email: user.email,
+                address: user.address,
+                contact: user.contact,
+                experience: user.experience,
+                birthdate: user.birthdate,
+                valid: false
+            };
+        } 
+        return res.status(200).json({ message: 'User found!', user: user });
+    } catch (error) {
+        console.log('Error: ', error);
+        return res.status(500).json({ error: error });
+    }
+}
 
-// // Update the user's profile
-// export const update_profile = async (req, res) => {
-//     try {
-//         await User.findByIdAndUpdate(
-//             { _id: req.user.id },
-//             req.body,
-//             { new: true }
-//         );
-//         return res.status(200).json({ message: 'User data updated!' });
-//     } catch (error) {
-//         console.log('Error: ', error);
-//         return res.status(500).json({ error: error });
-//     }
-// }
+// Update the user's profile
+export const update_profile = async (req, res) => {
+    try {
+        const username = req.params.username;
+        let user = await User.findById(req.user.id, { username: 1 });
+        if (user.username !== username) {
+            return res.status(401).json({ error: 'Unauthorized access!' });
+        }
+        await User.findByIdAndUpdate(
+            { _id: req.user.id },
+            req.body,
+            { new: true }
+        );
+        return res.status(200).json({ message: 'User data updated!' });
+    } catch (error) {
+        console.log('Error: ', error);
+        return res.status(500).json({ error: error });
+    }
+}
