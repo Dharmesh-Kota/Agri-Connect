@@ -1,42 +1,40 @@
 import React from "react";
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { light } from "@mui/material/styles/createPalette";
 
-// Custom styled component for a more attractive card with greenish theme
+// Custom styled component for a more attractive card
 const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: "16px",
   boxShadow: theme.shadows[5],
   overflow: "visible",
   backgroundColor: "#ffffff", // Light background color
-  border: `1px solid #a8d5ba`, // Light greenish border
+  border: `1px solid #d0e1d4`, // Light greenish border
   transition:
     "transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
   "&:hover": {
     transform: "scale(1.02)", // Slightly scale up for a subtle effect
-    backgroundColor: "#eaf4e5", // Very light green background on hover
+    backgroundColor: "#f9fdf6", // Very light green background on hover
     boxShadow: theme.shadows[10],
   },
 }));
 
-// Custom button styling with greenish theme
+// Custom button styling
 const StyledButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  backgroundColor: "#4caf50", // Green background color
+  backgroundColor: theme.palette.primary.main,
   color: "#fff",
   "&:hover": {
-    backgroundColor: "#388e3c", // Darker green on hover
+    backgroundColor: theme.palette.primary.dark,
   },
 }));
 
-const ApplicationCard = ({
-  title,
-  company,
-  personName,
-  applicationId,
-  workersRequired,
-  closingDate,
-  description,
-  amountPerDay,
+const RentApplicationCard = ({
+  owner,
+  discription,
+  category,
+  rent,
+  quantity_available
 }) => {
   return (
     <StyledCard>
@@ -50,7 +48,7 @@ const ApplicationCard = ({
             fontWeight={700} // Bold font weight
             fontSize="1.5rem" // Larger font size
           >
-            {title}
+            <strong>Owner Name</strong>{owner}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -59,7 +57,7 @@ const ApplicationCard = ({
             fontWeight={600} // Medium font weight
             fontSize="1.2rem" // Slightly larger font size
           >
-            {company}
+            <strong>Descrition</strong>{discription}
           </Typography>
         </Box>
         <Typography
@@ -70,7 +68,7 @@ const ApplicationCard = ({
           fontWeight={400} // Regular font weight
           fontSize="1rem" // Regular font size
         >
-          {description}
+          <strong>Categories</strong>{category.map((cat)=>{<li>{cat}</li>})}
         </Typography>
         <Typography
           variant="body2"
@@ -79,7 +77,7 @@ const ApplicationCard = ({
           fontWeight={500} // Medium font weight
           fontSize="1rem"
         >
-          <strong>Person Name:</strong> {personName}
+          <strong>Rent</strong> {rent}
         </Typography>
         <Typography
           variant="body2"
@@ -88,41 +86,15 @@ const ApplicationCard = ({
           fontWeight={500}
           fontSize="1rem"
         >
-          <strong>Application ID:</strong> {applicationId}
+          <strong>Quantity Available</strong> {quantity_available}
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          fontFamily="'Quicksand', sans-serif"
-          fontWeight={500}
-          fontSize="1rem"
-        >
-          <strong>Workers Required:</strong> {workersRequired}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          fontFamily="'Quicksand', sans-serif"
-          fontWeight={500}
-          fontSize="1rem"
-        >
-          <strong>Closing Date:</strong> {closingDate}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          fontFamily="'Quicksand', sans-serif"
-          fontWeight={500}
-          fontSize="1rem"
-        >
-          <strong>Amount Per Day:</strong> {amountPerDay}
-        </Typography>
+        
         <StyledButton variant="contained" size="small">
-          Apply
+          Rent
         </StyledButton>
       </CardContent>
     </StyledCard>
   );
 };
 
-export default ApplicationCard;
+export default RentApplicationCard;

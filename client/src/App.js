@@ -8,8 +8,8 @@ import Register from "./pages/Register";
 import Footer from "./components/Footer";
 import AboutUS from "./pages/AboutUs";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import RentApplicaton from "./pages/RentApplicaton";
 import WorkApplications from "./pages/WorkApplications";
-import scrollToTop from "./scrollToTop.js";
 
 function App() {
   const theme = createTheme({
@@ -32,7 +32,6 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <scrollToTop />
         {!isHiddenPath && <Navbar />}
         <Routes>
           <Route exact path="/" element={<Home />} />
@@ -40,6 +39,7 @@ function App() {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/aboutus" element={<AboutUS />} />
+          <Route exact path="/rent-application" element={<RentApplicaton />} />
           <Route
             exact
             path="/work-applications"
