@@ -1,40 +1,40 @@
 import React from "react";
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { light } from "@mui/material/styles/createPalette";
 
-// Custom styled component for a more attractive card
+// Custom styled component for a more attractive card with greenish theme
 const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: "16px",
   boxShadow: theme.shadows[5],
   overflow: "visible",
   backgroundColor: "#ffffff", // Light background color
-  border: `1px solid #d0e1d4`, // Light greenish border
+  border: `1px solid #a8d5ba`, // Light greenish border
   transition:
     "transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
   "&:hover": {
     transform: "scale(1.02)", // Slightly scale up for a subtle effect
-    backgroundColor: "#f9fdf6", // Very light green background on hover
+    backgroundColor: "#eaf4e5", // Very light green background on hover
     boxShadow: theme.shadows[10],
   },
 }));
 
-// Custom button styling
+// Custom button styling with greenish theme
 const StyledButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: "#4caf50", // Green background color
   color: "#fff",
   "&:hover": {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: "#388e3c", // Darker green on hover
   },
 }));
 
-const RentApplicationCard = ({
-  owner,
-  discription,
+const MachineryRentalCard = ({
+  title,
   category,
-  rent,
-  quantity_available,
+  description,
+  unitsAvailable,
+  unitsRented,
+  onShowHolders,
 }) => {
   return (
     <StyledCard>
@@ -48,8 +48,7 @@ const RentApplicationCard = ({
             fontWeight={700} // Bold font weight
             fontSize="1.5rem" // Larger font size
           >
-            <strong>Owner Name : </strong>
-            {owner}
+            {title}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -58,8 +57,7 @@ const RentApplicationCard = ({
             fontWeight={600} // Medium font weight
             fontSize="1.2rem" // Slightly larger font size
           >
-            <strong>Descrition : </strong>
-            {discription}
+            Category: {category}
           </Typography>
         </Box>
         <Typography
@@ -70,11 +68,7 @@ const RentApplicationCard = ({
           fontWeight={400} // Regular font weight
           fontSize="1rem" // Regular font size
         >
-          <ul>
-            {category.map((cat, index) => (
-              <li key={index}>{cat}</li> // Ensure each item has a unique `key`
-            ))}
-          </ul>
+          {description}
         </Typography>
         <Typography
           variant="body2"
@@ -83,7 +77,7 @@ const RentApplicationCard = ({
           fontWeight={500} // Medium font weight
           fontSize="1rem"
         >
-          <strong>Rent : </strong> {rent}
+          <strong>Units Available:</strong> {unitsAvailable}
         </Typography>
         <Typography
           variant="body2"
@@ -92,15 +86,20 @@ const RentApplicationCard = ({
           fontWeight={500}
           fontSize="1rem"
         >
-          <strong>Quantity Available</strong> {quantity_available}
+          <strong>Units Rented:</strong> {unitsRented}
         </Typography>
-
-        <StyledButton variant="contained" size="small">
-          Rent
-        </StyledButton>
+        <Box mt={2} display="flex" justifyContent="center">
+          <StyledButton
+            variant="contained"
+            size="small"
+            onClick={onShowHolders}
+          >
+            Show Holders
+          </StyledButton>
+        </Box>
       </CardContent>
     </StyledCard>
   );
 };
 
-export default RentApplicationCard;
+export default MachineryRentalCard;
