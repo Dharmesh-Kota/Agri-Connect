@@ -10,6 +10,7 @@ import AboutUS from "./pages/AboutUs";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import RentApplicaton from "./pages/RentApplicaton";
 import WorkApplications from "./pages/WorkApplications";
+import ViewWorkApplications from "./pages/ViewWorkApplications";
 
 function App() {
   const theme = createTheme({
@@ -41,6 +42,7 @@ function App() {
           <Route exact path="/aboutus" element={<AboutUS />} />
           <Route exact path="/rent-application" element={<RentApplicaton />} />
           <Route exact path="/work-applications" element={<WorkApplications />} />
+          <Route exact path="/view-work-applications" element={<ViewWorkApplications />} />
         </Routes>
         {!isHiddenPath && <Footer />}
       </ThemeProvider>
