@@ -45,6 +45,8 @@ const Profile = () => {
   const [showEditFields, setShowEditFields] = useState(true);
   const [apiKey, setApiKey] = useState("");
 
+  const [birthDatePicker, setBirthDatePicker] = useState(null);
+
   const theme = createTheme({
     typography: {
       fontFamily: "Quicksand",
@@ -129,6 +131,8 @@ const Profile = () => {
         { headers }
       );
 
+      console.log(results.data);
+
       if (results?.status === 200) {
         const { user } = results?.data;
         setName(user?.name === undefined ? "" : user.name);
@@ -138,6 +142,11 @@ const Profile = () => {
         setAddress(user?.address === undefined ? "" : user.address);
         setLocation(user?.location === undefined ? "" : user.location);
         setIsWorking(user?.working === undefined ? "" : user.working);
+        setExperience(user?.experience === undefined ? "" : user.experience);
+        setBirthdate(user?.birthdate === undefined ? "" : user.birthdate);
+        setBirthDatePicker(
+          dayjs(user?.birthdate === undefined ? "" : user.birthdate)
+        );
       } else {
         toast.error("Invalid Credentials");
       }
@@ -216,6 +225,18 @@ const Profile = () => {
     }
   }, [apiKey]);
 
+  function formatToISOWithLocalTime(dateString) {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <div
@@ -287,7 +308,7 @@ const Profile = () => {
             <Card
               sx={{
                 my: 4,
-                backgroundColor: "#e8f5e9",
+                backgroundColor: isWorking === "false" ? "#f08080" : "#e8f5e9",
               }}
             >
               <CardContent
@@ -300,9 +321,13 @@ const Profile = () => {
                 <Typography
                   fontSize="large"
                   fontWeight="bold"
-                  sx={{ color: "#388e3c" }}
+                  sx={{ color: isWorking === "false" ? "#c1121f" : "#388e3c" }}
                 >
-                  {isWorking ? "Currently Working" : "Not Working"}
+                  {typeof isWorking === "string"
+                    ? isWorking === "false"
+                      ? "Not Working"
+                      : isWorking
+                    : ""}
                 </Typography>
               </CardContent>
             </Card>
@@ -439,8 +464,13 @@ const Profile = () => {
                           <DatePicker
                             label="Birth Date"
                             maxDate={dayjs()}
-                            value={birthdate}
-                            onChange={(date) => setBirthdate(date)}
+                            value={birthDatePicker}
+                            onChange={(d) => {
+                              setBirthdate((prev) =>
+                                formatToISOWithLocalTime(d.$d)
+                              );
+                              setBirthDatePicker(d);
+                            }}
                             sx={{
                               "& .MuiOutlinedInput-root": {
                                 borderRadius: "12px",
@@ -483,7 +513,7 @@ const Profile = () => {
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         id="address"
-                        label="Address"
+                        label="Exact Address"
                         placeholder="Address"
                         variant="outlined"
                         fullWidth
