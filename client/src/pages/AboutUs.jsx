@@ -84,7 +84,7 @@ function AboutUS() {
                       href="https://www.linkedin.com/in/rhythm-panchal-108398253/"
                       target="_blank"
                     >
-                      Rythm Panchal
+                      Rhythm Panchal
                     </a>
                   </h5>
                 </div>
@@ -103,7 +103,7 @@ function AboutUS() {
             <div className="col-sm-6 col-lg-6">
               <div className="feature-box-1">
                 <div className="icon">
-                  <i class="fa-brands fa-node"></i>
+                  <i className="fa-brands fa-node"></i>
                 </div>
                 <div className="feature-content">
                   <h5 style={{ fontFamily: "Quicksand" }}>Node JS</h5>
@@ -113,7 +113,7 @@ function AboutUS() {
             <div className="col-sm-6 col-lg-6">
               <div className="feature-box-1">
                 <div className="icon">
-                  <i class="fa-solid fa-database"></i>
+                  <i className="fa-solid fa-database"></i>
                 </div>
                 <div className="feature-content">
                   <h5 style={{ fontFamily: "Quicksand" }}>MongoDB</h5>
@@ -123,7 +123,7 @@ function AboutUS() {
             <div className="col-sm-6 col-lg-6">
               <div className="feature-box-1">
                 <div className="icon">
-                  <i class="fa-brands fa-node-js"></i>
+                  <i className="fa-brands fa-node-js"></i>
                 </div>
                 <div className="feature-content">
                   <h5 style={{ fontFamily: "Quicksand" }}>Express</h5>
