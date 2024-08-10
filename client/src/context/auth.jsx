@@ -1,56 +1,44 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const authContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [theme, setTheme] = useState("light");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState("");
   const navigate = useNavigate();
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  const LogOut = () => {
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("username");
+    setIsLoggedIn(false);
+    navigate("/");
+    toast.success("Logout successful!");
+  };
+
+  const validateUser = () => {
+    if (
+      isLoggedIn &&
+      !(
+        window.localStorage.getItem("token") !== null &&
+        window.localStorage.getItem("username") !== null
+      )
+    ) {
+      LogOut();
+    }
   };
 
   useEffect(() => {
     setIsLoggedIn(window.localStorage.getItem("token") !== null);
-    setRole(window.localStorage.getItem("role"));
-  }, []);
-
-  const LogOut = () => {
-    window.localStorage.removeItem("token");
-    window.localStorage.removeItem("role");
-    setIsLoggedIn(false);
-    setRole("");
-    navigate("/");
-  };
-
-  useEffect(() => {
-    if (
-      !(
-        window.localStorage.getItem("token") !== null &&
-        window.localStorage.getItem("role") !== null
-      )
-    ) {
-      window.localStorage.removeItem("token");
-      window.localStorage.removeItem("role");
-      setIsLoggedIn(false);
-      setRole("");
-      navigate("/");
-    }
   }, []);
 
   return (
     <authContext.Provider
       value={{
-        theme,
-        toggleTheme,
         isLoggedIn,
         setIsLoggedIn,
-        role,
-        setRole,
         LogOut,
+        validateUser,
       }}
     >
       {children}
