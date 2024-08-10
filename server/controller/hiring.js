@@ -9,14 +9,15 @@ export const work_application = async (req, res) => {
         
         let location = '';
         if (Object.keys(req.query).length > 0) {
-            lat = req.query.lat;
-            lng = req.query.lng;
+          let lat = req.query.lat;
+          let lng = req.query.lng;
+
             location = lat + ',' + lng;
         } else {
             location = await User.findById(req.user.id);
             location = location.location;
         }
-        
+
         let hirers = await WorkApplication.find({status: 'open'}, {application_id: 1, description: 1, hirer: 1, workers_required: 1, closing_date: 1, labour: 1});
         let nearby_hirers = [];
         for (let hirer of hirers) {
@@ -45,7 +46,7 @@ export const work_application = async (req, res) => {
                 const distance = route.summary.lengthInMeters / 1000; // in km
                 const travelTime = route.summary.travelTimeInSeconds / 60; // in mins
 
-                if (distance < 25) {
+                if (distance < 50) {
                     let hirer_details = await User.findOne({username: hirer.hirer}, {name: 1, email: 1});
                     hirer.distance = distance;
                     hirer.travelTime = travelTime;
