@@ -16,6 +16,8 @@ import rentimg from "../images/rent.png";
 import hireimg from "../images/hire.jpg";
 
 import LandingText from "../components/LandingText";
+import HireOrHired from "../components/HireOrHired";
+import AcquireOrLease from "../components/AcquireOrLease";
 
 import "../CSS/Home.css";
 
@@ -143,50 +145,30 @@ function Home() {
   return (
     <>
       <LandingText />
-      <div></div>
-      <div style={containerStyle}>
-        <div style={imageStyle}>
-          <img
-            src={hireimg}
-            alt="Background"
-            style={{ width: "65%", height: "500px", borderRadius: "10px" }}
-          />
-          <div style={texthireStyle}>Hire or Get Hired</div>
-          <button
-            style={ButtonhireStyle}
-            onClick={() => {
-              navigate("/work-application");
-            }}
-          >
-            Hiring
-          </button>
-        </div>
-        <div style={imageStyle}>
-          <img
-            src={rentimg}
-            alt="Background"
-            style={{ width: "65%", height: "500px", borderRadius: "10px" }}
-          />
-          <div style={textrentStyle}>Acquire or Lease</div>
-          <button
-            style={ButtonrentStyle}
-            onClick={() => {
-              navigate("/rent-application");
-            }}
-          >
-            Rent Machine
-          </button>
-        </div>
-      </div>
+      <HireOrHired />
+      <AcquireOrLease />
 
       <div style={contentStyle}>
-        <h1 style={headingStyle}>What we do?</h1>
+        <h1 style={headingStyle}>
+          <Typography
+            variant="h5"
+            fontSize="xx-large"
+            fontWeight="bold"
+            sx={{ color: "#134611" }}
+          >
+            What we do?
+          </Typography>
+        </h1>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} sm={4}>
             <Card style={cardStyle}>
               <CardContent>
                 <WorkIcon style={iconStyle} />
-                <Typography variant="h5" component="div" gutterBottom>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  sx={{ color: "#134611" }}
+                >
                   Connect
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
@@ -200,7 +182,11 @@ function Home() {
             <Card style={cardStyle}>
               <BuildIcon style={iconStyle} />
               <CardContent>
-                <Typography variant="h5" component="div" gutterBottom>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  sx={{ color: "#134611" }}
+                >
                   Rent Equipment
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
@@ -214,7 +200,11 @@ function Home() {
             <Card style={cardStyle}>
               <InsightsIcon style={iconStyle} />
               <CardContent>
-                <Typography variant="h5" component="div" gutterBottom>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  sx={{ color: "#134611" }}
+                >
                   Innovate
                 </Typography>
                 <Typography variant="body2" color="textSecondary">

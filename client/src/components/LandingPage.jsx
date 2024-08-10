@@ -37,6 +37,7 @@ function LandingPage() {
               style={{
                 width: "16em",
                 height: "100%",
+                zIndex: -1000,
               }}
             />
           </div>
@@ -48,6 +49,7 @@ function LandingPage() {
               style={{
                 width: "20em",
                 height: "100%",
+                zIndex: -1000,
               }}
             />
           </div>
