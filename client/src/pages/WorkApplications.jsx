@@ -76,14 +76,14 @@ const WorkApplications = () => {
       };
 
       const results = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           (location
             ? `/work-application?lat=${location.latitude}&lng=${location.longitude}`
             : `/work-application`),
         { headers }
       );
 
-      console.log(results.data.hirers);
+      // console.log(results.data.hirers);
 
       setApplications(results.data.hirers);
     } catch (error) {
@@ -180,16 +180,16 @@ const WorkApplications = () => {
           Authorization: `Bearer ${window.localStorage.getItem("token")}`,
         };
 
-        console.log(formValues);
+        // console.log(formValues);
 
         const results = await axios.post(
-          (process.env.BACKEND_API || "http://localhost:8000") +
+          (config.BACKEND_API || "http://localhost:8000") +
             `/create-work-application`,
           formValues,
           { headers }
         );
 
-        console.log(results);
+        // console.log(results);
         setFormValues({
           workers_required: "",
           description: "",

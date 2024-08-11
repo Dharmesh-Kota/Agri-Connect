@@ -33,8 +33,9 @@ const MachineryRentalCard = ({
   category,
   description,
   unitsAvailable,
-  unitsRented,
   onShowHolders,
+  onEdit,
+  onDelete
 }) => {
   return (
     <StyledCard>
@@ -79,16 +80,8 @@ const MachineryRentalCard = ({
         >
           <strong>Units Available:</strong> {unitsAvailable}
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          fontFamily="'Quicksand', sans-serif"
-          fontWeight={500}
-          fontSize="1rem"
-        >
-          <strong>Units Rented:</strong> {unitsRented}
-        </Typography>
-        <Box mt={2} display="flex" justifyContent="center">
+        
+        <Box mt={5} display="flex" justifyContent="space-evenly" >
           <StyledButton
             variant="contained"
             size="small"
@@ -96,6 +89,17 @@ const MachineryRentalCard = ({
           >
             Show Holders
           </StyledButton>
+          <StyledButton variant="contained" size="small" onClick={onEdit}>
+              Edit
+            </StyledButton>
+            <StyledButton
+              variant="contained"
+              size="small"
+              color="error"
+              onClick={onDelete}
+            >
+              Delete
+            </StyledButton>
         </Box>
       </CardContent>
     </StyledCard>

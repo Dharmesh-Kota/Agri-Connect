@@ -1,16 +1,117 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Grid, Container } from "@mui/material";
 import ViewApplicationCard from "../components/ViewApplicationCard";
 import ApplicationModal from "../components/ApplicantsModal";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import config from "../config";
+import {
+  Grid,
+  Container,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+  TextField,
+  Box,
+} from "@mui/material";
 
 const ViewWorkApplications = () => {
   const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [currApplicationId, setCurrApplicationId] = useState(null);
+
+  const [formValues, setFormValues] = useState({
+    workers_required: "",
+    description: "",
+    closing_date: "",
+    labour: "",
+  });
+  const [formErrors, setFormErrors] = useState({
+    workers_required: false,
+    description: false,
+    closing_date: false,
+    labour: false,
+  });
+
+  const handleFormClose = () => {
+    setFormOpen(false);
+  };
+
+  const handleFormChange = (e) => {
+    setFormValues({
+      ...formValues,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const validateForm = () => {
+    const today = new Date().toISOString().split("T")[0];
+    const errors = {
+      workers_required: formValues.workers_required <= 0,
+      description: !formValues.description,
+      closing_date: formValues.closing_date < today,
+      labour: formValues.labour <= 0,
+    };
+    setFormErrors(errors);
+    return !Object.values(errors).includes(true);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    if (validateForm()) {
+      try {
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+        };
+
+        // console.log(formValues);
+
+        const results = await axios.post(
+          (config.BACKEND_API || "http://localhost:8000") +
+            `/update-work-application/${currApplicationId}`,
+          formValues,
+          { headers }
+        );
+
+        setApplications((prevApplications) =>
+          prevApplications.map((app) =>
+            app.application_id === currApplicationId
+              ? {
+                  ...app,
+                  workers_required: formValues.workers_required,
+                  description: formValues.description,
+                  closing_date: formValues.closing_date,
+                  labour: formValues.labour,
+                }
+              : app
+          )
+        );
+
+        setFormValues({
+          workers_required: "",
+          description: "",
+          closing_date: "",
+          labour: "",
+        });
+
+        // console.log("Form submitted:", response.data);
+        toast.success("Application submitted successfully!");
+        handleFormClose();
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        toast.error("Error submitting application. Please try again.");
+        handleFormClose();
+      }
+    }
+  };
 
   // const dummy_data = [
   //   {
@@ -62,12 +163,12 @@ const ViewWorkApplications = () => {
       };
 
       const results = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           `/view-work-applications`,
         { headers }
       );
 
-      console.log(results.data.applications);
+      // console.log(results.data.applications);
 
       setApplications(results.data.applications);
     } catch (error) {
@@ -84,27 +185,21 @@ const ViewWorkApplications = () => {
     setIsModalOpen(false);
   };
 
-  const handleEditApplication = async (application_id) => {
-    try {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-      };
+  const handleEditApplication = (application_id) => {
+    setFormOpen(true);
+    setCurrApplicationId((prev) => application_id);
+    const data = applications.filter(
+      (app) => app.application_id === application_id
+    )[0];
+    let closingDate = new Date(data.closing_date);
+    const formattedDate = closingDate.toISOString().split("T")[0];
 
-      // const results = await axios.post(
-      //   (config.BACKEND_API || "http://localhost:8000") +
-      //     `/update-work-application`,
-      //   { headers }
-      // );
-
-      // console.log(results);
-
-      // console.log("Form submitted:", response.data);
-      toast.success("Application submitted successfully!");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("Error submitting application. Please try again.");
-    }
+    setFormValues({
+      workers_required: data.workers_required,
+      description: data.description,
+      closing_date: formattedDate,
+      labour: data.labour,
+    });
   };
 
   const handleDeleteApplication = async (application_id) => {
@@ -115,7 +210,7 @@ const ViewWorkApplications = () => {
       };
 
       const results = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           `/delete-work-application/${application_id}`,
         { headers }
       );
@@ -146,7 +241,7 @@ const ViewWorkApplications = () => {
       // console.log(username);
 
       const response = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           (action === "hire"
             ? `/hire-worker/${application_id}/${username_obj.username}`
             : `/free-worker/${application_id}/${username_obj.username}`),
@@ -236,6 +331,81 @@ const ViewWorkApplications = () => {
           onApplicantStatusChange={handleApplicantStatusChange}
         />
       )}
+
+      <Dialog open={formOpen} onClose={handleFormClose} maxWidth="sm" fullWidth>
+        <DialogTitle>Submit Application</DialogTitle>
+        <DialogContent>
+          <Box
+            component="form"
+            onSubmit={handleFormSubmit}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              padding: 3,
+            }}
+          >
+            <TextField
+              label="Workers Required"
+              name="workers_required"
+              type="number"
+              value={formValues.workers_required}
+              onChange={handleFormChange}
+              fullWidth
+              error={formErrors.workers_required}
+              helperText={
+                formErrors.workers_required &&
+                "This field is required and must be greater than 0"
+              }
+            />
+            <TextField
+              label="Description"
+              name="description"
+              type="text"
+              value={formValues.description}
+              onChange={handleFormChange}
+              fullWidth
+              error={formErrors.description}
+              helperText={formErrors.description && "This field is required"}
+            />
+            <TextField
+              label="Closing Date"
+              name="closing_date"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+              value={formValues.closing_date}
+              onChange={handleFormChange}
+              fullWidth
+              error={formErrors.closing_date}
+              helperText={
+                formErrors.closing_date &&
+                "This field is required and must be a future date"
+              }
+            />
+            <TextField
+              label="Labour (in Rupee)"
+              name="labour"
+              type="number"
+              value={formValues.labour}
+              onChange={handleFormChange}
+              fullWidth
+              error={formErrors.labour}
+              helperText={
+                formErrors.labour &&
+                "This field is required and must be greater than 0"
+              }
+            />
+            <DialogActions>
+              <Button type="submit" color="primary">
+                Submit
+              </Button>
+              <Button onClick={handleFormClose} color="secondary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

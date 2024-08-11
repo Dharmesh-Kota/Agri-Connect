@@ -91,7 +91,7 @@ const Profile = () => {
       };
 
       const results = await axios.post(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           `/update-profile/${window.localStorage.getItem("username")}`,
         {
           name,
@@ -127,12 +127,12 @@ const Profile = () => {
       };
 
       const results = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           `/profile/${window.localStorage.getItem("username")}`,
         { headers }
       );
 
-      console.log(results.data);
+      // console.log(results.data);
 
       if (results?.status === 200) {
         const { user } = results?.data;
@@ -176,8 +176,7 @@ const Profile = () => {
         };
 
         const response = await fetch(
-          (process.env.BACKEND_API || "http://localhost:8000") +
-            "/getTomTomApiKey",
+          (config.BACKEND_API || "http://localhost:8000") + "/getTomTomApiKey",
           {
             headers,
           }

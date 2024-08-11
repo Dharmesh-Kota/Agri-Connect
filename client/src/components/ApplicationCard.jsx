@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 
 import axios from "axios";
 import toast from "react-hot-toast";
+import config from "../config";
 
 // Custom styled component for a more attractive card with greenish theme
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -41,12 +42,12 @@ const onClickApplyHandle = async (applicationId) => {
     };
 
     const results = await axios.get(
-      (process.env.BACKEND_API || "http://localhost:8000") +
+      (config.BACKEND_API || "http://localhost:8000") +
         `/apply-for-work/${applicationId}`,
       { headers }
     );
 
-    console.log(results);
+    // console.log(results);
     toast.success("Applied Successfully");
   } catch (error) {
     toast.error("Internal Server Error");

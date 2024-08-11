@@ -40,9 +40,9 @@ const ApplicationModal = ({
 
   useEffect(() => {
     setLocalApplication(application);
-    console.log("app");
+    // console.log("app");
 
-    console.log(application);
+    // console.log(application);
   }, [application]);
 
   const handleTabChange = (event, newIndex) => {
@@ -85,7 +85,6 @@ const ApplicationModal = ({
         hired_workers: prevApplication.hired_workers.filter(
           (user) => user.username !== username_obj.username
         ),
-        applicants: [...prevApplication.applicants, username_obj],
       }));
     } catch (error) {
       // Handle the error if the API call fails
