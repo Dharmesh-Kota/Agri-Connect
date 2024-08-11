@@ -1,5 +1,7 @@
 import User from '../models/user.js';
 import RentMachinery from '../models/rent_machinery.js';
+import { machinery_rented_owner } from '../mailer/machinery_rented_owner.js';
+import { machinery_rented_user } from '../mailer/machinery_rented_user.js';
 import axios from 'axios';
 
 export const rent_application = async (req, res) => {
@@ -137,6 +139,11 @@ export const rent_machinery = async (req, res) => {
             $inc: { quantity_available: -req.body.quantity_required },
             $push: { machinery_holder: req.user.username }
         });
+
+        let owner_details = await User.findOne({username: application.owner}, {name: 1, email: 1, contact: 1, username: 1});
+        let user_details = await User.findOne({username: req.user.username}, {name: 1, email: 1, contact: 1, username: 1});
+        machinery_rented_owner(owner_details, user_details, application, req.body.quantity_required);
+        machinery_rented_user(owner_details, user_details, application, req.body.quantity_required);
 
         return res.status(200).send({ message: 'Machinery rented successfully!' });
 

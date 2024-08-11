@@ -4,6 +4,8 @@ import HirerWorker from '../models/hirer_worker.js'
 import axios from 'axios';
 import { hirer_rating } from "../mailer/hirer_rating.js";
 import { worker_rating } from "../mailer/worker_rating.js";
+import { application_accepted } from '../mailer/application_accepted.js';
+import { worker_application } from '../mailer/worker_application.js';
 // import { application } from 'express';
 
 export const work_application = async (req, res) => {
@@ -134,6 +136,11 @@ export const apply_for_work = async (req, res) => {
 
         await WorkApplication.findOneAndUpdate({ application_id: application_id, status: 'open' }, { $push: { applicants: req.user.username } });
 
+        let worker = await User.findOne({username: req.user.username}, {username: 1, contact: 1, name: 1, email: 1});
+        let hirer = await WorkApplication.findOne({application_id: application_id}, {hirer: 1});
+        hirer = await User.findOne({username: hirer.hirer}, {username: 1, contact: 1, name: 1, email: 1});
+        worker_application(worker, hirer, existing_application);
+
         return res.status(201).json({ message: 'Application submitted successfully!' });
 
     } catch (error) {
@@ -230,6 +237,11 @@ export const hire_worker = async (req, res) => {
             $pull: { applicants: worker },
             $inc: { workers_required: -1 }
         });
+        
+        let worker_details = await User.findOne({username: worker}, {username: 1, contact: 1, name: 1, email: 1});
+        let hirer_details = await User.findOne({username: req.user.username}, {username: 1, contact: 1, name: 1, email: 1});
+        application = await WorkApplication.findOne({application_id: application_id}, {description: 1, labour: 1, description: 1, application_id: 1});
+        application_accepted(worker_details, hirer_details, application);
 
         await User.findOneAndUpdate({username: worker}, { working: application_id });
 

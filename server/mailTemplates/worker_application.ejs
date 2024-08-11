@@ -1,0 +1,29 @@
+<div style="font-family: Arial, sans-serif; color: #333;">
+    <h2 style="color: #4CAF50;">New Job Application Received</h2>
+
+    <p>Dear <%= hirer.name %>,</p>
+
+    <p>We are excited to inform you that <strong><%= worker.name %></strong> has applied for your job posting. Below are the details of the applicant:</p>
+
+    <ul>
+        <li><strong>Name:</strong> <%= worker.name %></li>
+        <li><strong>Email:</strong> <%= worker.email %></li>
+        <li><strong>Username:</strong> <%= worker.username %></li>
+        <li><strong>Contact:</strong> <%= worker.contact %></li>
+    </ul>
+
+    <p>The application details for your reference:</p>
+
+    <ul>
+        <li><strong>Application ID:</strong> <%= application.application_id %></li>
+        <li><strong>Description:</strong> <%= application.description %></li>
+        <li><strong>Labour Required:</strong> <%= application.labour %></li>
+    </ul>
+
+    <p>We appreciate your continued trust in our platform and look forward to helping you find the right candidates for your job.</p>
+
+    <p>If you have any questions or need further assistance, feel free to reach out to our support team.</p>
+
+    <p>Best regards,</p>
+    <p>The AgriConnect Team</p>
+</div>
