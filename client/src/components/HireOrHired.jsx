@@ -24,7 +24,7 @@ function LandingPage() {
           alignItems: "center",
           justifyContent: "flex-end",
           padding: "0.5%", // Adjust padding as needed
-          zIndex: 1,
+          zIndex: 200,
         }}
       >
         <Typography

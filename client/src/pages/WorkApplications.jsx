@@ -83,7 +83,7 @@ const WorkApplications = () => {
         { headers }
       );
 
-      console.log(results.data.hirers);
+      // console.log(results.data.hirers);
 
       setApplications(results.data.hirers);
     } catch (error) {
@@ -180,7 +180,7 @@ const WorkApplications = () => {
           Authorization: `Bearer ${window.localStorage.getItem("token")}`,
         };
 
-        console.log(formValues);
+        // console.log(formValues);
 
         const results = await axios.post(
           (config.BACKEND_API || "http://localhost:8000") +
@@ -189,7 +189,7 @@ const WorkApplications = () => {
           { headers }
         );
 
-        console.log(results);
+        // console.log(results);
         setFormValues({
           workers_required: "",
           description: "",

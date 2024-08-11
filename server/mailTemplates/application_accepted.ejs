@@ -1,0 +1,31 @@
+<div style="font-family: Arial, sans-serif; color: #333;">
+    <h2 style="color: #4CAF50;">Congratulations! You've Been Hired</h2>
+
+    <p>Dear <%= worker.name %>,</p>
+
+    <p>We are excited to inform you that your job request has been accepted by <strong><%= hirer.name %></strong>.</p>
+
+    <p>Here are the details of the hirer:</p>
+    <ul>
+        <li><strong>Name:</strong> <%= hirer.name %></li>
+        <li><strong>Email:</strong> <%= hirer.email %></li>
+        <li><strong>Contact Number:</strong> <%= hirer.contact %></li>
+        <li><strong>Username:</strong> <%= hirer.username %></li>
+    </ul>
+
+    <p>Below are the details of the job you have been hired for:</p>
+    <ul>
+        <li><strong>Application ID:</strong> <%= application.application_id %></li>
+        <li><strong>Description:</strong> <%= application.description %></li>
+        <li><strong>Labour Required:</strong> <%= application.labour %></li>
+    </ul>
+
+    <p>Your prompt and professional response to this job is appreciated. If you have any questions or need further information, please feel free to reach out to the hirer using the contact details provided above.</p>
+
+    <p>We're glad to have you as part of our community and wish you success in your new assignment!</p>
+
+    <p>If you have any questions or need support, do not hesitate to contact us.</p>
+
+    <p>Best regards,</p>
+    <p>The AgriConnect Team</p>
+</div>

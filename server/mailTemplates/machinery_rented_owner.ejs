@@ -1,0 +1,30 @@
+<div style="font-family: Arial, sans-serif; color: #333;">
+    <h2 style="color: #4CAF50;">Your Machinery Has Been Rented!</h2>
+
+    <p>Dear <%= owner.name %>,</p>
+
+    <p>We are excited to inform you that your machinery has been rented by <strong><%= user.name %></strong>. Below are the details of the rental:</p>
+
+    <ul>
+        <li><strong>Machinery Description:</strong> <%= application.description %></li>
+        <li><strong>Rent ID:</strong> <%= application.rent_id %></li>
+        <li><strong>Quantity Rented:</strong> <%= quantity %></li>
+        <li><strong>Rent Amount:</strong> <%= application.rent %></li>
+    </ul>
+
+    <p>Please coordinate with the user to ensure the smooth transfer and operation of the machinery.</p>
+
+    <p>You can contact the user at:</p>
+
+    <ul>
+        <li><strong>Email:</strong> <%= user.email %></li>
+        <li><strong>Contact Number:</strong> <%= user.contact %></li>
+    </ul>
+
+    <p>We appreciate your trust in our platform and hope for a successful transaction.</p>
+
+    <p>If you have any questions or need assistance, feel free to reach out to us.</p>
+
+    <p>Best regards,</p>
+    <p>The AgriConnect Team</p>
+</div>

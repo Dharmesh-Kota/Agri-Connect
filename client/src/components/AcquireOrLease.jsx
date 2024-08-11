@@ -25,7 +25,7 @@ function LandingPage() {
           alignItems: "center",
           justifyContent: "flex-end",
           padding: "0.5%", // Adjust padding as needed
-          zIndex: 1,
+          zIndex: 200,
         }}
       >
         <Typography
@@ -40,7 +40,12 @@ function LandingPage() {
         >
           Acquire or Lease
           <Button
-            sx={{ p: 2, px: 4, fontWeight: "bold", fontSize: "20px" }}
+            sx={{
+              p: 2,
+              px: 4,
+              fontWeight: "bold",
+              fontSize: "20px",
+            }}
             variant="outlined"
             color="success"
             onClick={() => {

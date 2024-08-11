@@ -40,9 +40,9 @@ const ApplicationModal = ({
 
   useEffect(() => {
     setLocalApplication(application);
-    console.log("app");
+    // console.log("app");
 
-    console.log(application);
+    // console.log(application);
   }, [application]);
 
   const handleTabChange = (event, newIndex) => {
