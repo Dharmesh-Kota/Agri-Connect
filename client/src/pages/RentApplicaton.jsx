@@ -11,6 +11,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import {
   Grid,
   Container,
@@ -28,6 +29,8 @@ import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS styles
 import DropdownWithSelectedOptions from "../components/DropdownWithSelectedOptions";
 import config from "../config";
+import { ArrowBack } from "@mui/icons-material";
+import HourglassEmptyRoundedIcon from "@mui/icons-material/HourglassEmptyRounded";
 
 const chipsContainerStyle = {
   display: "flex",
@@ -311,7 +314,9 @@ const RentApplication = () => {
         open={openDialog}
         onClose={handleCloseDialog} // Allow closing via backdrop click or escape key
       >
-        <DialogTitle>Location Preference</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold", color: "#134611" }}>
+          Location Preference
+        </DialogTitle>{" "}
         <DialogContent>
           <Typography variant="body1">
             Would you like to use your current location or the location
@@ -321,13 +326,17 @@ const RentApplication = () => {
         <DialogActions>
           <Button
             onClick={() => handleLocationChoice("current")}
-            color="primary"
+            color="success"
+            sx={{ fontWeight: "bold" }}
+            variant="contained"
           >
             Use Current Location
           </Button>
           <Button
             onClick={() => handleLocationChoice("profile")}
             color="secondary"
+            sx={{ fontWeight: "bold" }}
+            variant="outlined"
           >
             Use Profile Location
           </Button>
@@ -362,6 +371,47 @@ const RentApplication = () => {
         {/* <Button onClick={handleChoiceChange}>Search</Button> */}
       </div>
 
+      <>
+        <Grid
+          item
+          container
+          justifyContent="center"
+          alignItems="center"
+          padding={10}
+          margin={0}
+          xs={12}
+          sm={12}
+          md={12}
+          xl={12}
+          lg={12}
+          style={{
+            // backgroundColor: "ghostwhite",
+            width: "100%",
+            borderRadius: "10px",
+          }}
+        >
+          <Grid
+            item
+            margin={0}
+            padding={0}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              backgroundColor: "#f0fff1",
+              borderRadius: "16px",
+              padding: 4,
+            }}
+          >
+            <Typography variant="h4" sx={{ color: "#134611" }}>
+              <HourglassEmptyRoundedIcon fontSize="large" color="success" />
+              NO RENT APPLICATIONS FOUND
+            </Typography>
+          </Grid>
+        </Grid>
+      </>
+
       {applications.length > 0 && (
         <Container>
           <Grid container spacing={4}>
@@ -381,22 +431,30 @@ const RentApplication = () => {
       )}
 
       {/* Floating Icon */}
-      <AddCircleIcon
-        onClick={handleIconClick}
-        style={{
+      <IconButton
+        aria-label="Add"
+        sx={{
           position: "fixed",
           bottom: "16px",
           right: "16px",
-          fontSize: "4em",
-          color: "#4caf50",
-          cursor: "pointer",
-          zIndex: 1000,
+          backgroundColor: "#d8f3dc",
         }}
-      />
+      >
+        <AddRoundedIcon
+          onClick={handleIconClick}
+          style={{
+            fontSize: "2em",
+            color: "#134611",
+            zIndex: 1000,
+          }}
+        />
+      </IconButton>
 
       {/* Form Modal */}
       <Dialog open={formOpen} onClose={handleFormClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Submit Application</DialogTitle>
+        <DialogTitle sx={{ color: "#134611", fontWeight: "bold" }}>
+          Submit Application
+        </DialogTitle>
         <DialogContent>
           <Box
             component="form"
@@ -413,6 +471,7 @@ const RentApplication = () => {
               setSelectedOptions={setSelectCategoryOptions}
             />
             <TextField
+              color="success"
               label="Description"
               name="description"
               type="text"
@@ -421,8 +480,15 @@ const RentApplication = () => {
               fullWidth
               error={formErrors.description}
               helperText={formErrors.description && "This field is required"}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                },
+              }}
             />
             <TextField
+              color="success"
               label="quantity_available"
               name="quantity_available"
               multiple
@@ -435,8 +501,15 @@ const RentApplication = () => {
                 formErrors.quantity_available &&
                 "This field is required and must be greater than 0"
               }
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                },
+              }}
             />
             <TextField
+              color="success"
               label="rent (in Rupee)"
               name="rent"
               type="number"
@@ -448,12 +521,27 @@ const RentApplication = () => {
                 formErrors.rent &&
                 "This field is required and must be greater than 0"
               }
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                },
+              }}
             />
             <DialogActions>
-              <Button type="submit" color="primary">
+              <Button
+                type="submit"
+                variant="contained"
+                color="success"
+                sx={{ fontWeight: "bold" }}
+              >
                 Submit
               </Button>
-              <Button onClick={handleFormClose} color="secondary">
+              <Button
+                onClick={handleFormClose}
+                sx={{ fontWeight: "bold" }}
+                color="error"
+              >
                 Cancel
               </Button>
             </DialogActions>

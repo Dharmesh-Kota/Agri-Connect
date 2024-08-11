@@ -19,7 +19,7 @@ const dropdownStyle = {
   width: "100%",
   padding: "10px",
   border: "1px solid #ccc",
-  borderRadius: "4px",
+  borderRadius: "12px",
   backgroundColor: "#f0fff1",
 };
 
