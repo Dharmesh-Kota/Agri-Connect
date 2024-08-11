@@ -9,26 +9,13 @@ import config from "../config";
 // Custom styled component for a more attractive card with greenish theme
 const StyledCard = styled(Card)(({ theme }) => ({
   borderRadius: "16px",
-  boxShadow: theme.shadows[5],
+  boxShadow: "1px 1px 1px 1px #134611",
   overflow: "visible",
   backgroundColor: "#ffffff", // Light background color
-  border: `1px solid #a8d5ba`, // Light greenish border
-  transition:
-    "transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+  transition: "all 0.2s ease-in-out",
   "&:hover": {
-    transform: "scale(1.02)", // Slightly scale up for a subtle effect
-    backgroundColor: "#eaf4e5", // Very light green background on hover
-    boxShadow: theme.shadows[10],
-  },
-}));
-
-// Custom button styling with greenish theme
-const StyledButton = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  backgroundColor: "#4caf50", // Green background color
-  color: "#fff",
-  "&:hover": {
-    backgroundColor: "#388e3c", // Darker green on hover
+    transform: "scale(1.02)",
+    boxShadow: "2px 2px 2px 2px #134611",
   },
 }));
 
@@ -67,21 +54,14 @@ const ApplicationCard = ({
       <CardContent>
         <Box mb={2}>
           <Typography
-            variant="h5"
-            component="div"
-            gutterBottom
-            fontFamily="'Quicksand', sans-serif" // Custom font family
-            fontWeight={700} // Bold font weight
-            fontSize="1.5rem" // Larger font size
+            fontSize="xx-large" // Larger font size
+            sx={{ color: "#134611", fontWeight: "bold" }}
           >
             <strong>Person Name: </strong> {personName}
           </Typography>
           <Typography
-            variant="subtitle1"
-            color="text.secondary"
-            fontFamily="'Quicksand', sans-serif"
-            fontWeight={600} // Medium font weight
-            fontSize="1.2rem" // Slightly larger font size
+            fontSize="large" // Larger font size
+            sx={{ color: "#134611", fontWeight: "bold" }}
           >
             {description}
           </Typography>
@@ -140,15 +120,16 @@ const ApplicationCard = ({
           fontWeight={500}
           fontSize="1rem"
         >
-          <strong>Amount Per Day:</strong> {amountPerDay}
+          <strong>Amount Per Day:</strong> &#8377; {amountPerDay}
         </Typography>
-        <StyledButton
+        <Button
           variant="contained"
-          size="small"
+          color="success"
+          sx={{ my: 2, fontWeight: "bold" }}
           onClick={() => onClickApplyHandle(applicationId)}
         >
           Apply
-        </StyledButton>
+        </Button>
       </CardContent>
     </StyledCard>
   );

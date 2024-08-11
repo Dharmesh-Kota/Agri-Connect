@@ -455,9 +455,9 @@ const Profile = () => {
                         required
                         size="small"
                         autoComplete="off"
-                        error={justVerify && phoneNumber.length === ""}
+                        error={justVerify && phoneNumber.length !== 10}
                         helperText={
-                          justVerify && phoneNumber.length === ""
+                          justVerify && phoneNumber.length !== 10
                             ? "Please enter a valid Phone Number."
                             : ""
                         }
