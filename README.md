@@ -101,7 +101,7 @@ AgriConnect is a web application designed to revolutionize agricultural technolo
    ![Manage Created Jobs](./client/src/images/manage-created-jobs.png)
 
 9. **Mail service**  
-   ![Manage Created Jobs](./client/src/images/mail-service-jobs.png)
+   ![Manage Created Jobs](./client/src/images/mail-service.png)
 
 10. **About Us Page**  
    ![About Us](./client/src/images/about-us.png)
