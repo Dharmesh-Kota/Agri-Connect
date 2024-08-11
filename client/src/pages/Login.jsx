@@ -20,6 +20,7 @@ import VpnKeyRoundedIcon from "@mui/icons-material/VpnKeyRounded";
 import axios from "axios";
 import image1 from "../images/login_img.jpg";
 import img1 from "../images/img1.png";
+import config from "../config.js";
 
 export default function Login() {
   axios.defaults.withCredentials = true;
@@ -67,7 +68,7 @@ export default function Login() {
 
     try {
       const results = await axios.post(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           "/create-session",
         {
           emailUsername,
