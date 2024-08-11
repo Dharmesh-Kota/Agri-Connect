@@ -109,7 +109,7 @@ const ViewApplicationCard = ({
         >
           <strong>Status:</strong> {status}
         </Typography>
-        <Box mt={2} display="flex" justifyContent="space-evenly">
+        <Box mt={2} display="flex" justifyContent="space-between">
           <StyledButton
             variant="contained"
             size="small"

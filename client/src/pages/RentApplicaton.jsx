@@ -96,10 +96,12 @@ const RentApplication = () => {
                     });
                 
                 // Update the applications state with the filtered data
-                    setApplications(filteredApplications);
+                // console.log(filteredApplications);    
+                // console.log(response.data);    
+                setApplications(filteredApplications);
                     return response.data; // Return the fetched data
                 } catch (error) {
-                    console.error('Error fetching data:', error);
+                    // console.error('Error fetching data:', error);
                     return []; // Return an empty array on error
                 }
             };
@@ -232,7 +234,7 @@ const RentApplication = () => {
                 toast.success("Application submitted successfully!");
                 handleFormClose();
             } catch (error) {
-                console.error("Error submitting form:", error);
+                // console.error("Error submitting form:", error);
                 toast.error("Error submitting application. Please try again.");
                 handleFormClose();
             }
