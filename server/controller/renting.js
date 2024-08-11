@@ -20,6 +20,7 @@ export const rent_application = async (req, res) => {
 
         for (let application of applications) {
             if (application.quantity_available == 0) continue;
+            if (application.owner == req.user.username) continue;
             
             const apiKey = process.env.API_KEY;
 
@@ -43,7 +44,7 @@ export const rent_application = async (req, res) => {
                 const distance = route.summary.lengthInMeters / 1000; // in km
                 const travelTime = route.summary.travelTimeInSeconds / 60; // in mins
 
-                if (distance < 25) {
+                if (distance < 50) {
                     let owner_details = await User.findOne({username: application.owner}, {name: 1, email: 1});
                     application.distance = distance;
                     application.travelTime = travelTime;

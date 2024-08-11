@@ -97,8 +97,6 @@ const RentApplication = () => {
                 
                 // Update the applications state with the filtered data
                     setApplications(filteredApplications);
-                    console.log(filteredApplications);
-                    console.log(selectedOptions);
                     return response.data; // Return the fetched data
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -195,7 +193,6 @@ const RentApplication = () => {
     const handleFormClose = () => {
         setFormOpen(false);
     };
-   
 
     const handleFormChange = (e) => {
         setFormValues({
@@ -307,7 +304,6 @@ const RentApplication = () => {
                                 category={app.category}
                                 rent={app.rent}
                                 quantity_available={app.quantity_available}
-                                rent_id={app.rent_id}
                             />
                         </Grid>
                     ))}

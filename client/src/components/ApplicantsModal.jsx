@@ -40,23 +40,30 @@ const ApplicationModal = ({
 
   useEffect(() => {
     setLocalApplication(application);
+    console.log("app");
+
+    console.log(application);
   }, [application]);
 
   const handleTabChange = (event, newIndex) => {
     setTabIndex(newIndex);
   };
 
-  const handleHire = async (username) => {
+  const handleHire = async (username_obj) => {
     try {
       // Assume the API endpoint for hiring applicants is something like:
-      // POST /api/applications/{applicationId}/applicants/{username}/hire
-      await onApplicantStatusChange(localApplication.id, username, "hire");
+      // POST /api/applications/{applicationId}/applicants/{username}/h_objire
+      await onApplicantStatusChange(
+        localApplication.application_id,
+        username_obj,
+        "hire"
+      );
       setLocalApplication((prevApplication) => ({
         ...prevApplication,
         applicants: prevApplication.applicants.filter(
-          (user) => user !== username
+          (user) => user.username !== username_obj.username
         ),
-        hired: [...prevApplication.hired, username],
+        hired_workers: [...prevApplication.hired_workers, username_obj],
       }));
     } catch (error) {
       // Handle the error if the API call fails
@@ -64,15 +71,21 @@ const ApplicationModal = ({
     }
   };
 
-  const handleFree = async (username) => {
+  const handleFree = async (username_obj) => {
     try {
       // Assume the API endpoint for freeing applicants is something like:
       // POST /api/applications/{applicationId}/applicants/{username}/free
-      await onApplicantStatusChange(localApplication.id, username, "free");
+      await onApplicantStatusChange(
+        localApplication.application_id,
+        username_obj,
+        "free"
+      );
       setLocalApplication((prevApplication) => ({
         ...prevApplication,
-        hired: prevApplication.hired.filter((user) => user !== username),
-        applicants: [...prevApplication.applicants, username],
+        hired_workers: prevApplication.hired_workers.filter(
+          (user) => user.username !== username_obj.username
+        ),
+        applicants: [...prevApplication.applicants, username_obj],
       }));
     } catch (error) {
       // Handle the error if the API call fails
@@ -101,7 +114,9 @@ const ApplicationModal = ({
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
           Total Hired:{" "}
-          {localApplication.hired ? localApplication.hired.length : 0}
+          {localApplication.hired_workers
+            ? localApplication.hired_workers.length
+            : 0}
         </Typography>
 
         <Tabs value={tabIndex} onChange={handleTabChange} centered>
@@ -115,19 +130,18 @@ const ApplicationModal = ({
               Applicants
             </Typography>
             <List>
-              {localApplication.applicants &&
-                localApplication.applicants.map((username) => (
-                  <ListItem key={username}>
-                    <ListItemText primary={username} />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleHire(username)}
-                    >
-                      Hire
-                    </Button>
-                  </ListItem>
-                ))}
+              {localApplication.applicants.map((item, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={item.username} />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleHire(item)}
+                  >
+                    Hire
+                  </Button>
+                </ListItem>
+              ))}
             </List>
           </>
         )}
@@ -138,14 +152,14 @@ const ApplicationModal = ({
               Hired Applicants
             </Typography>
             <List>
-              {localApplication.hired &&
-                localApplication.hired.map((username) => (
-                  <ListItem key={username}>
-                    <ListItemText primary={username} />
+              {localApplication.hired_workers &&
+                localApplication.hired_workers.map((obj, index) => (
+                  <ListItem key={index}>
+                    <ListItemText primary={obj.username} />
                     <Button
                       variant="contained"
                       color="secondary"
-                      onClick={() => handleFree(username)}
+                      onClick={() => handleFree(obj)}
                     >
                       Free
                     </Button>
