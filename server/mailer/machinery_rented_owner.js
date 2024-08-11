@@ -1,6 +1,6 @@
 import * as nodemailer from '../config/nodemailer.js';
 
-export const machinery_rented = (owner, user, application, quantity) => {
+export const machinery_rented_owner = (owner, user, application, quantity) => {
     let htmlString = nodemailer.renderTemplate({owner: owner, user: user, application: application, quantity: quantity}, '/machinery_rented.ejs');
     nodemailer.transporter.sendMail({
         from: 'dharmeshkota123@gmail.com',
