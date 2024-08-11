@@ -35,6 +35,8 @@ const MachineryRentalCard = ({
   unitsAvailable,
   unitsRented,
   onShowHolders,
+  onEdit,
+  onDelete
 }) => {
   return (
     <StyledCard>
@@ -96,6 +98,17 @@ const MachineryRentalCard = ({
           >
             Show Holders
           </StyledButton>
+          <StyledButton variant="contained" size="small" onClick={onEdit}>
+              Edit
+            </StyledButton>
+            <StyledButton
+              variant="contained"
+              size="small"
+              color="error"
+              onClick={onDelete}
+            >
+              Delete
+            </StyledButton>
         </Box>
       </CardContent>
     </StyledCard>

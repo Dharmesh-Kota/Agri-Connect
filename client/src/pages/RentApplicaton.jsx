@@ -97,8 +97,6 @@ const RentApplication = () => {
                 
                 // Update the applications state with the filtered data
                     setApplications(filteredApplications);
-                    // console.log(filteredApplications);
-                    // console.log(selectedOptions);
                     return response.data; // Return the fetched data
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -216,6 +214,7 @@ const RentApplication = () => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        console.log(formValues)
         const headers = {
             "Content-Type": "application/json",
             Authorization: `Bearer ${window.localStorage.getItem("token")}`
@@ -384,7 +383,7 @@ const RentApplication = () => {
                             }
                         />
                         <DialogActions>
-                            <Button type="submit" color="primary">
+                            <Button type="submit" color="primary" onClick={handleFormSubmit} >
                                 Submit
                             </Button>
                             <Button onClick={handleFormClose} color="secondary">

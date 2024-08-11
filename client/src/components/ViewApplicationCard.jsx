@@ -117,17 +117,17 @@ const ViewApplicationCard = ({
           >
             View Applicants
           </StyledButton>
-          <StyledButton variant="contained" size="small" onClick={onEdit}>
-            Edit
-          </StyledButton>
-          <StyledButton
-            variant="contained"
-            size="small"
-            color="error"
-            onClick={onDelete}
-          >
-            Delete
-          </StyledButton>
+            <StyledButton variant="contained" size="small" onClick={onEdit}>
+              Edit
+            </StyledButton>
+            <StyledButton
+              variant="contained"
+              size="small"
+              color="error"
+              onClick={onDelete}
+            >
+              Delete
+            </StyledButton>
         </Box>
       </CardContent>
     </StyledCard>
