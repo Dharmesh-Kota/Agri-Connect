@@ -33,7 +33,6 @@ const MachineryRentalCard = ({
   category,
   description,
   unitsAvailable,
-  unitsRented,
   onShowHolders,
   onEdit,
   onDelete
@@ -81,16 +80,8 @@ const MachineryRentalCard = ({
         >
           <strong>Units Available:</strong> {unitsAvailable}
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          fontFamily="'Quicksand', sans-serif"
-          fontWeight={500}
-          fontSize="1rem"
-        >
-          <strong>Units Rented:</strong> {unitsRented}
-        </Typography>
-        <Box mt={2} display="flex" justifyContent="center">
+        
+        <Box mt={5} display="flex" justifyContent="space-evenly" >
           <StyledButton
             variant="contained"
             size="small"

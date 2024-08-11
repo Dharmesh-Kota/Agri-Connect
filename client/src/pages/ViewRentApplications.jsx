@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { Grid, Container } from "@mui/material";
 import MachineryRentalCard from "../components/MachineryRentalCard";
 import HoldersModal from "../components/HoldersModal";
@@ -25,15 +26,65 @@ const ViewRentApplications = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchApplications = () => {
+  const fetchApplications = async () => {
     // Simulate fetching applications with dummy data
-    setApplications(dummyApplications);
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      };
+
+      const results = await axios.get(
+        (process.env.BACKEND_API || "http://localhost:8000") +
+          `/view-rent-applications/`,
+        { headers }
+      );
+
+      setApplications(results.data.applications);
+      
+      // console.log(results.data);
+      // console.log("Form submitted:", response.data);
+      toast.success("Application deleted successfully!");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error deleting application. Please try again.");
+    }
+
+    // setApplications(dummyApplications);
   };
 
   const handleShowHolders = (application) => {
     setSelectedApplication(application);
     setIsModalOpen(true);
   };
+  const handleEdit = (application)=>{
+    
+  };
+  const handleDelete = async (application_id)=>{
+    console.log(application_id);
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      };
+
+      const results = await axios.get(
+        (process.env.BACKEND_API || "http://localhost:8000") +
+          `/delete-rent-application/${application_id}`,
+        { headers }
+      );
+
+      setApplications((apps) =>
+        apps.filter((app) => app.rent_id !== application_id)
+      );
+
+      console.log("Form submitted:", results.data);
+      toast.success("Application deleted successfully!");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error deleting application. Please try again.");
+    }
+  }
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -67,9 +118,11 @@ const ViewRentApplications = () => {
                 title={app.title}
                 category={app.category}
                 description={app.description}
-                unitsAvailable={app.unitsAvailable}
-                unitsRented={app.unitsRented}
+                unitsAvailable={app.quantity_available                }
+            
                 onShowHolders={() => handleShowHolders(app)}
+                onEdit = {()=> handleEdit(app)}
+                onDelete = {()=> handleDelete(app.rent_id)}
               />
             </Grid>
           ))}

@@ -129,6 +129,55 @@ const RentApplication = () => {
       toast.error("Failed to fetch applications.");
     }
   }, [selectedOptions, maxValue]);
+    useEffect(() => {
+        try {
+            let dummy_data = [];
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${window.localStorage.getItem("token")}`
+            };
+            const fetchfunction = async () => {
+                try {
+                    const response = await axios.get(
+                        `${config.BACKEND_API || "http://localhost:8000"}/rent-application`,
+                        { headers }
+                    );
+                    let dummy_data = response.data.applications
+                    // console.log(dummy_data);
+                    // Filter the dummy_data
+                    
+                        const filteredApplications = dummy_data.filter(application => {
+                        // Check if any of the application's categories are in the selectedOptions
+                        const categoryMatch = application.category.some(cat => selectedOptions.includes(cat));
+        
+                        // Check if the rent is below the threshold
+                        const priceMatch = application.rent <= maxValue || maxValue === undefined;
+        
+                        // Return true if both conditions are met
+                        return categoryMatch && priceMatch;
+                    });
+                
+                // Update the applications state with the filtered data
+                // console.log(filteredApplications);    
+                // console.log(response.data);    
+                setApplications(filteredApplications);
+                    return response.data; // Return the fetched data
+                } catch (error) {
+                    // console.error('Error fetching data:', error);
+                    return []; // Return an empty array on error
+                }
+            };
+
+            
+            fetchfunction(); 
+            
+            
+        } catch (error) {
+            toast.error("Failed to fetch applications.");
+        }
+        
+
+    }, [selectedOptions, maxValue]);
 
   const fetchApplications = async (location) => {
     //   try {
@@ -257,6 +306,38 @@ const RentApplication = () => {
       category: prevValues.category.filter((item) => item !== chipToDelete),
     }));
   };
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        console.log(formValues)
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`
+        };
+        formValues.category = selectCategoryOptions; 
+        if (validateForm()) {
+            try {
+                const response = await axios.post(
+                    `${
+                        config.BACKEND_API || "http://localhost:8000"
+                      }/create-rent-application`,
+                    {formValues}, {headers}
+                );
+                console.log("Form submitted:", response.data);
+                toast.success("Application submitted successfully!");
+                handleFormClose();
+            } catch (error) {
+                // console.error("Error submitting form:", error);
+                toast.error("Error submitting application. Please try again.");
+                handleFormClose();
+            }
+        }
+    };
+    const handleChipDelete = (chipToDelete) => {
+        formValues.category((prevValues) => ({
+            ...prevValues,
+            category: prevValues.category.filter((item) => item !== chipToDelete),
+        }));
+    };
 
   return (
     <>
