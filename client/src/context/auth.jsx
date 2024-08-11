@@ -29,12 +29,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (window.localStorage.getItem("token") === null) {
-      setIsLoggedIn((prev) => false);
-      navigate("/login");
-    } else {
-      setIsLoggedIn((prev) => true);
-    }
+    window.localStorage.getItem("token" !== null);
   }, []);
 
   return (
