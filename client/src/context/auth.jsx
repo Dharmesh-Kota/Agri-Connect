@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    window.localStorage.getItem("token" !== null);
+    setIsLoggedIn(window.localStorage.getItem("token") !== null);
   }, []);
 
   return (
