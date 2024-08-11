@@ -371,7 +371,7 @@ const RentApplication = () => {
         {/* <Button onClick={handleChoiceChange}>Search</Button> */}
       </div>
 
-      <>
+      {selectedOptions.length==0 && <>
         <Grid
           item
           container
@@ -411,7 +411,7 @@ const RentApplication = () => {
           </Grid>
         </Grid>
       </>
-
+    }
       {applications.length > 0 && (
         <Container>
           <Grid container spacing={4}>
