@@ -1,19 +1,18 @@
-Here's the entire code in `.md` format:
-
-```markdown
 # AgriConnect
 
 AgriConnect is a web application designed to revolutionize agricultural technology by connecting farmers with workers and providing a platform for renting agricultural machinery. Built on the MERN stack, AgriConnect leverages modern web technologies to offer a seamless experience for farmers and workers alike.
 
 ## Table of Contents
 
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Screenshots](#screenshots)
-- [Deployed Website](#deployed-website)
-- [License](#license)
+- [AgriConnect](#agriconnect)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Technology Stack](#technology-stack)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Screenshots](#screenshots)
+  - [Deployed Website](#deployed-website)
+  - [License](#license)
 
 ## Features
 
