@@ -455,6 +455,12 @@ const Profile = () => {
                         required
                         size="small"
                         autoComplete="off"
+                        error={justVerify && phoneNumber.length !== 10}
+                        helperText={
+                          justVerify && phoneNumber.length !== 10
+                            ? "Please enter a valid Phone Number."
+                            : ""
+                        }
                         sx={{
                           "& .MuiOutlinedInput-root": {
                             borderRadius: "12px",
@@ -545,7 +551,7 @@ const Profile = () => {
                         value={experience}
                         onChange={(e) => setExperience(e.target.value)}
                         id="experience"
-                        label="Experiences"
+                        label="Experiences (in years)"
                         placeholder="Experiences"
                         variant="outlined"
                         fullWidth

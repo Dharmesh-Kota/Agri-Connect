@@ -12,16 +12,24 @@ import {
   Typography,
   TextField,
   Box,
+  IconButton,
+  CircularProgress,
 } from "@mui/material";
 import ApplicationCard from "../components/ApplicationCard";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import { useNavigate } from "react-router-dom";
+import { ArrowBack } from "@mui/icons-material";
+import HourglassEmptyRoundedIcon from "@mui/icons-material/HourglassEmptyRounded";
 
 import { useAuth } from "../context/auth";
 import config from "../config.js";
 
 const WorkApplications = () => {
+  const [loading, setLoading] = useState(false);
+
   const [openDialog, setOpenDialog] = useState(true);
   const [useCurrentLocation, setUseCurrentLocation] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -39,6 +47,8 @@ const WorkApplications = () => {
     closing_date: false,
     labour: false,
   });
+
+  const navigate = useNavigate();
 
   // const dummy_data = [
   //   {
@@ -68,6 +78,7 @@ const WorkApplications = () => {
   // ];
 
   const fetchApplications = async (location) => {
+    setLoading(true);
     try {
       // fetch applications
       const headers = {
@@ -89,6 +100,7 @@ const WorkApplications = () => {
     } catch (error) {
       toast.error("Failed to fetch applications.");
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -210,9 +222,11 @@ const WorkApplications = () => {
   return (
     <>
       <Dialog open={openDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>Location Preference</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold", color: "#134611" }}>
+          Location Preference
+        </DialogTitle>
         <DialogContent>
-          <Typography variant="body1">
+          <Typography variant="body1" color="success">
             Would you like to use your current location or the location
             mentioned in your profile?
           </Typography>
@@ -220,53 +234,171 @@ const WorkApplications = () => {
         <DialogActions>
           <Button
             onClick={() => handleLocationChoice("current")}
-            color="primary"
+            color="success"
+            sx={{ fontWeight: "bold" }}
+            variant="contained"
           >
             Use Current Location
           </Button>
           <Button
             onClick={() => handleLocationChoice("profile")}
             color="secondary"
+            sx={{ fontWeight: "bold" }}
+            variant="outlined"
           >
             Use Profile Location
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Container sx={{ pt: "5em" }}>
-        <Grid container spacing={4}>
-          {applications.map((app) => (
-            <Grid item xs={12} key={app._id} data-aos="fade-up">
-              <ApplicationCard
-                personName={app.hirer}
-                applicationId={app.application_id}
-                workers_required={app.workers_required}
-                closing_date={app.closing_date}
-                description={app.description}
-                amountPerDay={app.labour}
-              />
-            </Grid>
-          ))}
+      {loading ? (
+        <Grid
+          item
+          container
+          justifyContent="center"
+          alignItems="center"
+          padding={10}
+          margin={0}
+          xs={12}
+          sm={12}
+          md={12}
+          xl={12}
+          lg={12}
+          style={{
+            // backgroundColor: "ghostwhite",
+            width: "100%",
+            height: "100vh",
+            borderRadius: "10px",
+          }}
+        >
+          <Grid
+            item
+            margin={0}
+            padding={0}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              borderRadius: "16px",
+              padding: 4,
+            }}
+          >
+            <CircularProgress
+              size={100}
+              sx={{
+                color: "green",
+                right: 0,
+              }}
+            />
+          </Grid>
         </Grid>
-      </Container>
+      ) : applications.length === 0 ? (
+        <>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            alignItems="center"
+            padding={10}
+            margin={0}
+            xs={12}
+            sm={12}
+            md={12}
+            xl={12}
+            lg={12}
+            style={{
+              // backgroundColor: "ghostwhite",
+              width: "100%",
+              height: "100vh",
+              borderRadius: "10px",
+            }}
+          >
+            <Grid
+              item
+              margin={0}
+              padding={0}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                // backgroundColor: "#DADAE0",
+                backgroundColor: "#f0fff1",
+                borderRadius: "16px",
+                padding: 4,
+              }}
+            >
+              <Typography variant="h4" sx={{ color: "#134611" }}>
+                <HourglassEmptyRoundedIcon fontSize="large" color="success" />
+                NO HIRING FOUND
+              </Typography>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  navigate(-1);
+                }}
+                color="success"
+                sx={{
+                  width: "fit-content",
+                  borderRadius: "16px",
+                  fontWeight: "bold",
+                  backgroundColor: "#134611",
+                  "&:hover": {
+                    backgroundColor: "#1a7431",
+                  },
+                }}
+                startIcon={<ArrowBack sx={{ color: "white" }} />}
+                size="large"
+              >
+                Back
+              </Button>
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <Container sx={{ pt: "5em" }}>
+          <Grid container spacing={4}>
+            {applications.map((app) => (
+              <Grid item xs={12} key={app._id} data-aos="fade-up">
+                <ApplicationCard
+                  personName={app.hirer}
+                  applicationId={app.application_id}
+                  workers_required={app.workers_required}
+                  closing_date={app.closing_date}
+                  description={app.description}
+                  amountPerDay={app.labour}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      )}
 
       {/* Floating Icon */}
-      <AddCircleIcon
-        onClick={handleIconClick}
-        style={{
+      <IconButton
+        aria-label="Add"
+        sx={{
           position: "fixed",
           bottom: "16px",
           right: "16px",
-          fontSize: "4em",
-          color: "#4caf50",
-          cursor: "pointer",
-          zIndex: 1000,
+          backgroundColor: "#d8f3dc",
         }}
-      />
+      >
+        <AddRoundedIcon
+          onClick={handleIconClick}
+          style={{
+            fontSize: "2em",
+            color: "#134611",
+            zIndex: 1000,
+          }}
+        />
+      </IconButton>
 
       {/* Form Modal */}
       <Dialog open={formOpen} onClose={handleFormClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Submit Application</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold", color: "#134611" }}>
+          Submit Application
+        </DialogTitle>
         <DialogContent>
           <Box
             component="form"
@@ -290,6 +422,13 @@ const WorkApplications = () => {
                 formErrors.workers_required &&
                 "This field is required and must be greater than 0"
               }
+              color="success"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                },
+              }}
             />
             <TextField
               label="Description"
@@ -300,6 +439,13 @@ const WorkApplications = () => {
               fullWidth
               error={formErrors.description}
               helperText={formErrors.description && "This field is required"}
+              color="success"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                },
+              }}
             />
             <TextField
               label="Closing Date"
@@ -314,6 +460,13 @@ const WorkApplications = () => {
                 formErrors.closing_date &&
                 "This field is required and must be a future date"
               }
+              color="success"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                },
+              }}
             />
             <TextField
               label="Labour (in Rupee)"
@@ -327,12 +480,28 @@ const WorkApplications = () => {
                 formErrors.labour &&
                 "This field is required and must be greater than 0"
               }
+              color="success"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                },
+              }}
             />
             <DialogActions>
-              <Button type="submit" color="primary">
+              <Button
+                type="submit"
+                variant="contained"
+                color="success"
+                sx={{ fontWeight: "bold" }}
+              >
                 Submit
               </Button>
-              <Button onClick={handleFormClose} color="secondary">
+              <Button
+                onClick={handleFormClose}
+                sx={{ fontWeight: "bold" }}
+                color="error"
+              >
                 Cancel
               </Button>
             </DialogActions>

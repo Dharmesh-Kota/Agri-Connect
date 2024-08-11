@@ -19,8 +19,8 @@ const dropdownStyle = {
   width: "100%",
   padding: "10px",
   border: "1px solid #ccc",
-  borderRadius: "4px",
-  backgroundColor: "#f0f0f0",
+  borderRadius: "12px",
+  backgroundColor: "#f0fff1",
 };
 
 const DropdownWithSelectedOptions = ({
@@ -81,6 +81,7 @@ const DropdownWithSelectedOptions = ({
       <Box mt={2} display="flex" flexWrap="wrap">
         {selectedOptions.map((option) => (
           <Chip
+            color="success"
             key={option}
             label={option}
             onDelete={() => handleRemove(option)}

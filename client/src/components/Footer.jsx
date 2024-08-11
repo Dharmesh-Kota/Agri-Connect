@@ -12,6 +12,7 @@ export default function Footer() {
     <>
       <div className="mt-5">&nbsp;</div>
       <div className="mt-5">&nbsp;</div>
+      <div className="mt-5">&nbsp;</div>
       <MDBFooter
         className="text-center text-lg-start text-muted"
         style={{ backgroundColor: "#f0fff1" }}
