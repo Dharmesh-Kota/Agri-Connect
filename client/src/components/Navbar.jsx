@@ -283,6 +283,7 @@ function Navbar() {
                 disableRipple
                 variant="outlined"
                 style={{ transition: "all 0.3s ease" }}
+                color="success"
                 sx={{
                   "&:hover": {
                     borderBottom: "1px solid #134611",
@@ -293,7 +294,11 @@ function Navbar() {
                 <Link
                   className="nav-link"
                   to="/login"
-                  style={{ fontFamily: "Quicksand" }}
+                  style={{
+                    fontFamily: "Quicksand",
+                    color: "#134611",
+                    fontWeight: "bold",
+                  }}
                 >
                   LogIn/SignUP
                 </Link>
