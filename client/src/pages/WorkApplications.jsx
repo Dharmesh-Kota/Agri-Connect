@@ -76,7 +76,7 @@ const WorkApplications = () => {
       };
 
       const results = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           (location
             ? `/work-application?lat=${location.latitude}&lng=${location.longitude}`
             : `/work-application`),
@@ -183,7 +183,7 @@ const WorkApplications = () => {
         console.log(formValues);
 
         const results = await axios.post(
-          (process.env.BACKEND_API || "http://localhost:8000") +
+          (config.BACKEND_API || "http://localhost:8000") +
             `/create-work-application`,
           formValues,
           { headers }

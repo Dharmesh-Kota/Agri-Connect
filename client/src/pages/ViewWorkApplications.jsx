@@ -6,6 +6,7 @@ import ViewApplicationCard from "../components/ViewApplicationCard";
 import ApplicationModal from "../components/ApplicantsModal";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import config from "../config";
 
 const ViewWorkApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -62,7 +63,7 @@ const ViewWorkApplications = () => {
       };
 
       const results = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           `/view-work-applications`,
         { headers }
       );
@@ -115,7 +116,7 @@ const ViewWorkApplications = () => {
       };
 
       const results = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           `/delete-work-application/${application_id}`,
         { headers }
       );
@@ -146,7 +147,7 @@ const ViewWorkApplications = () => {
       // console.log(username);
 
       const response = await axios.get(
-        (process.env.BACKEND_API || "http://localhost:8000") +
+        (config.BACKEND_API || "http://localhost:8000") +
           (action === "hire"
             ? `/hire-worker/${application_id}/${username_obj.username}`
             : `/free-worker/${application_id}/${username_obj.username}`),
