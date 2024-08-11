@@ -13,6 +13,7 @@ import {
   TextField,
   Box,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import ApplicationCard from "../components/ApplicationCard";
 import AOS from "aos";
@@ -27,6 +28,8 @@ import { useAuth } from "../context/auth";
 import config from "../config.js";
 
 const WorkApplications = () => {
+  const [loading, setLoading] = useState(false);
+
   const [openDialog, setOpenDialog] = useState(true);
   const [useCurrentLocation, setUseCurrentLocation] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -75,6 +78,7 @@ const WorkApplications = () => {
   // ];
 
   const fetchApplications = async (location) => {
+    setLoading(true);
     try {
       // fetch applications
       const headers = {
@@ -96,6 +100,7 @@ const WorkApplications = () => {
     } catch (error) {
       toast.error("Failed to fetch applications.");
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -245,8 +250,49 @@ const WorkApplications = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {applications.length === 0 ? (
+      {loading ? (
+        <Grid
+          item
+          container
+          justifyContent="center"
+          alignItems="center"
+          padding={10}
+          margin={0}
+          xs={12}
+          sm={12}
+          md={12}
+          xl={12}
+          lg={12}
+          style={{
+            // backgroundColor: "ghostwhite",
+            width: "100%",
+            height: "100vh",
+            borderRadius: "10px",
+          }}
+        >
+          <Grid
+            item
+            margin={0}
+            padding={0}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              borderRadius: "16px",
+              padding: 4,
+            }}
+          >
+            <CircularProgress
+              size={100}
+              sx={{
+                color: "green",
+                right: 0,
+              }}
+            />
+          </Grid>
+        </Grid>
+      ) : applications.length === 0 ? (
         <>
           <Grid
             item
