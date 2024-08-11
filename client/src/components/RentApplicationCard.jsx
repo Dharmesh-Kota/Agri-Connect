@@ -1,4 +1,5 @@
 import React , {useState} from "react";
+import axios from 'axios'; 
 import { Card, CardContent, Typography, Box , Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { light } from "@mui/material/styles/createPalette";
@@ -32,9 +33,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const handleRentClick =(( quantity_available, rent_id)=>{
-    
-});
 
 
 const RentApplicationCard = ({
@@ -63,7 +61,7 @@ const RentApplicationCard = ({
         const value = event.target.value;
 
         // Validate input value
-        if (value === "" || isNaN(value) || value <= 0 || value > quantity_available) {
+        if ( isNaN(value) || value <= 0 || value > quantity_available) {
             setInputError(true);
         } else {
             setInputError(false);
@@ -71,22 +69,45 @@ const RentApplicationCard = ({
 
         setInputValue(value);
     };
+    
+        const handleSubmit = () => {
+          console.log(rent_id);
+          console.log(quantity_available);
+            if (!inputError && inputValue !== "") {
+                // Process the inputValue here, like saving it or making an API call
+                const headers = {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${window.localStorage.getItem("token")}`
+              };
+                const postfunction = async ()=>{
+                  try {
+                    const response = await axios.post(
+                        `${
+                            process.env.BACKEND_API || "http://localhost:8000"
+                          }/rent-machinery`,
+                        {rent_id, quantity_available}, {headers}
+                    );
+                    console.log("Form submitted:", response.data);
+                    toast.success("Application submitted successfully!");
+                   
+                } catch (error) {
+                    console.error("Error submitting form:", error);
+                    toast.error("Error submitting application. Please try again.");
+                }
 
-    const handleSubmit = (quantity_available,rent_id) => {
-      console.log(quantity_available);
-      console.log(rent_id);
-        if (!inputError && inputValue !== "") {
-            // Process the inputValue here, like saving it or making an API call
-       
-            toast.success("Input value is valid!");
-            handleClose(); // Close the modal after submission
-        } else {
-            toast.error("Please enter a valid value.");
-        }
-    };
 
+                }
+                toast.success("Input value is valid!");
+                handleClose(); // Close the modal after submission
+            postfunction(); 
 
-  return (
+            } else {
+                toast.error("Please enter a valid value.");
+            }
+        };
+    
+    
+    return (
     <StyledCard>
       <CardContent>
         <Box mb={2}>
@@ -169,7 +190,7 @@ const RentApplicationCard = ({
                     <Button onClick={handleClose} color="secondary">
                         Cancel
                     </Button>
-                    <Button onClick={handleSubmit(quantity_available,rent_id)} color="primary">
+                    <Button onClick={handleSubmit} color="primary">
                         Submit
                     </Button>
                 </DialogActions>
