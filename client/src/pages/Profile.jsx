@@ -132,7 +132,7 @@ const Profile = () => {
         { headers }
       );
 
-      console.log(results.data);
+      // console.log(results.data);
 
       if (results?.status === 200) {
         const { user } = results?.data;

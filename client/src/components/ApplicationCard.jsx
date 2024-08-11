@@ -47,7 +47,7 @@ const onClickApplyHandle = async (applicationId) => {
       { headers }
     );
 
-    console.log(results);
+    // console.log(results);
     toast.success("Applied Successfully");
   } catch (error) {
     toast.error("Internal Server Error");

@@ -38,6 +38,16 @@ const ViewApplicationCard = ({
   onEdit, // Function to edit the application
   onDelete, // Function to delete the application
 }) => {
+  const date = new Date(closingDate);
+
+  // Extract the day, month, and year
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based, so add 1
+  const year = date.getUTCFullYear();
+
+  // Format the date as dd-mm-yyyy
+  const formattedDate = `${day}-${month}-${year}`;
+
   // Ensure all necessary props are passed and used correctly
   return (
     <StyledCard>
@@ -89,7 +99,7 @@ const ViewApplicationCard = ({
           fontWeight={500}
           fontSize="1rem"
         >
-          <strong>Closing Date:</strong> {closingDate}
+          <strong>Closing Date:</strong> {formattedDate}
         </Typography>
         <Typography
           variant="body2"
@@ -117,17 +127,17 @@ const ViewApplicationCard = ({
           >
             View Applicants
           </StyledButton>
-            <StyledButton variant="contained" size="small" onClick={onEdit}>
-              Edit
-            </StyledButton>
-            <StyledButton
-              variant="contained"
-              size="small"
-              color="error"
-              onClick={onDelete}
-            >
-              Delete
-            </StyledButton>
+          <StyledButton variant="contained" size="small" onClick={onEdit}>
+            Edit
+          </StyledButton>
+          <StyledButton
+            variant="contained"
+            size="small"
+            color="error"
+            onClick={onDelete}
+          >
+            Delete
+          </StyledButton>
         </Box>
       </CardContent>
     </StyledCard>
